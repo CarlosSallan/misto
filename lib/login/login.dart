@@ -36,7 +36,16 @@ class _loginState extends State<login> {
                   border: OutlineInputBorder(),
                   labelText: 'Contraseña',
                 ),
-              )
+              ),
+              FlatButton(
+                child: Text('SignUp', style: TextStyle(fontSize: 20.0),),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => login()),
+                    );
+                  }
+              ),
             ],
           ),
           ),
