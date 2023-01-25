@@ -17,17 +17,28 @@ class _loginState extends State<login> {
       body:
       Row(
         children: [
-          Expanded(child: Column(
+          Expanded(
+              child:
+              Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset("assets/MistoLog.png", scale: 0.2,),
-              Container(
-                width: 100,
-                height: 100,
-                color: Colors.blue,
+              const TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Nombre de usuario',
+                ),
+              ),
+              const TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Contraseña',
+                ),
               )
             ],
-          )
+          ),
           ),
         ],
       )
