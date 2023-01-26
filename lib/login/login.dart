@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../main_screen/main_screen.dart';
 import 'dart:math';
 
 class login extends StatefulWidget {
@@ -47,7 +48,7 @@ class _loginState extends State<login> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => login()),
+                      MaterialPageRoute(builder: (context) => main_screen()),
                     );
                   }
               ),
