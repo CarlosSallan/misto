@@ -37,7 +37,7 @@ class _loginState extends State<login> {
                   labelText: 'Contraseña',
                 ),
               ),
-              FlatButton(
+              TextButton(
                 child: Text('SignUp', style: TextStyle(fontSize: 20.0),),
                   onPressed: () {
                     Navigator.push(
