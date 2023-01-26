@@ -1,19 +1,17 @@
-import 'dart:math';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:misto/main_screen/main_screen.dart';
 import '../login/login.dart';
-import '../profile/profile.dart';
 
-class main_screen extends StatefulWidget {
-  static const String id = 'main_screen';
-  const main_screen({Key? key}) : super(key: key);
+class profile extends StatefulWidget {
+  const profile({Key? key}) : super(key: key);
 
   @override
-  State<main_screen> createState() => _main_screenState();
+  State<profile> createState() => _profileState();
 }
 
-class _main_screenState extends State<main_screen> {
+class _profileState extends State<profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +27,7 @@ class _main_screenState extends State<main_screen> {
             backgroundColor: Color.fromRGBO(22,53,77,1.000),
             activeColor: Colors.white60,
             color: Colors.white,
-           padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             gap: 20,
             onTabChange: (index){
               print(index);
@@ -37,20 +35,20 @@ class _main_screenState extends State<main_screen> {
             tabs: [
               GButton(
                   icon: Icons.logout,
-                      text:'Inicio',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => login()),
-                  );
-                }
+                  text:'Inicio',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => main_screen()),
+                    );
+                  }
               ),
               GButton(
-                  icon: Icons.chat,
+                icon: Icons.chat,
                 text:'Like',
               ),
               GButton(
-                  icon: Icons.sos,
+                icon: Icons.sos,
 
               ),
               GButton(
@@ -59,13 +57,7 @@ class _main_screenState extends State<main_screen> {
               ),
               GButton(
                   icon: IconData(0xf522, fontFamily: 'MaterialIcons'),
-                text:'Usuario',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => profile()),
-                    );
-                  }
+                  text:'Usuario',
               ),
 
 
