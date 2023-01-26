@@ -17,6 +17,11 @@ class _loginState extends State<login> {
       body:
       Row(
         children: [
+          Expanded(child:
+            Column(
+
+            ),
+          ),
           Expanded(
               child:
               Column(
@@ -47,6 +52,11 @@ class _loginState extends State<login> {
                   }
               ),
             ],
+          ),
+          ),
+          Expanded(child:
+          Column(
+
           ),
           ),
         ],
