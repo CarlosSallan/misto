@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:misto/main_screen/main_screen.dart';
 import '../login/login.dart';
+import '../container/menu.dart';
+import '../container/menuWidget.dart';
 
 class profile extends StatefulWidget {
   const profile({Key? key}) : super(key: key);
@@ -16,126 +18,91 @@ class _profileState extends State<profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body:
-      Row(
+      Column(
         children: [
-          Expanded(child:
-          Column(
+          Row(
+            children: [
+              Expanded(child:
+              Column(
 
-          ),
-          ),
-          Expanded(
-            child:
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Perfil"),
-                Container(
-                  height:175,
-                  width: 175,
-                  decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(100)
-                    //more than 50% of width makes circle
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                  child: TextButton(
-                    child: Text(
-                      "Cambiar avatar",
-                      style: TextStyle(color: Colors.white),
+              ),
+              ),
+              Expanded(
+                child:
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Perfil"),
+                    Container(
+                      height:175,
+                      width: 175,
+                      decoration: BoxDecoration(
+                          color: Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(100)
+                        //more than 50% of width makes circle
+                      ),
                     ),
-                    onPressed: () {
-                      //añadir onpressed
-                    },
-                  ),
-                ),
-                const TextField(
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Nombre de usuario',
-                  ),
-                ),
-                const TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Contraseña',
-                  ),
-                ),
-                TextButton(
-                    child: Text('Cambiar.', style: TextStyle(fontSize: 20.0),),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => main_screen()),
-                      );
-                    }
-                ),
-              ],
-            ),
-          ),
-          Expanded(child:
-          Column(
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      child: TextButton(
+                        child: Text(
+                          "Cambiar avatar",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          //añadir onpressed
+                        },
+                      ),
+                    ),
+                    const TextField(
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Nombre de usuario',
+                      ),
+                    ),
+                    const TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Contraseña',
+                      ),
+                    ),
+                    TextButton(
+                        child: Text('Cambiar.', style: TextStyle(fontSize: 20.0),),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => main_screen()),
+                          );
+                        }
+                    ),
+                  ],
 
-          ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        color: Color.fromRGBO(22,53,77,1.000) ,
-        padding: EdgeInsets.all(10),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15.0,
-            vertical:  20.0,
-          ),
-          child: GNav(
-            backgroundColor: Color.fromRGBO(22,53,77,1.000),
-            activeColor: Colors.white60,
-            color: Colors.white,
-            padding: EdgeInsets.all(10),
-            gap: 20,
-            onTabChange: (index){
-              print(index);
-            },
-            tabs: [
-              GButton(
-                  icon: Icons.logout,
-                  text:'Inicio',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => main_screen()),
-                    );
-                  }
+                ),
               ),
-              GButton(
-                icon: Icons.chat,
-                text:'Like',
-              ),
-              GButton(
-                icon: Icons.sos,
+              Expanded(child:
+              Column(
 
               ),
-              GButton(
-                icon: Icons.settings,
-                text:'Buscar',
               ),
-              GButton(
-                  icon: IconData(0xf522, fontFamily: 'MaterialIcons'),
-                  text:'Usuario',
-              ),
-
-
             ],
           ),
-        ),
-      ),
+          Row(
+            children: [
+              Column(
+                children: [
+                  menu()
+                ],
+              )
+            ],
+          )
+        ],
+      )
+
     );
   }
 }
