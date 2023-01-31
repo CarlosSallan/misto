@@ -4,9 +4,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:misto/main_screen/main_screen.dart';
 import '../login/login.dart';
 import '../container/menu.dart';
-import '../container/menuWidget.dart';
 
-class profile extends StatefulWidget {
+class profile extends StatefulWidget{
   const profile({Key? key}) : super(key: key);
 
   @override
@@ -19,6 +18,7 @@ class _profileState extends State<profile> {
     return Scaffold(
       body:
       Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             children: [
@@ -80,8 +80,13 @@ class _profileState extends State<profile> {
                           );
                         }
                     ),
+                    SizedBox(
+                      height: 300,
+                      width: 1000,
+                      child:
+                        menu()
+                    )
                   ],
-
                 ),
               ),
               Expanded(child:
@@ -91,15 +96,6 @@ class _profileState extends State<profile> {
               ),
             ],
           ),
-          Row(
-            children: [
-              Column(
-                children: [
-                  menu()
-                ],
-              )
-            ],
-          )
         ],
       )
 
