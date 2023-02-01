@@ -101,6 +101,7 @@ class _profile2State extends State<profile2> {
             ),
 
             ),
+            //Menu
             Row(
             mainAxisAlignment: MainAxisAlignment.center,
               children: [

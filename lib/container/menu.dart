@@ -2,15 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:misto/main_screen/main_screen.dart';
+import 'package:misto/mensajes/mensajes.dart';
 import 'package:misto/profile/profile2.dart';
 import '../login/login.dart';
 import '../profile/profile.dart';
+import '../ajustes/ajustes.dart';
 
 
 class menu extends StatefulWidget {
   const menu({Key? key, required this.pagina}) : super(key: key);
 
-  final int pagina; // 0 -> pagina principal | 1 -> chats | 2 -> SOS?? | 3 -> ajustes | 4-> perfil
+  final int pagina; // 0 -> pagina principal | 1 -> mensajes | 2 -> SOS?? | 3 -> ajustes | 4-> perfil
 
 
   @override
@@ -49,28 +52,45 @@ class _menuState extends State<menu> {
               print(index);
             },
             tabs: [
+              //0
               GButton(
                   icon: Icons.map,
 
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => login()),
+                      MaterialPageRoute(builder: (context) => main_screen()),
                     );
                   }
               ),
+              //1
               GButton(
                 icon: Icons.chat,
-
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => mensajes()),
+                    );
+                  }
               ),
+              //2
               GButton(
                 icon: Icons.sos,
 
               ),
+              //3
               GButton(
                 icon: Icons.settings,
-
+                  onPressed: () {
+                    if(!(widget.pagina == 3)) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ajustes()),
+                      );
+                    }
+                  }
               ),
+              //4
               GButton(
                   icon: IconData(0xf522, fontFamily: 'MaterialIcons'),
 
@@ -83,8 +103,6 @@ class _menuState extends State<menu> {
                     }
                   }
               ),
-
-
             ],
           ),
         ),

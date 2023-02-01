@@ -51,7 +51,7 @@ class _main_screenState extends State<main_screen> {
                     height: MediaQuery.of(context).size.height * 0.08,
                     width: MediaQuery.of(context).size.width * 0.95,
                     child:
-                    menu(pagina: 2,)
+                    menu(pagina: 0,)
                 )
               ]
           )
