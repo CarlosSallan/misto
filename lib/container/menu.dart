@@ -2,12 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:misto/profile/profile2.dart';
 import '../login/login.dart';
 import '../profile/profile.dart';
 
 
 class menu extends StatefulWidget {
-  const menu({Key? key}) : super(key: key);
+  const menu({Key? key, required this.pagina}) : super(key: key);
+
+  final int pagina; // 0 -> pagina principal | 1 -> chats | 2 -> SOS?? | 3 -> ajustes | 4-> perfil
+
 
   @override
   State<menu> createState() => _menuState();
@@ -71,10 +75,12 @@ class _menuState extends State<menu> {
                   icon: IconData(0xf522, fontFamily: 'MaterialIcons'),
 
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => profile()),
-                    );
+                    if(!(widget.pagina == 4)) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => profile2()),
+                      );
+                    }
                   }
               ),
 
