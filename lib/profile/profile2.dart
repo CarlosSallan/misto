@@ -14,7 +14,12 @@ class profile2 extends StatefulWidget{
 
 class _profile2State extends State<profile2> {
   @override
+  TextEditingController _textFieldController = TextEditingController();
+  TextEditingController _textFieldController2 = TextEditingController();
+  bool isTextFieldEnable = true;
+  FocusNode _focusNode = FocusNode();
   Widget build(BuildContext context) {
+    bool editable = false;
     return Scaffold(
         body:
         Column(
@@ -24,7 +29,6 @@ class _profile2State extends State<profile2> {
             Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-              color: Colors.amber,
               child:
               Row(
                 children: [
@@ -63,19 +67,25 @@ class _profile2State extends State<profile2> {
                           margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
                           width: MediaQuery.of(context).size.width * 0.70,
                           child:
-                          const TextField(
+                          TextField(
+                            controller: _textFieldController,
+                            focusNode: _focusNode,
+                            readOnly: isTextFieldEnable,
                             obscureText: false,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Nombre de usuario',
                             ),
-                          ),
+                          )
                         ),
                         Container(
                           margin: const EdgeInsets.only(bottom: 20.0),
                         width: MediaQuery.of(context).size.width * 0.70,
                         child:
-                        const TextField(
+                        TextField(
+                          controller: _textFieldController2,
+                          focusNode: _focusNode,
+                          readOnly: isTextFieldEnable,
                           obscureText: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -87,10 +97,14 @@ class _profile2State extends State<profile2> {
                         TextButton(
                             child: Text('Cambiar.', style: TextStyle(fontSize: 20.0),),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => main_screen()),
-                              );
+                              setState(() {
+                                if(isTextFieldEnable){
+                                  isTextFieldEnable = false;
+                                }else{
+                                  isTextFieldEnable = true;
+                                }
+                                print(isTextFieldEnable);
+                              });
                             }
                         ),
                       ],
