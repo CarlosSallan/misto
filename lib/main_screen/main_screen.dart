@@ -48,7 +48,7 @@ class _main_screenState extends State<main_screen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
+                    height: MediaQuery.of(context).size.height * 0.15,
                     width: MediaQuery.of(context).size.width * 0.95,
                     child:
                     menu(pagina: 0,)
