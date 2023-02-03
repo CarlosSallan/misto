@@ -29,12 +29,20 @@ class _loginState extends State<login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset("assets/MistoLog.png", scale: 0.2,),
-              const TextField(
-                obscureText: false,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Nombre de usuario',
-                ),
+              Container(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.02, top: MediaQuery.of(context).size.height * 0.02),
+                child:
+                Column(
+                  children: [
+                    const TextField(
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Nombre de usuario',
+                      ),
+                    )
+                  ],
+                )
               ),
               const TextField(
                 obscureText: true,

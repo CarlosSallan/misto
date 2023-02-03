@@ -19,25 +19,25 @@ class _ajustesState extends State<ajustes> {
           backgroundColor: Color.fromRGBO(22,53,77,1.000),
           expandedHeight: 20,
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => main_screen()),
+              );
+            },
             icon: Icon(Icons.arrow_back),
           ),
           centerTitle: true,
           title: Text('Ajustes'),
         ),
-
         SliverToBoxAdapter(
           child: Container(
             height: 660,
             color: Colors.green,
           ),
         )
-
-
       ],
     ),
-
-
     );
   }
 }
