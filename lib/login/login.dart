@@ -15,61 +15,113 @@ class _loginState extends State<login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(228,229,234,1.000),
       body:
       Row(
         children: [
-          Expanded(child:
-            Column(
-
+            Container(
+              width: 120,
             ),
-          ),
           Expanded(
               child:
               Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/MistoLog.png", scale: 0.2,),
+              Container(
+                margin: const EdgeInsets.only(bottom: 5.0),
+                child: Image.asset(
+                  "assets/MistoLog.png",
+                  scale: 0.1,
+                ),
+              ),
+
+
               Container(
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.02, top: MediaQuery.of(context).size.height * 0.02),
                 child:
                 Column(
                   children: [
-                    const TextField(
+                    TextField(
                       obscureText: false,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Nombre de usuario',
+                        filled: true,
+                        fillColor: Colors.white,
+                        enabledBorder: myinputborder(),
+                        focusedBorder: myfocusborder(),
+                        hintText: 'Nombre de usuario',
                       ),
-                    )
+                    ),
                   ],
                 )
               ),
-              const TextField(
+              TextField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Contraseña',
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: myinputborder(),
+                  focusedBorder: myfocusborder(),
+                  hintText: 'Contraseña',
                 ),
               ),
-              TextButton(
-                child: Text('SignUp', style: TextStyle(fontSize: 20.0),),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => main_screen()),
-                    );
-                  }
+
+              Container(
+                height:50, //height of button
+                width:150,
+                margin: const EdgeInsets.only(top: 20.0),
+                child: ElevatedButton(
+                    child: Text('Entrar', style: TextStyle(fontSize: 20.0),),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromRGBO(22,53,77,1.000),
+                      shadowColor: Color.fromRGBO(22,53,77,1.000),
+                      elevation: 5,
+                      padding: EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => main_screen()),
+                      );
+                    }
+
+                ),
               ),
             ],
-          ),
-          ),
-          Expanded(child:
-          Column(
 
           ),
           ),
+
+          Container(
+            width: 120,
+          ),
         ],
+
+
+
       )
+    );
+  }
+
+  OutlineInputBorder myinputborder(){ //return type is OutlineInputBorder
+    return OutlineInputBorder( //Outline border type for TextFeild
+        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderSide: BorderSide(
+          color:Colors.white,
+          width: 0,
+        )
+    );
+  }
+
+  OutlineInputBorder myfocusborder(){
+    return OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderSide: BorderSide(
+          color:Colors.white,
+          width: 0,
+        )
     );
   }
 }

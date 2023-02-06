@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'dart:math';
-
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -18,6 +19,11 @@ class main_screen extends StatefulWidget {
 }
 
 class _main_screenState extends State<main_screen> {
+  final Completer<GoogleMapController> _controller = Completer();
+
+  static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
+  static const LatLng destination = LatLng(37.33429383, -122.06600055);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +35,11 @@ class _main_screenState extends State<main_screen> {
               Row(
                 children: [
                   Expanded(
-                      child:
-                      Image(image: NetworkImage('https://static4.depositphotos.com/1000263/340/v/450/depositphotos_3408227-stock-illustration-world-map-blue.jpg'))
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(target: sourceLocation, zoom: 14.5),
+
+                      ),
+
                   )
                 ],
               )
