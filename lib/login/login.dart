@@ -19,9 +19,9 @@ class _loginState extends State<login> {
       body:
       Row(
         children: [
-            Container(
-              width: 120,
-            ),
+          Container(
+            width: 120,
+          ),
           Expanded(
               child:
               Column(
@@ -65,6 +65,14 @@ class _loginState extends State<login> {
                 ),
               ),
 
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(22,53,77,1.000),),
+                ),
+                onPressed: () { },
+                child: Text('olvidaste la contraseña?',  textAlign: TextAlign.right,),
+              ),
+
               Container(
                 height:50, //height of button
                 width:150,
@@ -89,6 +97,20 @@ class _loginState extends State<login> {
 
                 ),
               ),
+
+
+
+
+              TextButton(
+
+                style: ButtonStyle(
+
+                  foregroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(22,53,77,1.000),),
+                ),
+                onPressed: () { },
+                child: Text('¿No tinenes cuenta creada? registrate !!'),
+              ),
+
             ],
 
           ),
