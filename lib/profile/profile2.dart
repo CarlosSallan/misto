@@ -64,34 +64,36 @@ class _profile2State extends State<profile2> {
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          margin: EdgeInsets.only(top: (MediaQuery.of(context).size.width * 0.05), bottom: (MediaQuery.of(context).size.width * 0.05)),
                           width: MediaQuery.of(context).size.width * 0.70,
                           child:
-                          TextField(
-                            controller: _textFieldController,
-                            focusNode: _focusNode,
-                            readOnly: isTextFieldEnable,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Nombre de usuario',
-                            ),
+                          Column(
+                            children: [
+                              TextField(
+                                controller: _textFieldController,
+                                focusNode: _focusNode,
+                                readOnly: isTextFieldEnable,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Nombre de usuario',
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: (MediaQuery.of(context).size.width * 0.025)),
+                              ),
+                              TextField(
+                                controller: _textFieldController2,
+                                focusNode: _focusNode,
+                                readOnly: isTextFieldEnable,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Contraseña',
+                                ),
+                              ),
+                            ],
                           )
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 20.0),
-                        width: MediaQuery.of(context).size.width * 0.70,
-                        child:
-                        TextField(
-                          controller: _textFieldController2,
-                          focusNode: _focusNode,
-                          readOnly: isTextFieldEnable,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Contraseña',
-                          ),
-                        ),
                         ),
 
                         TextButton(

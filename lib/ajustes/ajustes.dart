@@ -31,10 +31,23 @@ class _ajustesState extends State<ajustes> {
           title: Text('Ajustes'),
         ),
         SliverToBoxAdapter(
-          child: Container(
-            height: 660,
-            color: Colors.green,
-          ),
+          child:
+          Column(
+            children: [
+              Container(
+                color: Colors.amber,
+                height: 800
+              ),
+              Container(
+                  color: Colors.black,
+                  height: 800
+              ),
+              Container(
+                  color: Colors.green,
+                  height: 800
+              )
+            ],
+          )
         )
       ],
     ),
