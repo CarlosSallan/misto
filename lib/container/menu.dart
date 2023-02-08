@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:misto/main_screen/main_screen.dart';
-import 'package:misto/mensajes/mensajes.dart';
+import 'package:misto/mensajes/profileTest.dart';
 import 'package:misto/profile/profile2.dart';
 import '../login/login.dart';
 import '../profile/profile.dart';
@@ -69,7 +69,7 @@ class _menuState extends State<menu> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => mensajes()),
+                      MaterialPageRoute(builder: (context) => profileTest()),
                     );
                   }
               ),

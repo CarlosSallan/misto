@@ -21,6 +21,7 @@ class _profile2State extends State<profile2> {
   Widget build(BuildContext context) {
     bool editable = false;
     return Scaffold(
+        backgroundColor: Color.fromRGBO(228,229,234,1.000),
         body:
         Column(
           //mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +38,7 @@ class _profile2State extends State<profile2> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Perfil"),
+                        Text("Perfilll"),
                         Container(
                           height:175,
                           width: 175,
@@ -75,8 +76,11 @@ class _profile2State extends State<profile2> {
                                 readOnly: isTextFieldEnable,
                                 obscureText: false,
                                 decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Nombre de usuario',
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  enabledBorder: myinputborder(),
+                                  focusedBorder: myfocusborder(),
+                                  hintText: 'Nombre de usuario',
                                 ),
                               ),
                               Container(
@@ -88,8 +92,11 @@ class _profile2State extends State<profile2> {
                                 readOnly: isTextFieldEnable,
                                 obscureText: true,
                                 decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Contraseña',
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  enabledBorder: myinputborder(),
+                                  focusedBorder: myfocusborder(),
+                                  hintText: 'Contraseña',
                                 ),
                               ),
                             ],
@@ -132,6 +139,26 @@ class _profile2State extends State<profile2> {
           ],
         )
 
+    );
+  }
+
+  OutlineInputBorder myinputborder(){ //return type is OutlineInputBorder
+    return OutlineInputBorder( //Outline border type for TextFeild
+        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderSide: BorderSide(
+          color:Colors.white,
+          width: 0,
+        )
+    );
+  }
+
+  OutlineInputBorder myfocusborder(){
+    return OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderSide: BorderSide(
+          color:Colors.white,
+          width: 0,
+        )
     );
   }
 }
