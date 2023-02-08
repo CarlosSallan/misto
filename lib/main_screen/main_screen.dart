@@ -1,14 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import '../login/login.dart';
-import '../profile/profile.dart';
-import '../profile/profile2.dart';
 import '../container/menu.dart';
-import '../container/botonHold.dart';
+import '../container/ripple_button.dart';
 
 class main_screen extends StatefulWidget {
   static const String id = 'main_screen';
@@ -61,7 +56,7 @@ class _main_screenState extends State<main_screen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
+                RippleButton(size: 0.3)
               ],
             )
           ),
