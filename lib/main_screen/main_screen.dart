@@ -27,6 +27,7 @@ class _main_screenState extends State<main_screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(228,229,234,1.000),
       body: Column(
         children: [
           //Mapa
@@ -69,8 +70,8 @@ class _main_screenState extends State<main_screen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: MediaQuery.of(context).size.width * 0.95,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width,
                     child:
                     menu(pagina: 0,)
                 )

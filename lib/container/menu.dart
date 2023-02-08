@@ -23,7 +23,9 @@ class menu extends StatefulWidget {
 class _menuState extends State<menu> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      backgroundColor: Color.fromRGBO(228,229,234,1.000),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(
             vertical: 15.0,

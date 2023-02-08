@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttermoji/fluttermoji.dart';
-
+import '../container/menu.dart';
 
 class profileTest extends StatefulWidget{
   static const String id = 'profile';
@@ -19,6 +19,117 @@ class _profileTestState extends State<profileTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color.fromRGBO(228,229,234,1.000),
+      body:
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child:
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FluttermojiCircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: MediaQuery.of(context).size.width * 0.20,
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
+                          child:
+                          ElevatedButton(
+                            child: Text('Editar avatar.', style: TextStyle(fontSize: 20.0),),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color.fromRGBO(22,53,77,1.000),
+                              shadowColor: Color.fromRGBO(22,53,77,1.000),
+                              elevation: 5,
+                              padding: EdgeInsets.all(15),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)
+                              ),
+                            ),
+                            onPressed: () => Navigator.push(context,
+                                new MaterialPageRoute(builder: (context) => customizePage())),
+                          ),
+                        ),
+                        Container(
+                            height: MediaQuery.of(context).size.height * 0.30,
+                            width: MediaQuery.of(context).size.width * 0.70,
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
+                            child:
+                            Column(
+                              children: [
+                                TextField(
+                                  controller: _textFieldController,
+                                  focusNode: _focusNode,
+                                  readOnly: isTextFieldEnable,
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: myinputborder(),
+                                    focusedBorder: myfocusborder(),
+                                    hintText: 'Nombre de usuario',
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
+                                ),
+                                TextField(
+                                  controller: _textFieldController2,
+                                  focusNode: _focusNode,
+                                  readOnly: isTextFieldEnable,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: myinputborder(),
+                                    focusedBorder: myfocusborder(),
+                                    hintText: 'Contraseña',
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
+                                ),
+                                TextButton(
+                                    child: Text('Cambiar.', style: TextStyle(fontSize: 20.0),),
+                                    onPressed: () {
+                                      setState(() {
+                                        if(isTextFieldEnable){
+                                          isTextFieldEnable = false;
+                                        }else{
+                                          isTextFieldEnable = true;
+                                        }
+                                        print(isTextFieldEnable);
+                                      });
+                                    }
+                                ),
+                              ],
+                            )
+                        ),
+                      ],
+                    )
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          height: MediaQuery.of(context).size.height * 0.08,
+                          width: MediaQuery.of(context).size.width,
+                          child:
+                          menu(pagina: 4,)
+                      )
+                    ]
+                )
+              ],
+            ),
+          ],
+        )
+    );
+    /*
       backgroundColor: Color.fromRGBO(228,229,234,1.000),
       body: ListView(
         physics: BouncingScrollPhysics(),
@@ -118,11 +229,26 @@ class _profileTestState extends State<profileTest> {
               SizedBox(
                 width: 100,
               ),
+              TextButton(
+                  child: Text('Cambiar.', style: TextStyle(fontSize: 20.0),),
+                  onPressed: () {
+                    setState(() {
+                      if(isTextFieldEnable){
+                        isTextFieldEnable = false;
+                      }else{
+                        isTextFieldEnable = true;
+                      }
+                      print(isTextFieldEnable);
+                    });
+                  }
+              ),
             ],
           ),
         ],
       ),
     );
+
+     */
   }
 }
 
