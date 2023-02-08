@@ -16,6 +16,7 @@ class _ajustesState extends State<ajustes> {
     body: CustomScrollView(
       slivers: [
         SliverAppBar(
+          pinned: true,
           backgroundColor: Color.fromRGBO(22,53,77,1.000),
           expandedHeight: 20,
           leading: IconButton(
