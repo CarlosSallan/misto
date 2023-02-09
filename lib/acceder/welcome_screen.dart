@@ -36,7 +36,7 @@ class _welcomeScreenState extends State<welcomeScreen> {
         ),
 
         Container(
-          alignment: Alignment(0, 0.75),
+          alignment: Alignment(0, 0.80),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -45,7 +45,12 @@ class _welcomeScreenState extends State<welcomeScreen> {
                 onTap:(){
                   _controller.jumpToPage(2);
                 },
-                child: Text('Atras'),
+                child: Text('Atras',
+                  style: TextStyle(
+                    color: Color.fromRGBO(22,53,77,1.000),
+                    decoration: TextDecoration.none,
+                    fontSize: 20.0,
+                  ),),
               ),
 
 
@@ -60,7 +65,12 @@ class _welcomeScreenState extends State<welcomeScreen> {
                   })
                   );
                 },
-                child: Text('Done'),
+                child: Text('Done',
+                  style: TextStyle(
+                    color: Color.fromRGBO(22,53,77,1.000),
+                    decoration: TextDecoration.none,
+                    fontSize: 20.0,
+                  ),),
               ): GestureDetector(
               onTap:(){
                   _controller.nextPage(
@@ -68,7 +78,13 @@ class _welcomeScreenState extends State<welcomeScreen> {
                   curve: Curves.easeIn
                 ) ;
                 },
-              child: Text('Siguiente'),
+              child: Text('Siguiente',
+                style: TextStyle(
+                  color: Color.fromRGBO(22,53,77,1.000),
+                 decoration: TextDecoration.none,
+                  fontSize: 20.0,
+                ),
+              ),
               ),
 
             ],
