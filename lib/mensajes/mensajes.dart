@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../container/menu.dart';
+import '../container/ChatButton.dart';
 
 class mensajes extends StatefulWidget {
   static const String id = 'mensajes';
@@ -24,16 +25,11 @@ class _mensajesState extends State<mensajes> {
                   Column(
                     children: [
                       Container(
-                          color: Colors.amber,
-                          height: 800
-                      ),
-                      Container(
-                          color: Colors.black,
-                          height: 800
-                      ),
-                      Container(
-                          color: Colors.green,
-                          height: 800
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
+                          height: MediaQuery.of(context).size.height * 0.10,
+                          width: MediaQuery.of(context).size.width * 90,
+                          color: Colors.blue,
+                        child: ChatButton()
                       )
                     ],
                   )
@@ -41,6 +37,7 @@ class _mensajesState extends State<mensajes> {
             ],
           ),
           ),
+          //Menu
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
