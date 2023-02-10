@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "75021980984",
+    "project_id": "misto-22442",
+    "storage_bucket": "misto-22442.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75021980984:android:51dfeaad1e1a07be629dcd",
+        "android_client_info": {
+          "package_name": "com.example.misto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75021980984-lk0m5i7vm592tkeksr6elutm619bksdr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgH_m-OsPeXryF1zJd-CxM7YlHKC2w_Jw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75021980984-687gfv0bf5qr2bq0qbldjupqh4ojlg6h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

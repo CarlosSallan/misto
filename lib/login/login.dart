@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../main_screen/main_screen.dart';
 import 'dart:math';
 
@@ -12,6 +13,12 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+  final email = TextEditingController();
+  final password = TextEditingController();
+
+  String ema = "";
+  String pass = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +49,7 @@ class _loginState extends State<login> {
                 Column(
                   children: [
                     TextField(
+                      controller: email,
                       obscureText: false,
                       decoration: InputDecoration(
                         filled: true,
@@ -55,6 +63,7 @@ class _loginState extends State<login> {
                 )
               ),
               TextField(
+                controller: password,
                 obscureText: true,
                 decoration: InputDecoration(
                   filled: true,
@@ -89,9 +98,12 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onPressed: () {
+                      ema = email.text;
+                      pass = password.text;
+                      FirebaseAuth.instance.signInWithEmailAndPassword(email: ema, password: pass);
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => main_screen()),
+                      context,
+                      MaterialPageRoute(builder: (context) => main_screen()),
                       );
                     }
 
