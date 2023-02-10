@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:misto/acceder/welcome_screen.dart';
 import 'package:misto/main_screen/main_screen.dart';
 import 'package:misto/profile/profileTest.dart';
 import '../mensajes/mensajes.dart';
@@ -75,7 +76,14 @@ class _menuState extends State<menu> {
               //2
               GButton(
                 icon: Icons.sos,
-
+                  onPressed: () {
+                    if(!(widget.pagina == 3)) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => welcomeScreen()),
+                      );
+                    }
+                  }
               ),
               //3
               GButton(
