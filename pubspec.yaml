@@ -23,6 +23,7 @@ dependencies:
   vibration: ^1.7.5
   firebase_core: ^2.5.0
   firebase_auth: ^4.2.6
+  firebase_database: ^10.0.10
 
 dev_dependencies:
   flutter_test:

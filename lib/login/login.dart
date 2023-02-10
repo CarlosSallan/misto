@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../main_screen/main_screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
 
 class login extends StatefulWidget {
@@ -97,14 +98,54 @@ class _loginState extends State<login> {
                           borderRadius: BorderRadius.circular(30.0)
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       ema = email.text;
                       pass = password.text;
-                      FirebaseAuth.instance.signInWithEmailAndPassword(email: ema, password: pass);
-                      Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => main_screen()),
-                      );
+
+                      if (ema.isEmpty || pass.isEmpty) {
+                        print("Email and password fields cannot be empty");
+                        return;
+                      }
+
+                      if (!ema.contains("@") || !ema.endsWith(".com")) {
+                        print("Email is not valid");
+                        return;
+                      }
+
+                      if (pass.length < 6) {
+                        print("Password must be at least 6 characters");
+                        return;
+                      }
+
+                      try {
+                        final userSnapshot = await FirebaseDatabase.instance
+                            .reference()
+                            .child("users")
+                            .orderByChild("email")
+                            .equalTo(ema)
+                            .once();
+                        if (userSnapshot.value != null) {
+                          final user = userSnapshot.value.values.first;
+                          if (user["password"] == pass) {
+
+
+                            final credential = FirebaseAuth.instance.signInWithEmailAndPassword(
+                              email: ema,
+                              password: pass,
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => main_screen()),
+                            );
+                          } else {
+                            print("Incorrect email or password");
+                          }
+                        } else {
+                          print("Incorrect email or password");
+                        }
+                      } catch (e) {
+                        print("Error");
+                      }
                     }
 
                 ),
