@@ -99,6 +99,7 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onPressed: () async {
+                      print("hola");
                       ema = email.text;
                       pass = password.text;
 
@@ -118,33 +119,35 @@ class _loginState extends State<login> {
                       }
 
                       try {
-                        final userSnapshot = await FirebaseDatabase.instance
+                        final userSnapshot = FirebaseDatabase.instance
                             .reference()
                             .child("users")
                             .orderByChild("email")
                             .equalTo(ema)
                             .once();
-                        if (userSnapshot.value != null) {
-                          final user = userSnapshot.value.values.first;
-                          if (user["password"] == pass) {
 
 
-                            final credential = FirebaseAuth.instance.signInWithEmailAndPassword(
+                        final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
                               email: ema,
                               password: pass,
                             );
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => main_screen()),
                             );
-                          } else {
-                            print("Incorrect email or password");
-                          }
-                        } else {
-                          print("Incorrect email or password");
-                        }
                       } catch (e) {
-                        print("Error");
+                        if (e == 'user-not-found') {
+                          print('No user found for that email.');
+                        } else if (e == 'wrong-password') {
+                          print('Wrong password provided for that user.');
+                        }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString()),
+                          ),
+                        );
                       }
                     }
 
