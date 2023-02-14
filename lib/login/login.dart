@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../main_screen/main_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'dart:math';
+import '../registro/registro.dart';
 
 class login extends StatefulWidget {
   static const String id = 'login';
@@ -163,7 +163,12 @@ class _loginState extends State<login> {
 
                   foregroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(22,53,77,1.000),),
                 ),
-                onPressed: () { },
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => registro()),
+                  );
+                },
                 child: Text('¿No tinenes cuenta creada? registrate !!'),
               ),
 
@@ -176,9 +181,6 @@ class _loginState extends State<login> {
             width: 120,
           ),
         ],
-
-
-
       )
     );
   }
