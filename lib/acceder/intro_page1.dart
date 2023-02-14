@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'dart:math';
 
 class introPage1 extends StatelessWidget {
@@ -23,10 +24,13 @@ class introPage1 extends StatelessWidget {
             Container(
               child: Center(
                 child: Text('Bienvenido a misto ',
+
                     style: TextStyle(
+
                     color: Color.fromRGBO(22,53,77,1.000),
                 decoration: TextDecoration.none,
-                fontSize: 35.0, fontWeight: FontWeight.bold
+                fontSize: 35.0, fontWeight: FontWeight.bold,
+
               ),
                 ),
               ),

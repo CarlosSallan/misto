@@ -65,7 +65,7 @@ class _welcomeScreenState extends State<welcomeScreen> {
                   })
                   );
                 },
-                child: Text('Done',
+                child: Text('Empezar',
                   style: TextStyle(
                     color: Color.fromRGBO(22,53,77,1.000),
                     decoration: TextDecoration.none,
