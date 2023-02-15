@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import '../login/login.dart';
 
-class registro extends StatefulWidget {
+class registro extends StatefulWidget{
   const registro({Key? key}) : super(key: key);
 
   @override
@@ -15,6 +16,7 @@ class _registroState extends State<registro> {
 
   String ema = "";
   String pass = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,14 +72,6 @@ class _registroState extends State<registro> {
                     ),
                   ),
 
-                  TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(22,53,77,1.000),),
-                    ),
-                    onPressed: () { },
-                    child: Text('olvidaste la contraseña?',  textAlign: TextAlign.right,),
-                  ),
-
                   Container(
                     height:50, //height of button
                     width:150,
@@ -110,6 +104,11 @@ class _registroState extends State<registro> {
 
                           if (pass.length < 6) {
                             print("Password must be at least 6 characters");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Contraseña no válida"),
+                              ),
+                            );
                             return;
                           }
 
@@ -122,21 +121,16 @@ class _registroState extends State<registro> {
                                 .once();
 
 
-                            final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
                               email: ema,
                               password: pass,
                             );
 
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => main_screen()),
+                              MaterialPageRoute(builder: (context) => login()),
                             );
                           } catch (e) {
-                            if (e == 'user-not-found') {
-                              print('No user found for that email.');
-                            } else if (e == 'wrong-password') {
-                              print('Wrong password provided for that user.');
-                            }
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

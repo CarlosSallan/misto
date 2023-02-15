@@ -99,7 +99,6 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onPressed: () async {
-                      print("hola");
                       ema = email.text;
                       pass = password.text;
 
@@ -131,12 +130,10 @@ class _loginState extends State<login> {
                               email: ema,
                               password: pass,
                             );
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => main_screen()),
-                            );
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                            builder: (context) => main_screen()), (Route route) => false);
                       } catch (e) {
+
                         if (e == 'user-not-found') {
                           print('No user found for that email.');
                         } else if (e == 'wrong-password') {

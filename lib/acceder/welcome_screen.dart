@@ -43,7 +43,7 @@ class _welcomeScreenState extends State<welcomeScreen> {
 
               GestureDetector(
                 onTap:(){
-                  _controller.jumpToPage(2);
+                  _controller.jumpToPage(1);
                 },
                 child: Text('Atras',
                   style: TextStyle(
