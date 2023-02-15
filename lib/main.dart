@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:misto/acceder/welcome_screen.dart';
+import 'package:misto/container/dashboard.dart';
 import 'package:misto/login/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: login.id,
       routes: {
-        login.id: (context) => const welcomeScreen()
+        login.id: (context) => const dashboard()
       },
       debugShowCheckedModeBanner: false,
     );

@@ -41,4 +41,7 @@ flutter:
     - assets/maps.png
     - assets/frends.png
     - assets/welcome.png
+    - assets/dashboard/chat.png
+    - assets/dashboard/mensaje.png
+    - assets/dashboard/hombre.png
 
