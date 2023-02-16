@@ -31,7 +31,7 @@ class _ChatButtonState extends State<ChatButton> {
           child:
             Row(
               children: [
-                
+
               ],
             )
         )
