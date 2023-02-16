@@ -24,13 +24,20 @@ class _mensajesState extends State<mensajes> {
                   child:
                   Column(
                     children: [
-                      Container(
-                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
-                          height: MediaQuery.of(context).size.height * 0.10,
-                          width: MediaQuery.of(context).size.width * 90,
-                          color: Colors.blue,
-                        child: ChatButton()
-                      )
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton(),
+                      ChatButton()
                     ],
                   )
               )
