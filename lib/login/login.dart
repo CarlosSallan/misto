@@ -79,7 +79,50 @@ class _loginState extends State<login> {
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(22,53,77,1.000),),
                 ),
-                onPressed: () { },
+                onPressed: () async{
+                  ema = email.text;
+                  pass = password.text;
+
+                  if (ema.isEmpty) {
+                    print("Email field cannot be empty");
+                    return;
+                  }
+
+                  if (!ema.contains("@") || !ema.endsWith(".com")) {
+                    print("Email is not valid");
+                    return;
+                  }
+
+                  try {
+                    final userSnapshot = FirebaseDatabase.instance
+                        .reference()
+                        .child("users")
+                        .orderByChild("email")
+                        .equalTo(ema)
+                        .once();
+
+
+                    final user = await FirebaseAuth.instance.sendPasswordResetEmail(
+                      email: ema,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Correo de recuperación enviado.'),
+                      ),
+                    );
+                  } catch (e) {
+
+                    if (e == 'user-not-found') {
+                      print('No user found for that email.');
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                      ),
+                    );
+                  }
+                },
                 child: Text('olvidaste la contraseña?',  textAlign: TextAlign.right,),
               ),
 
@@ -201,4 +244,5 @@ class _loginState extends State<login> {
         )
     );
   }
+
 }
