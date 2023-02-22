@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../login/login.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class registro extends StatefulWidget{
   const registro({Key? key}) : super(key: key);
@@ -19,6 +21,19 @@ class _registroState extends State<registro> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
+    Future<void> addUser() {
+      print("Ejecutando addUser");
+      // Call the user's CollectionReference to add a new user
+      return users
+          .add({
+        'Nombre': "Prueba"
+      })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
     return Scaffold(
         backgroundColor: Color.fromRGBO(228,229,234,1.000),
         body:
@@ -125,6 +140,8 @@ class _registroState extends State<registro> {
                               email: ema,
                               password: pass,
                             );
+
+                            addUser();
 
                             Navigator.push(
                               context,
