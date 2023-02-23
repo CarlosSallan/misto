@@ -21,8 +21,11 @@ class _registroState extends State<registro> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('Users');
-
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final uid = user?.uid;
+    CollectionReference users = FirebaseFirestore.instance.collection('Users/' + uid.toString());
+    
     Future<void> addUser() {
       print("Ejecutando addUser");
       // Call the user's CollectionReference to add a new user
