@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import '../container/menu.dart';
+import '../container/ripple_button.dart';
 
 class dashboard extends StatefulWidget {
   const dashboard({Key? key}) : super(key: key);
@@ -11,7 +17,7 @@ class _dashboardState extends State<dashboard> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromRGBO(228,229,234,1.000),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -21,7 +27,7 @@ class _dashboardState extends State<dashboard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.menu, color: Colors.white, size: 50.0,),
+                  Icon(Icons.menu, color: Color.fromRGBO(22,53,77,1.000), size: 50.0,),
                   Image.asset("assets/dashboard/hombre.png", width: 50.0),
                 ],
               ),
@@ -31,13 +37,16 @@ class _dashboardState extends State<dashboard> {
               child: Text(
                 "Dashboard Misto",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color.fromRGBO(22,53,77,1.000),
                   fontSize: 28.0,
                   fontWeight: FontWeight.bold
                 ),
                 textAlign: TextAlign.start
                 ,
               ),
+            ),
+            Container(
+              height: 40,
             ),
             Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -47,10 +56,10 @@ class _dashboardState extends State<dashboard> {
                   runSpacing: 20.0,
                   children: [
                     SizedBox(
-                      width: 160.0,
-                      height: 160.0,
+                      width: 700.0,
+                      height: 360.0,
                       child: Card(
-                        color: Color.fromARGB(255, 21, 21, 21),
+                        color: Color.fromRGBO(22,53,77,1.000),
                         elevation: 2.0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)
@@ -78,11 +87,57 @@ class _dashboardState extends State<dashboard> {
                         ),
                       ),
                     ),
+
+                  ],
+                ),
+              ),
+
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Center(
+                child: Wrap(
+                  spacing: 20.0,
+                  runSpacing: 20.0,
+                  children: [
                     SizedBox(
                       width: 160.0,
                       height: 160.0,
                       child: Card(
-                        color: Color.fromARGB(255, 21, 21, 21),
+                        color: Color.fromRGBO(22,53,77,1.000),
+                        elevation: 2.0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Image.asset("assets/dashboard/chat.png",width: 64, ),
+                                SizedBox(height: 10.0),
+                                Text("Maps", style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0
+                                ),),
+                                SizedBox(height: 5.0),
+                                Text("2 Items", style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w100
+                                ))
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 160.0,
+                      height: 160.0,
+                      child: Card(
+                        color: Color.fromRGBO(22,53,77,1.000),
                         elevation: 2.0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0)
@@ -114,7 +169,7 @@ class _dashboardState extends State<dashboard> {
                       width: 160.0,
                       height: 160.0,
                       child: Card(
-                        color: Color.fromARGB(255, 21, 21, 21),
+                        color: Color.fromRGBO(22,53,77,1.000),
                         elevation: 2.0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0)
@@ -146,7 +201,7 @@ class _dashboardState extends State<dashboard> {
                       width: 160.0,
                       height: 160.0,
                       child: Card(
-                        color: Color.fromARGB(255, 21, 21, 21),
+                        color: Color.fromRGBO(22,53,77,1.000),
                         elevation: 2.0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0)
@@ -174,11 +229,74 @@ class _dashboardState extends State<dashboard> {
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ),
 
             ),
+
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Center(
+                child: Wrap(
+                  spacing: 20.0,
+                  runSpacing: 20.0,
+                  children: [
+                    SizedBox(
+                      width: 260.0,
+                      height: 260.0,
+                      child: Card(
+                        color: Color.fromRGBO(22,53,77,1.000),
+                        elevation: 2.0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10000)
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Image.asset("assets/dashboard/chat.png",width: 64, ),
+                                SizedBox(height: 10.0),
+                                Text("Maps", style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0
+                                ),),
+                                SizedBox(height: 5.0),
+                                Text("2 Items", style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w100
+                                ))
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+
+            ),
+
+            Container(
+              height: 60,
+            ),
+
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width,
+                      child:
+                      menu(pagina: 0,)
+                  )
+                ]
+            )
           ],
         ),
       ),
