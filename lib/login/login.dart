@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../main_screen/main_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../registro/registro.dart';
+import '../registro/SignInDemo.dart';
 
 class login extends StatefulWidget {
   static const String id = 'login';
@@ -194,7 +195,27 @@ class _loginState extends State<login> {
                 ),
               ),
 
-
+              Container(
+                height:50, //height of button
+                width:150,
+                margin: const EdgeInsets.only(top: 20.0),
+                child: ElevatedButton(
+                    child: Text('Google', style: TextStyle(fontSize: 20.0),),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromRGBO(22,53,77,1.000),
+                      shadowColor: Color.fromRGBO(22,53,77,1.000),
+                      elevation: 5,
+                      padding: EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)
+                      ),
+                    ),
+                    onPressed: () async {
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                            builder: (context) => SignInDemo()), (Route route) => false);
+                      }
+                ),
+              ),
 
 
               TextButton(
