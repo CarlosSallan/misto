@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../main_screen/main_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../registro/registro.dart';
-import '../registro/SignInDemo.dart';
 
 class login extends StatefulWidget {
   static const String id = 'login';
