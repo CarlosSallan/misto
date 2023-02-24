@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:misto/login/SignInDemo.dart';
 import '../main_screen/main_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../registro/registro.dart';
@@ -211,7 +212,7 @@ class _loginState extends State<login> {
                     ),
                     onPressed: () async {
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                            builder: (context) => registro()), (Route route) => false);
+                            builder: (context) => SignInDemo()), (Route route) => false);
                       }
                 ),
               ),
