@@ -211,7 +211,7 @@ class _loginState extends State<login> {
                     ),
                     onPressed: () async {
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                            builder: (context) => SignInDemo()), (Route route) => false);
+                            builder: (context) => registro()), (Route route) => false);
                       }
                 ),
               ),
