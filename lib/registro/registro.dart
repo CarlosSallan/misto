@@ -22,16 +22,20 @@ class _registroState extends State<registro> {
 
   @override
   Widget build(BuildContext context) {
-
-    void addUser(String email, String pass) async{
-      var timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-      UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: pass);
-      User? user = result.user;
-      await FirebaseFirestore.instance.collection('Users')
-          .doc(user?.uid).set({
-        'firstName': "Manuel",
-        'timestamp': timestamp.toString()
-          });
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final uid = user?.uid;
+    CollectionReference users = FirebaseFirestore.instance.collection('Users/' + uid.toString());
+    
+    Future<void> addUser() {
+      print("Ejecutando addUser");
+      // Call the user's CollectionReference to add a new user
+      return users
+          .add({
+        'Nombre': "Prueba"
+      })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
     }
 
     return Scaffold(
@@ -136,9 +140,12 @@ class _registroState extends State<registro> {
                                 .once();
 
 
+                            final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                              email: ema,
+                              password: pass,
+                            );
 
-
-                            addUser(ema, pass);
+                            addUser();
 
                             Navigator.push(
                               context,
