@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:misto/login/SignInDemo.dart';
 import '../main_screen/main_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../registro/registro.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class login extends StatefulWidget {
   static const String id = 'login';
@@ -20,6 +21,23 @@ class _loginState extends State<login> {
 
   String ema = "";
   String pass = "";
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,10 +228,10 @@ class _loginState extends State<login> {
                           borderRadius: BorderRadius.circular(30.0)
                       ),
                     ),
-                    onPressed: () async {
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                            builder: (context) => SignInDemo()), (Route route) => false);
-                      }
+                  onPressed: () async {
+                    UserCredential user = await signInWithGoogle();
+                    print(user);
+                  },
                 ),
               ),
 

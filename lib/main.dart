@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: login.id,
       routes: {
-        login.id: (context) => const dashboard()
+        login.id: (context) => const login()
       },
       debugShowCheckedModeBanner: false,
     );
