@@ -17,21 +17,21 @@ class _registroState extends State<registro> {
   final email = TextEditingController();
   final password = TextEditingController();
 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   String ema = "";
   String pass = "";
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-    final uid = user?.uid;
-    CollectionReference users = FirebaseFirestore.instance.collection('Users/' + uid.toString());
-    
-    Future<void> addUser() {
+
+    Future<void> addUser(User? user) {
       print("Ejecutando addUser");
+      CollectionReference users = firestore.collection('Users');
+
       // Call the user's CollectionReference to add a new user
-      return users
-          .add({
+       return users.doc(user?.uid).set({
         'Nombre': "Prueba",
         'Creado': new DateTime.now()
 
@@ -142,12 +142,12 @@ class _registroState extends State<registro> {
                                 .once();
 
 
-                            final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                            final userCredentials = await auth.createUserWithEmailAndPassword(
                               email: ema,
                               password: pass,
                             );
 
-                            addUser();
+                            addUser(userCredentials.user);
 
                             Navigator.push(
                               context,
