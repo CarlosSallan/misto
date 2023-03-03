@@ -22,6 +22,8 @@ class _loginState extends State<login> {
   String ema = "";
   String pass = "";
 
+
+
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -231,8 +233,8 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onPressed: () async {
-                      UserCredential user = await signInWithGoogle();
-                      print(user);
+                      signInWithGoogle();
+
                     },
                   ),
                 ),
