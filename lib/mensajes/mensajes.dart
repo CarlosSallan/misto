@@ -49,7 +49,7 @@ class _mensajesState extends State<mensajes> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                    height: MediaQuery.of(context).size.height * 0.08,
+                    height: MediaQuery.of(context).size.height * 0.13,
                     width: MediaQuery.of(context).size.width,
                     child:
                     menu(pagina: 4,)

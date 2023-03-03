@@ -36,7 +36,7 @@ class _profileTestState extends State<profileTest> {
                           radius: MediaQuery.of(context).size.width * 0.20,
                         ),
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
+                          height: MediaQuery.of(context).size.height * 0.08,
                           width: MediaQuery.of(context).size.width * 0.45,
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
                           child:
@@ -117,7 +117,7 @@ class _profileTestState extends State<profileTest> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          height: MediaQuery.of(context).size.height * 0.08,
+                          height: MediaQuery.of(context).size.height * 0.13,
                           width: MediaQuery.of(context).size.width,
                           child:
                           menu(pagina: 4,)

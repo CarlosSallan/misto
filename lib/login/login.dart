@@ -47,7 +47,7 @@ class _loginState extends State<login> {
       Row(
         children: [
           Container(
-            width: 120,
+            width: MediaQuery.of(context).size.width * 0.10,
           ),
           Expanded(
               child:
@@ -145,95 +145,99 @@ class _loginState extends State<login> {
                 child: Text('olvidaste la contraseña?',  textAlign: TextAlign.right,),
               ),
 
-              Container(
-                height:50, //height of button
-                width:150,
-                margin: const EdgeInsets.only(top: 20.0),
-                child: ElevatedButton(
-                    child: Text('Entrar', style: TextStyle(fontSize: 20.0),),
-                    style: ElevatedButton.styleFrom(
-                      primary: Color.fromRGBO(22,53,77,1.000),
-                      shadowColor: Color.fromRGBO(22,53,77,1.000),
-                      elevation: 5,
-                      padding: EdgeInsets.all(15),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Container(
+                  height:50, //height of button
+                  width:125,
+                  margin: const EdgeInsets.only(top: 20.0, right: 2.0),
+                  child: ElevatedButton(
+                      child: Text('Entrar', style: TextStyle(fontSize: 20.0),),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromRGBO(22,53,77,1.000),
+                        shadowColor: Color.fromRGBO(22,53,77,1.000),
+                        elevation: 5,
+                        padding: EdgeInsets.all(5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0)
+                        ),
                       ),
-                    ),
-                    onPressed: () async {
-                      ema = email.text;
-                      pass = password.text;
+                      onPressed: () async {
+                        ema = email.text;
+                        pass = password.text;
 
-                      if (ema.isEmpty || pass.isEmpty) {
-                        print("Email and password fields cannot be empty");
-                        return;
-                      }
-
-                      if (!ema.contains("@") || !ema.endsWith(".com")) {
-                        print("Email is not valid");
-                        return;
-                      }
-
-                      if (pass.length < 6) {
-                        print("Password must be at least 6 characters");
-                        return;
-                      }
-
-                      try {
-                        final userSnapshot = FirebaseDatabase.instance
-                            .reference()
-                            .child("users")
-                            .orderByChild("email")
-                            .equalTo(ema)
-                            .once();
-
-
-                        final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                              email: ema,
-                              password: pass,
-                            );
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                            builder: (context) => main_screen()), (Route route) => false);
-                      } catch (e) {
-
-                        if (e == 'user-not-found') {
-                          print('No user found for that email.');
-                        } else if (e == 'wrong-password') {
-                          print('Wrong password provided for that user.');
+                        if (ema.isEmpty || pass.isEmpty) {
+                          print("Email and password fields cannot be empty");
+                          return;
                         }
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.toString()),
-                          ),
-                        );
+                        if (!ema.contains("@") || !ema.endsWith(".com")) {
+                          print("Email is not valid");
+                          return;
+                        }
+
+                        if (pass.length < 6) {
+                          print("Password must be at least 6 characters");
+                          return;
+                        }
+
+                        try {
+                          final userSnapshot = FirebaseDatabase.instance
+                              .reference()
+                              .child("users")
+                              .orderByChild("email")
+                              .equalTo(ema)
+                              .once();
+
+
+                          final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: ema,
+                            password: pass,
+                          );
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                              builder: (context) => main_screen()), (Route route) => false);
+                        } catch (e) {
+
+                          if (e == 'user-not-found') {
+                            print('No user found for that email.');
+                          } else if (e == 'wrong-password') {
+                            print('Wrong password provided for that user.');
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(e.toString()),
+                            ),
+                          );
+                        }
                       }
-                    }
 
+                  ),
                 ),
-              ),
-
-              Container(
-                height:50, //height of button
-                width:150,
-                margin: const EdgeInsets.only(top: 20.0),
-                child: ElevatedButton(
+                Container(
+                  height:50, //height of button
+                  width:125,
+                  margin: const EdgeInsets.only(top: 20.0),
+                  child: ElevatedButton(
                     child: Text('Google', style: TextStyle(fontSize: 20.0),),
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromRGBO(22,53,77,1.000),
                       shadowColor: Color.fromRGBO(22,53,77,1.000),
                       elevation: 5,
-                      padding: EdgeInsets.all(15),
+                      padding: EdgeInsets.all(5),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0)
                       ),
                     ),
-                  onPressed: () async {
-                    UserCredential user = await signInWithGoogle();
-                    print(user);
-                  },
+                    onPressed: () async {
+                      UserCredential user = await signInWithGoogle();
+                      print(user);
+                    },
+                  ),
                 ),
-              ),
+              ],),
+
 
 
               TextButton(
@@ -257,7 +261,7 @@ class _loginState extends State<login> {
           ),
 
           Container(
-            width: 120,
+            width: MediaQuery.of(context).size.width * 0.10,
           ),
         ],
       )
