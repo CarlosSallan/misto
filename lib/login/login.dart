@@ -234,6 +234,10 @@ class _loginState extends State<login> {
                     ),
                     onPressed: () async {
                       signInWithGoogle();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => main_screen()),
+                      );
 
                     },
                   ),
