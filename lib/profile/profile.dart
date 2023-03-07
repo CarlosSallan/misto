@@ -74,10 +74,6 @@ class _profileState extends State<profile> {
                     TextButton(
                         child: Text('Cambiar.', style: TextStyle(fontSize: 20.0),),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => main_screen()),
-                          );
                         }
                     ),
                     SizedBox(

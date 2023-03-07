@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import '../container/menu.dart';
 import '../container/ripple_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class main_screen extends StatefulWidget {
   static const String id = 'main_screen';
-  const main_screen({Key? key}) : super(key: key);
+  const main_screen({Key? key, User? user}) : super(key: key);
 
   @override
   State<main_screen> createState() => _main_screenState();

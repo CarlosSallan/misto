@@ -36,7 +36,8 @@ class _loginState extends State<login> {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
+    print("Tokens:");
+    print(googleAuth);
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
@@ -183,7 +184,7 @@ class _loginState extends State<login> {
                           print("Password must be at least 6 characters");
                           return;
                         }
-
+                        final user;
                         try {
                           final userSnapshot = FirebaseDatabase.instance
                               .reference()
@@ -193,12 +194,13 @@ class _loginState extends State<login> {
                               .once();
 
 
-                          final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            user = await FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: ema,
                             password: pass,
                           );
+
                           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                              builder: (context) => main_screen()), (Route route) => false);
+                              builder: (context) => main_screen(user: user)), (Route route) => false);
                         } catch (e) {
 
                           if (e == 'user-not-found') {
@@ -234,10 +236,6 @@ class _loginState extends State<login> {
                     ),
                     onPressed: () async {
                       signInWithGoogle();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => main_screen()),
-                      );
 
                     },
                   ),
