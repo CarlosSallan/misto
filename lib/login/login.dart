@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +23,8 @@ class _loginState extends State<login> {
   String ema = "";
   String pass = "";
 
-
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
@@ -38,10 +40,24 @@ class _loginState extends State<login> {
     );
     print("Tokens:");
     print(googleAuth);
+
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
+  Future<void> addUserGoogle(User? user) {
+    print("Ejecutando addUser");
+    CollectionReference users = firestore.collection('Users');
+
+    // Call the user's CollectionReference to add a new user
+    return users.doc(user?.uid).set({
+      'Nombre': "Prueba",
+      'Creado': new DateTime.now()
+
+    })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -236,7 +252,10 @@ class _loginState extends State<login> {
                     ),
                     onPressed: () async {
                       signInWithGoogle();
-
+                      User? userGoogle = FirebaseAuth.instance.currentUser;
+                      addUserGoogle(userGoogle);
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                          builder: (context) => main_screen()), (Route route) => false);
                     },
                   ),
                 ),

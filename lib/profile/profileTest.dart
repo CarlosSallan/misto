@@ -51,7 +51,7 @@ class _profileTestState extends State<profileTest> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Hola, ' + user!.uid,//FirebaseFirestore.instance.collection("Users").doc(user.uid),
+                            'Hola, ' + FirebaseFirestore.instance.collection("Users").doc(user!.uid).firestore.collection("Nombre").toString(),//FirebaseFirestore.instance.collection("Users").doc(user.uid),
                             style: TextStyle(
                               color: Colors.deepOrangeAccent,
                               fontSize: 50,
