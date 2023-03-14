@@ -235,32 +235,42 @@ class _loginState extends State<login> {
 
                   ),
                 ),
-                Container(
-                  height:50, //height of button
-                  width:125,
-                  margin: const EdgeInsets.only(top: 20.0),
-                  child: ElevatedButton(
-                    child: Text('Google', style: TextStyle(fontSize: 20.0),),
-                    style: ElevatedButton.styleFrom(
-                      primary: Color.fromRGBO(22,53,77,1.000),
-                      shadowColor: Color.fromRGBO(22,53,77,1.000),
-                      elevation: 5,
-                      padding: EdgeInsets.all(5),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                    ),
-                    onPressed: () async {
-                      signInWithGoogle();
-                      User? userGoogle = FirebaseAuth.instance.currentUser;
-                      addUserGoogle(userGoogle);
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                          builder: (context) => main_screen()), (Route route) => false);
-                    },
-                  ),
-                ),
               ],),
 
+              ElevatedButton(
+                onPressed: () async {
+                  signInWithGoogle();
+                  User? userGoogle = FirebaseAuth.instance.currentUser;
+                  addUserGoogle(userGoogle);
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                      builder: (context) => main_screen()), (Route route) => false);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white, // Color de fondo del botón
+                  shape: RoundedRectangleBorder( // Forma del botón
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  elevation: 2.0, // Elevación del botón
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset( // Imagen del icono de Google
+                      'assets/googleLogo.png',
+                      height: 24.0,
+                    ),
+                    SizedBox(width: 12.0),
+                    Text(
+                      'Ingresar con Google', // Texto del botón
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
 
               TextButton(
