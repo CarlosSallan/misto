@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:misto/acceder/welcome_screen.dart';
 import 'package:misto/main_screen/main_screen.dart';
-import 'package:misto/profile/profileTest.dart';
+import '../profile/UserDetailScreen.dart';
 import '../mensajes/mensajes.dart';
 import '../ajustes/ajustes.dart';
 
@@ -105,7 +105,7 @@ class _menuState extends State<menu> {
                     if(!(widget.pagina == 4)) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => profileTest()),
+                        MaterialPageRoute(builder: (context) => UserDetailScreen()),
                       );
                     }
                   }

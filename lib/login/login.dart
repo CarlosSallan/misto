@@ -216,7 +216,7 @@ class _loginState extends State<login> {
                           );
 
                           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                              builder: (context) => main_screen(user: user)), (Route route) => false);
+                              builder: (context) => main_screen()), (Route route) => false);
                         } catch (e) {
 
                           if (e == 'user-not-found') {
