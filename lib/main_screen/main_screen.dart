@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 
+import '../container/userConected.dart';
+
 class main_screen extends StatefulWidget {
   static const String id = 'main_screen';
   const main_screen({Key? key}) : super(key: key);
@@ -99,11 +101,28 @@ class _main_screenState extends State<main_screen> {
               )),
           //Deslizar amigos
           Container(
-            color: Colors.deepPurpleAccent,
+            color: Color.fromRGBO(22,53,77,1.000),
             height: MediaQuery.of(context).size.height * 0.20,
             width: MediaQuery.of(context).size.width,
-            child:
-              Row()
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.20,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: MediaQuery.of(context).size.height * 0.20,
+                          child: userConected(),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           //Boton SOS
           Container(
