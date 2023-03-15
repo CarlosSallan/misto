@@ -34,6 +34,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(228,229,234,1.000),
       body: StreamBuilder<DocumentSnapshot>(
         stream: _userStream,
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
