@@ -6,7 +6,7 @@ import '../main_screen/main_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../registro/registro.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import '../funciones.dart';
 
 class login extends StatefulWidget {
   static const String id = 'login';
@@ -43,20 +43,6 @@ class _loginState extends State<login> {
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  Future<void> addUserGoogle(User? user) {
-    print("Ejecutando addUser");
-    CollectionReference users = firestore.collection('Users');
-
-    // Call the user's CollectionReference to add a new user
-    return users.doc(user?.uid).set({
-      'Nombre': "Prueba",
-      'Creado': new DateTime.now()
-
-    })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
   }
   @override
   Widget build(BuildContext context) {
@@ -239,11 +225,10 @@ class _loginState extends State<login> {
 
               ElevatedButton(
                 onPressed: () async {
-                  signInWithGoogle();
+                  await signInWithGoogle(); // Esperar a que la autenticación con Google se complete
                   User? userGoogle = FirebaseAuth.instance.currentUser;
-                  addUserGoogle(userGoogle);
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                      builder: (context) => main_screen()), (Route route) => false);
+                  await addUser(userGoogle); // Esperar a que se agregue el usuario a Firestore
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => main_screen()), (Route route) => false);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white, // Color de fondo del botón

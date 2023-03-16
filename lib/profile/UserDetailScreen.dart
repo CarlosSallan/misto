@@ -43,9 +43,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           }
 
           Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
-          String? name = data?['Nombre'];
+          String? name = data?['FullName'];
           String? email = user?.email;
-
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

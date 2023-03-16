@@ -4,7 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import '../login/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import '../funciones.dart';
 
 class registro extends StatefulWidget{
   const registro({Key? key}) : super(key: key);
@@ -25,20 +25,6 @@ class _registroState extends State<registro> {
 
   @override
   Widget build(BuildContext context) {
-
-    Future<void> addUser(User? user) {
-      print("Ejecutando addUser");
-      CollectionReference users = firestore.collection('Users');
-
-      // Call the user's CollectionReference to add a new user
-       return users.doc(user?.uid).set({
-        'Nombre': "Prueba",
-        'Creado': new DateTime.now()
-
-      })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
-    }
 
     return Scaffold(
         backgroundColor: Color.fromRGBO(228,229,234,1.000),
