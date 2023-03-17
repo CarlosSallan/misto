@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import '../container/userConected.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/gestures.dart';
 
 class MyMap extends StatefulWidget {
   final String user_id;
@@ -96,24 +98,61 @@ class main_screen extends StatefulWidget {
 class _main_screenState extends State<main_screen> {
     final Completer<GoogleMapController> _controller = Completer();
     String _selectedUserId = 'user1'; // Asigna un valor predeterminado válido.
-
+    final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
     final loc.Location location = loc.Location();
     StreamSubscription<loc.LocationData>? _locationSubscription;
 
     @override
     Widget build(BuildContext context) {
-        return Scaffold(
-          backgroundColor: Color.fromRGBO(228, 229, 234, 1.000),
-            body: Column(
-            children: [
+      return Scaffold(
+        backgroundColor: Color.fromRGBO(228, 229, 234, 1.000),
+        body: Column(
+          children: [
+            ValueListenableBuilder<double>(
+              valueListenable: _mapHeight,
+              builder: (context, value, child) {
+                return Expanded(
+                  flex: (value * 10).toInt(),
+                  child: Builder(
+                    builder: (BuildContext context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(300),
+                          bottomRight: Radius.circular(300),
+                        ),
+                        child: MyMap(_selectedUserId),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            GestureDetector(
+              onVerticalDragUpdate: (DragUpdateDetails details) {
+                if (details.delta.dy > 0) {
+                  // Deslizar hacia abajo
+                  _mapHeight.value = 0.9;
+                } else {
+                  // Deslizar hacia arriba
+                  _mapHeight.value = 0.1;
+                }
+              },
+              child: Center(
+                child: Icon(
+                  Icons.arrow_drop_down_rounded, // Icono de flecha hacia abajo
+                  color: Color.fromRGBO(22,53,77,1.000),
+                  size: 150.0, // Tamaño del ícono, puedes ajustarlo según tus necesidades
+                ),
+              ),
+            ),
             Expanded(
               child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('location')
-                  .snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('location')
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
                     return ListView.builder(
                     itemCount: snapshot.data?.docs.length,
@@ -147,9 +186,7 @@ class _main_screenState extends State<main_screen> {
           ),
       ),
       // Agrega el widget MyMap y utiliza la variable _selectedUserId
-      Expanded(
-        child: MyMap(_selectedUserId),
-      ),
+   //-----------------------------------------------------------------------------------------------------------------------------------------------------------
           //Deslizar amigos
           Container(
             color: Color.fromRGBO(22,53,77,1.000),
