@@ -8,19 +8,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:location/location.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import '../container/userConected.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/gestures.dart';
 
+// MyMap widget
 class MyMap extends StatefulWidget {
   final String user_id;
+
   MyMap(this.user_id);
+
   @override
   _MyMapState createState() => _MyMapState();
 }
@@ -29,66 +29,70 @@ class _MyMapState extends State<MyMap> {
   final loc.Location location = loc.Location();
   late GoogleMapController _controller;
   bool _added = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('location').snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (_added) {
-              mymap(snapshot);
-            }
-            if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return GoogleMap(
-              mapType: MapType.normal,
-              markers: {
-                Marker(
-                    position: LatLng(
-                      snapshot.data!.docs.singleWhere(
-                              (element) => element.id == widget.user_id)['latitude'],
-                      snapshot.data!.docs.singleWhere(
-                              (element) => element.id == widget.user_id)['longitude'],
-                    ),
-                    markerId: MarkerId('id'),
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                        BitmapDescriptor.hueMagenta)),
-              },
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                    snapshot.data!.docs.singleWhere(
-                            (element) => element.id == widget.user_id)['latitude'],
-                    snapshot.data!.docs.singleWhere(
-                            (element) => element.id == widget.user_id)['longitude'],
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('location').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (_added) {
+            mymap(snapshot);
+          }
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return GoogleMap(
+            mapType: MapType.normal,
+            markers: {
+              Marker(
+                  position: LatLng(
+                    snapshot.data!.docs.singleWhere((element) =>
+                    element.id == widget.user_id)['latitude'],
+                    snapshot.data!.docs.singleWhere((element) =>
+                    element.id == widget.user_id)['longitude'],
                   ),
-                  zoom: 14.47),
-              onMapCreated: (GoogleMapController controller) async {
-                setState(() {
-                  _controller = controller;
-                  _added = true;
-                });
-              },
-            );
-          },
-        ));
+                  markerId: MarkerId('id'),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueMagenta)),
+            },
+            initialCameraPosition: CameraPosition(
+                target: LatLng(
+                  snapshot.data!.docs.singleWhere((element) =>
+                  element.id == widget.user_id)['latitude'],
+                  snapshot.data!.docs.singleWhere((element) =>
+                  element.id == widget.user_id)['longitude'],
+                ),
+                zoom: 14.47),
+            onMapCreated: (GoogleMapController controller) async {
+              setState(() {
+                _controller = controller;
+                _added = true;
+              });
+            },
+          );
+        },
+      ),
+    );
   }
 
   Future<void> mymap(AsyncSnapshot<QuerySnapshot> snapshot) async {
-    await _controller
-        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: LatLng(
-          snapshot.data!.docs.singleWhere(
-                  (element) => element.id == widget.user_id)['latitude'],
-          snapshot.data!.docs.singleWhere(
-                  (element) => element.id == widget.user_id)['longitude'],
-        ),
-        zoom: 14.47)));
+    await _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(
+              snapshot.data!.docs.singleWhere((element) =>
+              element.id == widget.user_id)['latitude'],
+              snapshot.data!.docs.singleWhere((element) =>
+              element.id == widget.user_id)['longitude'],
+            ),
+            zoom: 14.47)));
   }
 }
 
+// main_screen widget
 class main_screen extends StatefulWidget {
   static const String id = 'main_screen';
+
   main_screen({Key? key}) : super(key: key);
 
   @override
@@ -96,154 +100,211 @@ class main_screen extends StatefulWidget {
 }
 
 class _main_screenState extends State<main_screen> {
-    final Completer<GoogleMapController> _controller = Completer();
-    String _selectedUserId = 'user1'; // Asigna un valor predeterminado válido.
-    final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
-    final loc.Location location = loc.Location();
-    StreamSubscription<loc.LocationData>? _locationSubscription;
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: Color.fromRGBO(228, 229, 234, 1.000),
-        body: Column(
-          children: [
-            ValueListenableBuilder<double>(
-              valueListenable: _mapHeight,
-              builder: (context, value, child) {
-                return Expanded(
-                  flex: (value * 10).toInt(),
-                  child: Builder(
-                    builder: (BuildContext context) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(300),
-                          bottomRight: Radius.circular(300),
-                        ),
-                        child: MyMap(_selectedUserId),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-            GestureDetector(
-              onVerticalDragUpdate: (DragUpdateDetails details) {
-                if (details.delta.dy > 0) {
-                  // Deslizar hacia abajo
-                  _mapHeight.value = 0.9;
-                } else {
-                  // Deslizar hacia arriba
-                  _mapHeight.value = 0.1;
-                }
-              },
-              child: Center(
-                child: Icon(
-                  Icons.arrow_drop_down_rounded, // Icono de flecha hacia abajo
-                  color: Color.fromRGBO(22,53,77,1.000),
-                  size: 150.0, // Tamaño del ícono, puedes ajustarlo según tus necesidades
-                ),
-              ),
-            ),
-            Expanded(
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('location')
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                    return ListView.builder(
-                    itemCount: snapshot.data?.docs.length,
-                    itemBuilder: (context, index) {
-                        return ListTile(
-                        title: Text(
-                        snapshot.data!.docs[index]['name'].toString()),
-                          subtitle: Row(
-                          children: [
-                            Text(snapshot.data!.docs[index]['latitude']
-                                .toString()),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text(snapshot.data!.docs[index]['longitude']
-                                .toString()),
-                          ],
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.directions),
-                            onPressed: () {
-                              setState(() {
-                                _selectedUserId =
-                                    snapshot.data!.docs[index].id;
-                              });
-                            },
-                          ),
-                        );
-                    });
-                },
-          ),
-      ),
-      // Agrega el widget MyMap y utiliza la variable _selectedUserId
-   //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-          //Deslizar amigos
-          Container(
-            color: Color.fromRGBO(22,53,77,1.000),
-            height: MediaQuery.of(context).size.height * 0.20,
-            width: MediaQuery.of(context).size.width,
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.20,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: MediaQuery.of(context).size.height * 0.20,
-                          child: userConected(),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          //Boton SOS
-          Container(
-            height: MediaQuery.of(context).size.height * 0.20,
-            width: MediaQuery.of(context).size.width,
-            child:
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RippleButton(size: 0.3)
-              ],
-            )
-          ),
-          //Menu
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.13,
-                    width: MediaQuery.of(context).size.width,
-                    child:
-                    menu(pagina: 0,)
-                )
-              ]
-          )
+  final Completer<GoogleMapController> _controller = Completer();
+  String _selectedUserId = 'user1'; // Asigna un valor
+  final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
+  final loc.Location location = loc.Location();
+  StreamSubscription<loc.LocationData>? _locationSubscription;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(228, 229, 234, 1.000),
+      body: Column(
+        children: [
+          buildMapArea(),
+          buildResizeIcon(),
+          buildUserList(),
+          buildConnectedUserCards(),
+          buildSosButton(),
+          buildMenu(),
         ],
       ),
     );
   }
+
+// Map Area widget
+  Widget buildMapArea() {
+    return ValueListenableBuilder<double>(
+      valueListenable: _mapHeight,
+      builder: (context, value, child) {
+        return Expanded(
+          flex: (value * 10).toInt(),
+          child: Builder(
+            builder: (BuildContext context) {
+              return ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(300),
+                  bottomRight: Radius.circular(300),
+                ),
+                child: MyMap(_selectedUserId),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+// Resize Icon widget
+  Widget buildResizeIcon() {
+    return GestureDetector(
+      onVerticalDragUpdate: (DragUpdateDetails details) {
+        if (details.delta.dy > 0) {
+// Deslizar hacia abajo
+          _mapHeight.value = 0.9;
+        } else {
+// Deslizar hacia arriba
+          _mapHeight.value = 0.1;
+        }
+      },
+      child: Center(
+        child: Icon(
+          Icons.arrow_drop_down_rounded, // Icono de flecha hacia abajo
+          color: Color.fromRGBO(22, 53, 77, 1.000),
+          size: 150.0, // Tamaño del ícono, puedes ajustarlo según tus necesidades
+        ),
+      ),
+    );
+  }
+
+// User List widget
+  Widget buildUserList() {
+    return Expanded(
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('location')
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+            itemCount: snapshot.data?.docs.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                    snapshot.data!.docs[index]['name'].toString()),
+                subtitle: Row(
+                  children: [
+                    Text(snapshot.data!.docs[index]['latitude']
+                        .toString()),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(snapshot.data!.docs[index]['longitude']
+                        .toString()),
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.directions),
+                  onPressed: () {
+                    setState(() {
+                      _selectedUserId =
+                          snapshot.data!.docs[index].id;
+                    });
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+// Connected User Cards widget
+  Widget buildConnectedUserCards() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.20,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Card(
+              color: Colors.white,
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.20,
+                child: Row(
+                  children: [
+                    // Image
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          "assets/avatar_prueba.jpg",
+                          width: MediaQuery.of(context).size.width * 0.20,
+                          height: MediaQuery.of(context).size.height * 0.20,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+
+                    // Text
+                    Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          'Texto de ejemplo',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+// SOS Button widget
+  Widget buildSosButton() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.20,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RippleButton(size: 0.3),
+        ],
+      ),
+    );
+  }
+
+// Menu widget
+  Widget buildMenu() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.13,
+          width: MediaQuery.of(context).size.width,
+          child: menu(
+            pagina: 0,
+          ),
+        ),
+      ],
+    );
+  }
+
   _getLocation() async {
     try {
       final loc.LocationData _locationResult = await location.getLocation();
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
+      await FirebaseFirestore.instance
+          .collection('location')
+          .doc('user1')
+          .set({
         'latitude': _locationResult.latitude,
         'longitude': _locationResult.longitude,
         'name': 'john'
@@ -261,7 +322,10 @@ class _main_screenState extends State<main_screen> {
         _locationSubscription = null;
       });
     }).listen((loc.LocationData currentlocation) async {
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
+      await FirebaseFirestore.instance
+          .collection('location')
+          .doc('user1')
+          .set({
         'latitude': currentlocation.latitude,
         'longitude': currentlocation.longitude,
         'name': 'john'
@@ -287,4 +351,3 @@ class _main_screenState extends State<main_screen> {
     }
   }
 }
-
