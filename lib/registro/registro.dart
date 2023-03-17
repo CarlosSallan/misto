@@ -14,6 +14,7 @@ class registro extends StatefulWidget{
 }
 
 class _registroState extends State<registro> {
+  final nickname = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -22,6 +23,7 @@ class _registroState extends State<registro> {
 
   String ema = "";
   String pass = "";
+  String nick = "";
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class _registroState extends State<registro> {
                       Column(
                         children: [
                           TextField(
-                            controller: email,
+                            controller: nickname,
                             obscureText: false,
                             decoration: InputDecoration(
                               filled: true,
@@ -64,27 +66,40 @@ class _registroState extends State<registro> {
                               hintText: 'Nombre de usuario',
                             ),
                           ),
+                          Padding(padding: EdgeInsets.symmetric(vertical: 10), child: TextField(
+                            controller: email,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: myinputborder(),
+                              focusedBorder: myfocusborder(),
+                              hintText: 'Correo Gmail',
+                            ),
+                          ),),
+                          TextField(
+                            controller: password,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: myinputborder(),
+                              focusedBorder: myfocusborder(),
+                              hintText: 'Contraseña',
+                            ),
+                          ),
+
                         ],
                       )
                   ),
-                  TextField(
-                    controller: password,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      enabledBorder: myinputborder(),
-                      focusedBorder: myfocusborder(),
-                      hintText: 'Contraseña',
-                    ),
-                  ),
+
 
                   Container(
                     height:50, //height of button
                     width:150,
                     margin: const EdgeInsets.only(top: 20.0),
                     child: ElevatedButton(
-                        child: Text('Entrar', style: TextStyle(fontSize: 20.0),),
+                        child: Text('Registrarse', style: TextStyle(fontSize: 20.0),),
                         style: ElevatedButton.styleFrom(
                           primary: Color.fromRGBO(22,53,77,1.000),
                           shadowColor: Color.fromRGBO(22,53,77,1.000),
@@ -98,7 +113,12 @@ class _registroState extends State<registro> {
                           print("hola");
                           ema = email.text;
                           pass = password.text;
+                          nick = nickname.text;
 
+                          if (nick.isEmpty) {
+                            print("Nickname cannot be empty");
+                            return;
+                          }
                           if (ema.isEmpty || pass.isEmpty) {
                             print("Email and password fields cannot be empty");
                             return;
@@ -133,7 +153,7 @@ class _registroState extends State<registro> {
                               password: pass,
                             );
 
-                            addUser(userCredentials.user);
+                            addUser(userCredentials.user, nickname.text);
 
                             Navigator.push(
                               context,

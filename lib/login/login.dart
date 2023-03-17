@@ -227,7 +227,7 @@ class _loginState extends State<login> {
                 onPressed: () async {
                   await signInWithGoogle(); // Esperar a que la autenticación con Google se complete
                   User? userGoogle = FirebaseAuth.instance.currentUser;
-                  await addUser(userGoogle); // Esperar a que se agregue el usuario a Firestore
+                  await addUser(userGoogle, ""); // Esperar a que se agregue el usuario a Firestore
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => main_screen()), (Route route) => false);
                 },
                 style: ElevatedButton.styleFrom(
