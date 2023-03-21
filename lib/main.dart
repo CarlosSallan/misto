@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:misto/acceder/welcome_screen.dart';
+
 import 'package:misto/container/dashboard.dart';
 import 'package:misto/login/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:misto/main_screen/main_screen.dart';
+
+import 'acceder/welcome.dart';
 
 
 void main() async{
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: login.id,
       routes: {
-        login.id: (context) => const login()
+        login.id: (context) => const welcome()
       },
       debugShowCheckedModeBanner: false,
     );
