@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,8 +6,6 @@ import '../container/menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
-
-import '../login/login.dart';
 import '../acceder/login.dart';
 import '../profile/UserDetailScreen.dart';
 
@@ -164,7 +161,7 @@ class _main_screenState extends State<main_screen> {
             color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
             child: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new, size: 36.0), // Ajusta el tamaño del icono aquí
+              icon: Icon(Icons.logout, size: 36.0), // Ajusta el tamaño del icono aquí
               onPressed: () {
                 // Acción del botón
                 Navigator.push(
@@ -225,54 +222,67 @@ class _main_screenState extends State<main_screen> {
 
   Widget buildConnectedUserCards() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      width: MediaQuery.of(context).size.width,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Card(
-              color: Colors.white,
-              elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height * 0.7, // Aumenta este valor para hacer la tarjeta más alta
-                child: Row(
-                  children: [
-                    // Image
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image.asset(
-                          "assets/avatar_prueba.jpg",
-                          width: MediaQuery.of(context).size.width * 0.20,
-                          height: MediaQuery.of(context).size.height * 0.20,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+        height: MediaQuery.of(context).size.height * 0.7,
+        width: MediaQuery.of(context).size.width,
+        child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('Users').snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
 
-                    // Text
-                    Flexible(
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          'Texto de ejemplo',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot user = snapshot.data!.docs[index];
+
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        height: MediaQuery.of(context).size.height * 0.7,
+                          child: Row(
+                            children: [
+                        // Image
+                              Padding(
+                              padding: EdgeInsets.all(8),
+                              child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                                child: Image.asset(
+                                  "assets/avatar_prueba.jpg",
+                                  width: MediaQuery.of(context).size.width * 0.20,
+                                  height: MediaQuery.of(context).size.height * 0.20,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              ),
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    user.id,
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ],
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+                  );
+                },
+              );
+            },
+        ),
     );
   }
 
