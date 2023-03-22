@@ -8,7 +8,7 @@ import '../main_screen/main_screen.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import '../funciones.dart';
-import '../registro/registro.dart';
+import 'registro.dart';
 import 'login.dart';
 
 class welcome extends StatefulWidget {
