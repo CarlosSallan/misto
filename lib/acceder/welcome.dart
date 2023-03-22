@@ -8,6 +8,7 @@ import '../main_screen/main_screen.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import '../funciones.dart';
+import '../registro/registro.dart';
 import 'login.dart';
 
 class welcome extends StatefulWidget {
@@ -129,7 +130,12 @@ class _welcomeState extends State<welcome> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: (){},
+                        onPressed: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => registro()),
+                          );
+                        },
                         color: Color.fromRGBO(22,53,77,1.000),
                         elevation: 0,
                         shape: RoundedRectangleBorder(

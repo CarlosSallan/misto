@@ -4,17 +4,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import '../container/menu.dart';
-import '../container/ripple_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:location/location.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
-import '../container/userConected.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/gestures.dart';
+
+import '../login/login.dart';
+import '../acceder/login.dart';
+import '../profile/UserDetailScreen.dart';
 
 // MyMap widget
 class MyMap extends StatefulWidget {
@@ -151,6 +147,10 @@ class _main_screenState extends State<main_screen> {
               icon: Icon(Icons.person, size: 36.0), // Ajusta el tamaño del icono aquí
               onPressed: () {
                 // Acción del botón
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserDetailScreen()),
+                );
               },
               iconSize: 48.0, // Ajusta el tamaño del botón aquí
               padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
@@ -167,6 +167,10 @@ class _main_screenState extends State<main_screen> {
               icon: Icon(Icons.arrow_back_ios_new, size: 36.0), // Ajusta el tamaño del icono aquí
               onPressed: () {
                 // Acción del botón
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
               },
               iconSize: 48.0, // Ajusta el tamaño del botón aquí
               padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
