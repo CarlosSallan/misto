@@ -121,16 +121,34 @@ class _main_screenState extends State<main_screen> {
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: Column(
-                    children: [
+                      children: [
+                      SizedBox(height: 10.0), // Espacio en la parte superior del DraggableScrollableSheet
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.chat),
+                            onPressed: () {
+                              // Acción del botón chat
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.person_add),
+                            onPressed: () {
+                              // Acción del botón añadir amigos
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
                       Container(
-                        height: 200, // Aquí puedes especificar la altura que desees para las tarjetas
+                        height: 300, // Aquí puedes especificar la altura que desees para las tarjetas
                         child: buildConnectedUserCards(),
                       ),
-                      // Agrega otros widgets aquí si deseas agregar más contenido en el DraggableScrollableSheet
-                    ],
-                  ),
-                ),
+                  ],
               ),
+            ),
+            ),
             );
           },
         ),
