@@ -32,6 +32,12 @@ Future<void> addUser(User? user, String nombre) {
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user: $error"));
 }
+
+Future<void> sendFriendRequest({User? origen, })async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  print("Ejecutando solicitud de amistad");
+  CollectionReference users = firestore.collection('Users');
+}
 /*
 Future<void> addAmigoForUser(User? user) {
   print("Creando nueva colección para usuario ${user?.uid}");

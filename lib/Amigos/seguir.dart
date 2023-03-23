@@ -157,7 +157,7 @@ class _seguirState extends State<seguir> {
                     border: Border.all(color: user.isFollowedByMe ? Colors.transparent : Colors.grey.shade700,)
                 ),
                 child: Center(
-                    child: Text(user.isFollowedByMe ? 'Unfollow' : 'Follow', style: TextStyle(color: user.isFollowedByMe ? Colors.white : Colors.white))
+                    child: Text(user.isFollowedByMe ? 'Solicitud enviada' : 'Enviar solicitud', style: TextStyle(color: user.isFollowedByMe ? Colors.white : Colors.white))
                 )
             ),
           )

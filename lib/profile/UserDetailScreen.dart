@@ -7,6 +7,7 @@ import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
 import 'package:fluttermoji/fluttermojiCustomizer.dart';
 import 'package:fluttermoji/fluttermojiSaveWidget.dart';
 import 'package:fluttermoji/fluttermojiThemeData.dart';
+import 'package:misto/Amigos/seguir.dart';
 import '../container/menu.dart';
 
 class UserDetailScreen extends StatefulWidget {
@@ -94,6 +95,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                       new MaterialPageRoute(
                                           builder: (context) => customizePage())),
                                 ),
+
                               ],
                             ),
                           ),
@@ -155,6 +157,24 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                           print(isTextFieldEnable);
                                         });
                                       }),
+                                  ElevatedButton(
+                                    child: Text(
+                                      'Editar avatar.',
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color.fromRGBO(22, 53, 77, 1.000),
+                                      shadowColor: Color.fromRGBO(22, 53, 77, 1.000),
+                                      elevation: 5,
+                                      padding: EdgeInsets.all(15),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(30.0)),
+                                    ),
+                                    onPressed: () => Navigator.push(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) => seguir())),
+                                  ),
                                 ],
                               )),
                         ],
