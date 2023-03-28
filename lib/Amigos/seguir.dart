@@ -11,6 +11,7 @@ class seguir extends StatefulWidget {
 
 class _seguirState extends State<seguir> {
   List<User> _users = [
+    
     User('Elliana Palacios', '@elliana', 'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b', false),
     User('Kayley Dwyer', '@kayley', 'https://images.unsplash.com/photo-1503467913725-8484b65b0715?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=cf7f82093012c4789841f570933f88e3', false),
     User('Kathleen Mcdonough', '@kathleen', 'https://images.unsplash.com/photo-1507081323647-4d250478b919?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b717a6d0469694bbe6400e6bfe45a1da', false),
@@ -45,17 +46,20 @@ class _seguirState extends State<seguir> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.grey.shade600, //change your color here
+        ),
         elevation: 0,
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: Colors.white,
         title: Container(
           height: 38,
           child: TextField(
             onChanged: (value) => onSearch(value),
             decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.grey[850],
+                fillColor: Colors.grey.shade300,
                 contentPadding: EdgeInsets.all(0),
-                prefixIcon: Icon(Icons.search, color: Colors.grey.shade500,),
+                prefixIcon: Icon(Icons.search, color: Colors.grey.shade600,),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide.none
@@ -70,7 +74,7 @@ class _seguirState extends State<seguir> {
         ),
       ),
       body: Container(
-        color: Colors.grey.shade900,
+        color: Colors.white,
         child: _foundedUsers.length > 0 ? ListView.builder(
             itemCount: _foundedUsers.length,
             itemBuilder: (context, index) {
@@ -134,9 +138,9 @@ class _seguirState extends State<seguir> {
                 Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(user.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                      Text(user.name, style: TextStyle(color:Color.fromRGBO(22,53,77,1.000), fontWeight: FontWeight.w500)),
                       SizedBox(height: 5,),
-                      Text(user.username, style: TextStyle(color: Colors.grey[500])),
+                      Text(user.username, style: TextStyle(color: Color.fromRGBO(22,53,77,1.000),)),
                     ]
                 )
               ]
@@ -148,16 +152,16 @@ class _seguirState extends State<seguir> {
               });
             },
             child: AnimatedContainer(
-                height: 35,
-                width: 110,
+                height: 45,
+                width: 130,
                 duration: Duration(milliseconds: 300),
                 decoration: BoxDecoration(
                     color: user.isFollowedByMe ? Colors.blue[700] : Color(0xffffff),
                     borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: user.isFollowedByMe ? Colors.transparent : Colors.grey.shade700,)
+                    border: Border.all(color: user.isFollowedByMe ? Colors.transparent : Colors.white,)
                 ),
                 child: Center(
-                    child: Text(user.isFollowedByMe ? 'Solicitud enviada' : 'Enviar solicitud', style: TextStyle(color: user.isFollowedByMe ? Colors.white : Colors.white))
+                    child: Text(user.isFollowedByMe ? 'Solicitud enviada' : 'Enviar solicitud', style: TextStyle(color: user.isFollowedByMe ? Colors.white : Colors.blue , fontWeight: FontWeight.bold))
                 )
             ),
           )

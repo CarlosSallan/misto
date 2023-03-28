@@ -8,6 +8,7 @@ import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import '../acceder/login.dart';
 import '../profile/UserDetailScreen.dart';
+import '../Amigos/seguir.dart';
 
 // MyMap widget
 class MyMap extends StatefulWidget {
@@ -134,9 +135,10 @@ class _main_screenState extends State<main_screen> {
                           ),
                           IconButton(
                             icon: Icon(Icons.person_add),
-                            onPressed: () {
-                              // Acción del botón añadir amigos
-                            },
+                            onPressed: () => Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) => seguir())),
                           ),
                         ],
                       ),
