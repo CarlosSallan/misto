@@ -30,6 +30,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     super.initState();
     _userStream =
         FirebaseFirestore.instance.collection('Users').doc(user?.uid).snapshots();
+
+
   }
 
   @override
@@ -42,6 +44,10 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           }
+
+          ////
+          print('IDEEEE: ${snapshot.data?.id}');
+          ////
 
           Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
           String? name = data?['FullName'];
