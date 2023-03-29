@@ -10,11 +10,12 @@ import '../acceder/login.dart';
 import '../profile/UserDetailScreen.dart';
 import '../Amigos/seguir.dart';
 
-// MyMap widget
 class MyMap extends StatefulWidget {
   final String user_id;
+  final String selectedUserId;
+  final Function(GoogleMapController) onMapCreated;
 
-  MyMap(this.user_id);
+  MyMap(this.user_id, this.selectedUserId, {required this.onMapCreated});
 
   @override
   _MyMapState createState() => _MyMapState();
@@ -22,63 +23,74 @@ class MyMap extends StatefulWidget {
 
 class _MyMapState extends State<MyMap> {
   final loc.Location location = loc.Location();
-  late GoogleMapController _controller;
+  GoogleMapController? _controller;
   bool _added = false;
+
+  void _zoomToSelectedUserLocation(LatLng userLocation) {
+    _controller?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: userLocation,
+          zoom: 50.0, // Ajusta el nivel de zoom según tus necesidades
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('location').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (_added) {
-            mymap(snapshot);
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance.collection('location').snapshots(),
+      builder: (BuildContext context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+          final userExists = snapshot.data!.docs.any((element) => element.id == widget.selectedUserId);
+
+          if (!userExists) {
+            return Center(child: Text(widget.selectedUserId));
           }
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
+
           return GoogleMap(
             mapType: MapType.normal,
             markers: {
               Marker(
                   position: LatLng(
                     snapshot.data!.docs.singleWhere((element) =>
-                    element.id == widget.user_id)['latitude'],
+                    element.id == widget.selectedUserId)['latitude'],
                     snapshot.data!.docs.singleWhere((element) =>
-                    element.id == widget.user_id)['longitude'],
+                    element.id == widget.selectedUserId)['longitude'],
                   ),
-                  markerId: MarkerId('id'),
+                  markerId: MarkerId(widget.selectedUserId),
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                       BitmapDescriptor.hueMagenta)),
             },
             initialCameraPosition: CameraPosition(
                 target: LatLng(
                   snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.user_id)['latitude'],
+                  element.id == widget.selectedUserId)['latitude'],
                   snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.user_id)['longitude'],
+                  element.id == widget.selectedUserId)['longitude'],
                 ),
                 zoom: 14.47),
-            onMapCreated: (GoogleMapController controller) async {
-              setState(() {
-                _controller = controller;
-                _added = true;
-              });
+            onMapCreated: (GoogleMapController controller) {
+              _controller = controller;
+              widget.onMapCreated(controller);
             },
           );
         },
-      ),
-    );
+      );
   }
 
   Future<void> mymap(AsyncSnapshot<QuerySnapshot> snapshot) async {
-    await _controller.animateCamera(CameraUpdate.newCameraPosition(
+    await _controller?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
             target: LatLng(
               snapshot.data!.docs.singleWhere((element) =>
-              element.id == widget.user_id)['latitude'],
+              element.id == widget.selectedUserId)['latitude'],
               snapshot.data!.docs.singleWhere((element) =>
-              element.id == widget.user_id)['longitude'],
+              element.id == widget.selectedUserId)['longitude'],
             ),
             zoom: 14.47)));
   }
@@ -95,18 +107,20 @@ class main_screen extends StatefulWidget {
 class _main_screenState extends State<main_screen> {
 
   final Completer<GoogleMapController> _controller = Completer();
-  String _selectedUserId = 'user1'; // Asigna un valor
+  String _selectedUserId = 'user1';
   final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
   final loc.Location location = loc.Location();
   StreamSubscription<loc.LocationData>? _locationSubscription;
 
-
+  GoogleMapController? _mapController;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        MyMap(_selectedUserId),
+        MyMap(_selectedUserId, _selectedUserId, onMapCreated: (controller) {
+          _mapController = controller;
+        }),
         DraggableScrollableSheet(
           initialChildSize: 0.2,
           minChildSize: 0.2,
@@ -199,7 +213,6 @@ class _main_screenState extends State<main_screen> {
     );
   }
 
-
   Widget buildUserList() {
     return Expanded(
       child: StreamBuilder(
@@ -229,6 +242,7 @@ class _main_screenState extends State<main_screen> {
                       setState(() {
                         _selectedUserId = snapshot.data!.docs[index].id;
                       });
+
                     },
                   ),
                 );
@@ -239,72 +253,116 @@ class _main_screenState extends State<main_screen> {
       ),
     );
   }
+  void _zoomToSelectedUserLocation(LatLng userLocation) {
+    _mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: userLocation,
+          zoom: 15.0, // Ajusta el nivel de zoom según tus necesidades
+        ),
+      ),
+    );
+  }
+
+
 
   Widget buildConnectedUserCards() {
     return Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        width: MediaQuery.of(context).size.width,
-        child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('Users').snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
+      height: MediaQuery.of(context).size.height * 0.7,
+      width: MediaQuery.of(context).size.width,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('location').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
 
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot user = snapshot.data!.docs[index];
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot user = snapshot.data!.docs[index];
 
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: MediaQuery.of(context).size.height * 0.7,
-                          child: Row(
-                            children: [
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Card(
+                  color: Colors.white,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Row(
+                      children: [
                         // Image
-                              Padding(
-                              padding: EdgeInsets.all(8),
-                              child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  "assets/avatar_prueba.jpg",
-                                  width: MediaQuery.of(context).size.width * 0.20,
-                                  height: MediaQuery.of(context).size.height * 0.20,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              ),
-                              Flexible(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    user.id,
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: Image.asset(
+                              "assets/avatar_prueba.jpg",
+                              width: MediaQuery.of(context).size.width * 0.20,
+                              height: MediaQuery.of(context).size.height * 0.20,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        // Text and Map button
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Text
+                                Text(
+                                  user.id,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                            ],
+                                // Map button
+                                IconButton(
+                                  icon: Icon(Icons.map),
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedUserId = user.id;
+                                    });
+                                    LatLng userLocation = LatLng(
+                                      snapshot.data!.docs.singleWhere(
+                                              (element) => element.id == user.id)['latitude'],
+                                      snapshot.data!.docs.singleWhere(
+                                              (element) => element.id == user.id)['longitude'],
+                                    );
+                                    _zoomToSelectedUserLocation(userLocation);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                ),
               );
             },
-        ),
+          );
+        },
+      ),
     );
   }
+
+
+
 
 // Menu widget
   Widget buildMenu() {
@@ -373,5 +431,22 @@ class _main_screenState extends State<main_screen> {
     } else if (status.isPermanentlyDenied) {
       openAppSettings();
     }
+  }
+
+  Future<Map<String, LatLng>> getUsersWithLocation() async {
+    QuerySnapshot<Map<String, dynamic>> users =
+    await FirebaseFirestore.instance.collection('location').get();
+    Map<String, LatLng> usersWithLocation = {};
+
+    for (var user in users.docs) {
+      if (user.data().containsKey('latitude') &&
+          user.data().containsKey('longitude')) {
+        usersWithLocation[user.id] = LatLng(
+          user['latitude'],
+          user['longitude'],
+        );
+      }
+    }
+    return usersWithLocation;
   }
 }
