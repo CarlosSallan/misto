@@ -38,14 +38,19 @@ Future<void> sendFriendRequest({User? origen, })async {
   print("Ejecutando solicitud de amistad");
   CollectionReference users = firestore.collection('Users');
 }
-/*
-Future<void> addAmigoForUser(User? user) {
-  print("Creando nueva colección para usuario ${user?.uid}");
-  CollectionReference userCollection = FirebaseFirestore.instance.collection('Users').doc(user?.uid).collection('myCollection');
-  // Luego puedes agregar documentos a la nueva colección como lo harías en cualquier otra colección de Firestore:
-  return userCollection.add({
-    'createdAt': FieldValue.serverTimestamp(),
-  }).then((value) => print("Documento agregado a Amigos"))
-      .catchError((error) => print("Error al agregar documento a myCollection: $error"));
+Future<List<String>?> getAllUserUIDs() async {
+  List<String> uids = [];
+  try {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Users').get();
+    for (QueryDocumentSnapshot doc in snapshot.docs) {
+      uids.add(doc.id);
+    }
+    for (var value in uids) {
+      print("UID == $value");
+    }
+    return uids;
+  } catch (e) {
+    print(e.toString());
+    return null;
+  }
 }
-*/

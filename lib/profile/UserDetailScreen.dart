@@ -165,7 +165,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                       }),
                                   ElevatedButton(
                                     child: Text(
-                                      'Editar avatar.',
+                                      'Buscar amigos.',
                                       style: TextStyle(fontSize: 20.0),
                                     ),
                                     style: ElevatedButton.styleFrom(
