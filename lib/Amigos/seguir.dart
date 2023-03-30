@@ -84,6 +84,7 @@ class _seguirState extends State<seguir> {
             itemCount: _foundedUsers.length,
             itemBuilder: (context, index) {
               return Slidable(
+                enabled: false,
                 actionPane: SlidableDrawerActionPane(),
                 actionExtentRatio: 0.25,
                 child: userComponent(user: _foundedUsers[index]),
