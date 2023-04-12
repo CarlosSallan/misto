@@ -25,8 +25,6 @@ Future<void> addUser(User? user, String nombre) {
   // Call the user's CollectionReference to add a new user
   return users.doc(user?.uid).set({
     'FullName': nombre,
-    'Creado': new DateTime.now(),
-    'Amigos': [],
 
   })
       .then((value) => print("User Added"))
@@ -38,6 +36,7 @@ Future<void> sendFriendRequest({User? origen, })async {
   print("Ejecutando solicitud de amistad");
   CollectionReference users = firestore.collection('Users');
 }
+
 Future<List<String>?> getAllUserUIDs() async {
   List<String> uids = [];
   try {
