@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:misto/container/dashboard.dart';
 import 'package:misto/login/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:misto/main_screen/main_screen.dart';
+import 'package:misto/profile/perfil.dart';
+
+
 
 import 'acceder/welcome.dart';
 
