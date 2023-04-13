@@ -8,7 +8,7 @@ import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import '../acceder/login.dart';
 import '../profile/UserDetailScreen.dart';
-import '../Amigos/seguir.dart';
+import '../Amigos/seguirUsers.dart';
 
 class MyMap extends StatefulWidget {
   final String user_id;
@@ -152,7 +152,7 @@ class _main_screenState extends State<main_screen> {
                             onPressed: () => Navigator.push(
                                 context,
                                 new MaterialPageRoute(
-                                    builder: (context) => seguir())),
+                                    builder: (context) => seguirUsers())),
                           ),
                         ],
                       ),
