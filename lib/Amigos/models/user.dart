@@ -3,4 +3,6 @@ class User {
   bool isFollowedByMe;
 
   User(this.FullName, this.isFollowedByMe);
+
+  get isFollowing => false;
 }
