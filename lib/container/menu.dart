@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'package:misto/main_screen/main_screen.dart';
+import '../mensajes/friends_screen.dart';
 import '../profile/UserDetailScreen.dart';
 import '../mensajes/mensajes.dart';
 import '../ajustes/ajustes.dart';
-
+import '../user.dart';
 
 class menu extends StatefulWidget {
-  const menu({Key? key, required this.pagina}) : super(key: key);
+  final int pagina;
+  final Usuario currentUser;
 
-  final int pagina; // 0 -> pagina principal | 1 -> mensajes | 2 -> SOS?? | 3 -> ajustes | 4-> perfil
-
+  const menu({Key? key, required this.pagina, required this.currentUser}) : super(key: key);
 
   @override
   State<menu> createState() => _menuState();
@@ -59,17 +60,17 @@ class _menuState extends State<menu> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => main_screen()),
+                      MaterialPageRoute(builder: (context) => main_screen(currentUser: widget.currentUser)),
                     );
                   }
               ),
               //1
-              GButton(
+              GButton (
                 icon: Icons.chat,
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => mensajes()),
+                      MaterialPageRoute(builder: (context) => FriendsScreen(currentUser: widget.currentUser)),
                     );
                   }
               ),
@@ -89,7 +90,7 @@ class _menuState extends State<menu> {
                     if(!(widget.pagina == 3)) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ajustes()),
+                        MaterialPageRoute(builder: (context) => ajustes(currentUser: widget.currentUser)),
                       );
                     }
                   }
@@ -102,7 +103,7 @@ class _menuState extends State<menu> {
                     if(!(widget.pagina == 4)) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => UserDetailScreen()),
+                        MaterialPageRoute(builder: (context) => UserDetailScreen(currentUser:  widget.currentUser,)),
                       );
                     }
                   }

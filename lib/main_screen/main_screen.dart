@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../acceder/login.dart';
 import '../profile/UserDetailScreen.dart';
 import '../Amigos/seguirUsers.dart';
+import '../user.dart';
 
 class MyMap extends StatefulWidget {
   final String user_id;
@@ -98,24 +99,28 @@ class _MyMapState extends State<MyMap> {
 
 // main_screen widget
 class main_screen extends StatefulWidget {
-  static const String id = 'main_screen';
-  main_screen({Key? key}) : super(key: key);
+  final Usuario currentUser;
+  main_screen({required this.currentUser});
+
   @override
-  State<main_screen> createState() => _main_screenState();
+  _main_screenState createState() => _main_screenState();
 }
+
 
 class _main_screenState extends State<main_screen> {
 
-  final Completer<GoogleMapController> _controller = Completer();
-  String _selectedUserId = 'user1';
   final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
   final loc.Location location = loc.Location();
   StreamSubscription<loc.LocationData>? _locationSubscription;
-
+  final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
+  String _selectedUserId = 'user1';
 
   @override
   Widget build(BuildContext context) {
+
+    Usuario currentUser = widget.currentUser;
+
     return Stack(
       children: [
         MyMap(_selectedUserId, _selectedUserId, onMapCreated: (controller) {
@@ -180,7 +185,7 @@ class _main_screenState extends State<main_screen> {
                 // Acción del botón
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserDetailScreen()),
+                  MaterialPageRoute(builder: (context) => UserDetailScreen(currentUser: widget.currentUser,)),
                 );
               },
               iconSize: 48.0, // Ajusta el tamaño del botón aquí
@@ -267,6 +272,7 @@ class _main_screenState extends State<main_screen> {
 
 
   Widget buildConnectedUserCards() {
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       width: MediaQuery.of(context).size.width,
@@ -366,6 +372,7 @@ class _main_screenState extends State<main_screen> {
 
 // Menu widget
   Widget buildMenu() {
+    Usuario currentUser = widget.currentUser;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -373,7 +380,7 @@ class _main_screenState extends State<main_screen> {
           height: MediaQuery.of(context).size.height * 0.13,
           width: MediaQuery.of(context).size.width,
           child: menu(
-            pagina: 0,
+            pagina: 0, currentUser: currentUser,
           ),
         ),
       ],

@@ -7,6 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import '../registro/registro.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../funciones.dart';
+import '../user.dart';
 
 class login extends StatefulWidget {
   static const String id = 'login';
@@ -195,14 +196,23 @@ class _loginState extends State<login> {
                               .equalTo(ema)
                               .once();
 
-
-                            user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          user = await FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: ema,
                             password: pass,
                           );
 
-                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                              builder: (context) => main_screen()), (Route route) => false);
+                          Usuario currentUser = Usuario(
+                            id: user.user!.uid,
+                            email: ema,
+                          );
+
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => main_screen(currentUser: currentUser),
+                            ),
+                                (Route route) => false,
+                          );
+
                         } catch (e) {
 
                           if (e == 'user-not-found') {
@@ -225,10 +235,20 @@ class _loginState extends State<login> {
 
               ElevatedButton(
                 onPressed: () async {
-                  await signInWithGoogle(); // Esperar a que la autenticación con Google se complete
+                  await signInWithGoogle();
                   User? userGoogle = FirebaseAuth.instance.currentUser;
                   await addUser(userGoogle, ""); // Esperar a que se agregue el usuario a Firestore
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => main_screen()), (Route route) => false);
+                  Usuario currentUser = Usuario(
+                    id: userGoogle!.uid,
+                    email: userGoogle.email!,
+                  );
+
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => main_screen(currentUser: currentUser),
+                    ),
+                        (Route route) => false,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white, // Color de fondo del botón

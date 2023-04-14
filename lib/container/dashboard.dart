@@ -5,17 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import '../container/menu.dart';
 import '../container/ripple_button.dart';
+import '../user.dart';
 
 class dashboard extends StatefulWidget {
-  const dashboard({Key? key}) : super(key: key);
+  final Usuario currentUser;
 
+  dashboard({required this.currentUser});
   @override
-  State<dashboard> createState() => _dashboardState();
+  _dashboardState createState() => _dashboardState();
 }
 
 class _dashboardState extends State<dashboard> {
   @override
   Widget build(BuildContext context) {
+    Usuario currentUser = widget.currentUser;
     return  Scaffold(
       backgroundColor: Color.fromRGBO(228,229,234,1.000),
       body: SafeArea(
@@ -293,7 +296,7 @@ class _dashboardState extends State<dashboard> {
                       height: MediaQuery.of(context).size.height * 0.08,
                       width: MediaQuery.of(context).size.width,
                       child:
-                      menu(pagina: 0,)
+                      menu(pagina: 0, currentUser: widget.currentUser,)
                   )
                 ]
             )

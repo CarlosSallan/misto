@@ -8,6 +8,7 @@ import '../main_screen/main_screen.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import '../funciones.dart';
+import '../user.dart';
 import 'registro.dart';
 import 'login.dart';
 
@@ -153,10 +154,20 @@ class _welcomeState extends State<welcome> {
                       minWidth: double.infinity,
                       height: 60,
                       onPressed: () async {
-                        await signInWithGoogle(); // Esperar a que la autenticación con Google se complete
+                        await signInWithGoogle();
                         User? userGoogle = FirebaseAuth.instance.currentUser;
                         await addUser(userGoogle, ""); // Esperar a que se agregue el usuario a Firestore
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => main_screen()), (Route route) => false);
+                        Usuario currentUser = Usuario(
+                          id: userGoogle!.uid,
+                          email: userGoogle.email!,
+                        );
+
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => main_screen(currentUser: currentUser),
+                          ),
+                              (Route route) => false,
+                        );
                       },
                       shape: RoundedRectangleBorder(
                           side: BorderSide(

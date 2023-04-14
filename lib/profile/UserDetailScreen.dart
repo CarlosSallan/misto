@@ -10,10 +10,13 @@ import 'package:fluttermoji/fluttermojiThemeData.dart';
 import 'package:misto/Amigos/seguir.dart';
 import 'package:misto/Amigos/seguirUsers.dart';
 import '../container/menu.dart';
+import '../user.dart';
 
 class UserDetailScreen extends StatefulWidget {
-  const UserDetailScreen({Key? key}) : super(key: key);
 
+  final Usuario currentUser;
+
+  UserDetailScreen({required this.currentUser});
   @override
   _UserDetailScreenState createState() => _UserDetailScreenState();
 }
@@ -191,7 +194,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         height: MediaQuery.of(context).size.height * 0.13,
                         width: MediaQuery.of(context).size.width,
                         child: menu(
-                          pagina: 4,
+                          pagina: 4, currentUser: widget.currentUser,
                         ))
                   ])
                 ],

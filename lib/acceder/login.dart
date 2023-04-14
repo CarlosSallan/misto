@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:misto/acceder/welcome.dart';
 
 import '../main_screen/main_screen.dart';
+import '../user.dart';
 
 
 
@@ -169,8 +170,17 @@ class LoginPage extends StatelessWidget {
                                 password: pass,
                               );
 
-                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                                  builder: (context) => main_screen()), (Route route) => false);
+                              Usuario currentUser = Usuario(
+                                id: user.user!.uid,
+                                email: ema,
+                              );
+
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => main_screen(currentUser: currentUser),
+                                ),
+                                    (Route route) => false,
+                              );
                             } catch (e) {
 
                               if (e == 'user-not-found') {

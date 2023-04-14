@@ -1,63 +1,112 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../container/menu.dart';
-import '../container/ChatButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../user.dart';
+
 
 class mensajes extends StatefulWidget {
-  static const String id = 'mensajes';
-  const mensajes({Key? key}) : super(key: key);
+  final Usuario currentUser;
+  final DocumentSnapshot friendUser;
+
+  mensajes({required this.currentUser, required this.friendUser});
 
   @override
-  State<mensajes> createState() => _mensajesState();
+  _mensajes createState() => _mensajes();
 }
 
-class _mensajesState extends State<mensajes> {
+class _mensajes extends State<mensajes> {
+  final TextEditingController _messageController = TextEditingController();
+  final CollectionReference _chatsCollection =
+  FirebaseFirestore.instance.collection('chats');
+
+  String _getChatId() {
+    return widget.currentUser.id.compareTo(widget.friendUser.id) < 0
+        ? '${widget.currentUser.id}-${widget.friendUser.id}'
+        : '${widget.friendUser.id}-${widget.currentUser.id}';
+  }
+
+  Future<void> _sendMessage(String message) async {
+    if (message.trim().isEmpty) return;
+
+    // Crear un chatId único para la conversación entre dos usuarios
+    String chatId = widget.currentUser.id.compareTo(widget.friendUser.id) < 0
+        ? '${widget.currentUser.id}-${widget.friendUser.id}'
+        : '${widget.friendUser.id}-${widget.currentUser.id}';
+
+    DocumentReference chatDoc = _chatsCollection.doc(chatId);
+
+    await chatDoc.collection('messages').add({
+      'text': message.trim(),
+      'timestamp': Timestamp.now(),
+      'userId': widget.currentUser.id,
+    });
+
+    _messageController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Stream<QuerySnapshot> _messagesStream = _chatsCollection
+        .doc(_getChatId())
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+
     return Scaffold(
-      backgroundColor: Color.fromRGBO(228,229,234,1.000),
+      appBar: AppBar(
+        title: Text('Chat con ${widget.friendUser['FullName']}'),
+      ),
       body: Column(
         children: [
-          Expanded(child:
-          CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                  child:
-                  Column(
-                    children: [
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton(),
-                      ChatButton()
-                    ],
-                  )
-              )
-            ],
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _messagesStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                return ListView(
+                  reverse: true,
+                  children: snapshot.data!.docs.map((DocumentSnapshot messageDoc) {
+                    bool isCurrentUser =
+                        messageDoc['userId'] == widget.currentUser.id;
+                    return ListTile(
+                      title: Text(messageDoc['text']),
+                      subtitle: Text(messageDoc['timestamp'].toDate().toString()),
+                      trailing: isCurrentUser ? Icon(Icons.person) : null,
+                    );
+                  }).toList(),
+                );
+              },
+            ),
           ),
-          ),
-          //Menu
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
               children: [
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.13,
-                    width: MediaQuery.of(context).size.width,
-                    child:
-                    menu(pagina: 4,)
-                )
-              ]
-          )
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: 'Escribe un mensaje...',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () => _sendMessage(_messageController.text),
+                ),
+              ],
+            ),
+          ),
         ],
-      )
+      ),
     );
   }
 }
