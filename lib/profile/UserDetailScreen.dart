@@ -8,6 +8,7 @@ import 'package:fluttermoji/fluttermojiCustomizer.dart';
 import 'package:fluttermoji/fluttermojiSaveWidget.dart';
 import 'package:fluttermoji/fluttermojiThemeData.dart';
 import 'package:misto/Amigos/seguir.dart';
+import 'package:misto/Amigos/seguirUsers.dart';
 import '../container/menu.dart';
 
 class UserDetailScreen extends StatefulWidget {
@@ -179,7 +180,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                     onPressed: () => Navigator.push(
                                         context,
                                         new MaterialPageRoute(
-                                            builder: (context) => seguir())),
+                                            builder: (context) => seguirUsers())),
                                   ),
                                 ],
                               )),

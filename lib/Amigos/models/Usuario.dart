@@ -1,8 +1,8 @@
-class User {
+class Usuario {
   final String FullName;
   bool isFollowedByMe;
 
-  User(this.FullName, this.isFollowedByMe);
+  Usuario(this.FullName, this.isFollowedByMe);
 
   get isFollowing => false;
 }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:misto/acceder/welcome.dart';
 
 import '../main_screen/main_screen.dart';
 
@@ -29,7 +30,8 @@ class LoginPage extends StatelessWidget {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: (){
-            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                builder: (context) => welcome()), (Route route) => false);
           },
           icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black,),
         ),
