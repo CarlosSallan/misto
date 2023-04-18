@@ -12,6 +12,12 @@ import 'package:misto/Amigos/seguirUsers.dart';
 import '../container/menu.dart';
 import '../user.dart';
 
+
+import 'package:flutter/rendering.dart';
+
+
+
+
 class UserDetailScreen extends StatefulWidget {
 
   final Usuario currentUser;
