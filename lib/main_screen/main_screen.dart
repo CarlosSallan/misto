@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:misto/mensajes/mensajes.dart';
+import 'package:misto/profile/perfil2.dart';
 import '../container/menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart' as loc;
@@ -183,7 +184,7 @@ class _main_screenState extends State<main_screen> {
                 // Acción del botón
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserDetailScreen(currentUser: widget.currentUser,)),
+                  MaterialPageRoute(builder: (context) => perfil2(currentUser: currentUser,)),
                 );
               },
               iconSize: 48.0, // Ajusta el tamaño del botón aquí

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: login.id,
       routes: {
-        login.id: (context) => const welcome()
+        login.id: (context) => const welcome(),
       },
       debugShowCheckedModeBanner: false,
     );

@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:misto/main_screen/main_screen.dart';
+import '../user.dart';
+import '../Amigos/seguirUsers.dart';
 import '../acceder/login.dart';
-
+import 'UserDetailScreen.dart';
 
 
 class perfil2 extends StatefulWidget {
-  const perfil2({Key? key}) : super(key: key);
+  final Usuario currentUser;
+  const perfil2({Key? key, required this.currentUser}) : super(key: key);
 
   @override
   State<perfil2> createState() => _perfil2State();
 }
-
-
 
 class _perfil2State extends State<perfil2> {
 
@@ -26,22 +27,14 @@ class _perfil2State extends State<perfil2> {
   TextEditingController _textFieldController2 = TextEditingController();
   bool isTextFieldEnable = true;
   FocusNode _focusNode = FocusNode();
-
   @override
-
   void initState() {
-
-
     _userStream = FirebaseFirestore.instance.collection('Users').doc(user?.uid).snapshots();
-
     super.initState();
 
-
-
   }
-
   Widget build(BuildContext context) {
-
+    Usuario currentUser = widget.currentUser; //
     return Scaffold(
 
     body:StreamBuilder<DocumentSnapshot>(
@@ -86,9 +79,10 @@ class _perfil2State extends State<perfil2> {
                 borderRadius: BorderRadius.circular(10.0),
                 child: IconButton(
                   icon: Icon(Icons.supervised_user_circle, size: 36.0), // Ajusta el tamaño del icono aquí
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => seguirUsers())),
                   iconSize: 48.0, // Ajusta el tamaño del botón aquí
                   padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
                 ),
@@ -102,8 +96,11 @@ class _perfil2State extends State<perfil2> {
                 borderRadius: BorderRadius.circular(10.0),
                 child: IconButton(
                   icon: Icon(Icons.map, size: 36.0), // Ajusta el tamaño del icono aquí
-                  onPressed: (){
-                    Navigator.pop(context);
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => main_screen(currentUser: currentUser)),
+                    );
                   },
                   iconSize: 48.0, // Ajusta el tamaño del botón aquí
                   padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
@@ -153,7 +150,7 @@ class _perfil2State extends State<perfil2> {
 
             Positioned(
               top: 250,
-              left: 240,
+              left: 150,
 
               child: Column(
                 children: [
@@ -181,32 +178,82 @@ class _perfil2State extends State<perfil2> {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
+                  Container(
+                      height: 300,
+                      width: 500,
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.03),
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: _textFieldController,
+                            focusNode: _focusNode,
+                            readOnly: isTextFieldEnable,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: myinputborder(),
+                              focusedBorder: myfocusborder(),
+                              hintText: 'Nombre de usuario',
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height *
+                                    0.02),
+                          ),
+                          TextField(
+                            controller: _textFieldController2,
+                            focusNode: _focusNode,
+                            readOnly: isTextFieldEnable,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: myinputborder(),
+                              focusedBorder: myfocusborder(),
+                              hintText: 'Contraseña',
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height *
+                                    0.02),
+                          ),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                if (isTextFieldEnable) {
+                                  isTextFieldEnable = false;
+                                } else {
+                                  isTextFieldEnable = true;
+                                }
+                                print(isTextFieldEnable);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 20.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50.0)
+                              ),
+                              primary: Color.fromRGBO(22,53,77,1.000),
+                            ),
+                            child: Text(
+                              "EDITAR",
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ),
+
+
+
+                        ],
+                      )),
                   SizedBox(
                     height: 10,
                   ),
 
-                  Positioned(
-                    top: 700,
-                    left: 280,
-
-                    child: Material(
-                        borderRadius: BorderRadius.circular(100.0),
-                        child:  ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 20.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50.0)
-                            ),
-                            primary: Color.fromRGBO(22,53,77,1.000),
-                          ),
-                          child: Text(
-                            "EDITAR",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        )
-                    ),
-                  ),
                 ],
               ),
             ),
