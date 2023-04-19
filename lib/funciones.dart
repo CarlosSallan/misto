@@ -5,12 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 void UserToFirebase(User? user, String nombre){
   //Agregamos User a Firebase
   addUser(user, nombre);
-  if(user?.metadata.lastSignInTime == null){
-    print("Añadiendo Amistad a Firebase");
-    addAmistad(user);
-  }else{
-    print("No se ha añadido Amistad a Firebase");
-  }
+  addAmistad(user);
 }
 
 Future<void> addUser(User? user, String nombre) {
@@ -41,22 +36,29 @@ Future<void> addUser(User? user, String nombre) {
       .catchError((error) => print("Failed to add user: $error"));
 }
 
-Future<void> addAmistad(User? user) {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  print("Ejecutando addUser");
-  CollectionReference users = firestore.collection('Amistad');
+Future<void> addAmistad(User? user) async {
+  print("Comprobando si tiene doc Amigos");
+  final snapshotCheck = await FirebaseFirestore.instance.collection('Amistad').doc(
+      user?.uid).get();
+  if(snapshotCheck.exists){
+    print("El usuario ya tiene Amistad en Firebase");
+  }else{
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    print("Ejecutando addAmistad");
+    CollectionReference users = firestore.collection('Amistad');
 
-  List<String> ArrayAmigos = [];
-  List<String> ArraySoli = [];
+    List<String> ArrayAmigos = [];
+    List<String> ArraySoli = [];
 
-  // Call the user's CollectionReference to add a new user
-  return users.doc(user?.uid).set({
-    'ArrayAmigos': ArrayAmigos,
-    'ArraySoli': ArraySoli,
+    // Call the user's CollectionReference to add a new user
+    return users.doc(user?.uid).set({
+      'ArrayAmigos': ArrayAmigos,
+      'ArraySoli': ArraySoli,
 
-  })
-      .then((value) => print("User Added"))
-      .catchError((error) => print("Failed to add user: $error"));
+    })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
 }
 
 Future<List<String>?> getAllUserUIDs() async {
