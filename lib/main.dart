@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:misto/acceder/welcome.dart';
 import 'package:misto/login/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:misto/profile/perfil2.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: login.id,
       routes: {
-        login.id: (context) => const perfil2()
+        login.id: (context) => const welcome()
       },
       debugShowCheckedModeBanner: false,
     );
