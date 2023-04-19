@@ -134,12 +134,7 @@ class _registroState extends State<registro> {
                                   password: pass,
                                 );
 
-                                //Agregamos User a Firebase
-                                Future<bool> Amigos = checkAmigosDoc(userCredentials.user);
-                                addUser(userCredentials.user, nickname.text);
-                                if(Amigos == false){
-                                  addAmistad(userCredentials.user);
-                                }
+                                UserToFirebase(userCredentials.user, nickname.text);
 
                                 Navigator.push(
                                   context,

@@ -2,6 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
+void UserToFirebase(User? user, String nombre){
+  //Agregamos User a Firebase
+  addUser(user, nombre);
+  if(user?.metadata.lastSignInTime == null){
+    print("Añadiendo Amistad a Firebase");
+    addAmistad(user);
+  }else{
+    print("No se ha añadido Amistad a Firebase");
+  }
+}
+
 Future<void> addUser(User? user, String nombre) {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   print("Ejecutando addUser");
@@ -46,17 +57,6 @@ Future<void> addAmistad(User? user) {
   })
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user: $error"));
-}
-
-Future<bool> checkAmigosDoc(User? user) async {
-  print("Comprobando si tiene doc Amigos");
-  final snapShot = await FirebaseFirestore.instance.collection('Amistad').doc(
-      user?.uid).get();
-  if(snapShot.exists){
-    return true;
-  }else{
-    return false;
-  }
 }
 
 Future<List<String>?> getAllUserUIDs() async {

@@ -157,12 +157,8 @@ class _welcomeState extends State<welcome> {
                         await signInWithGoogle();
                         User? userGoogle = FirebaseAuth.instance.currentUser;
                         //await addUser(userGoogle, ""); // Esperar a que se agregue el usuario a Firestore
-                        //Agregamos User a Firebase
-                        Future<bool> Amigos = checkAmigosDoc(userGoogle);
-                        addUser(userGoogle, "");
-                        if(Amigos == false){
-                          addAmistad(userGoogle);
-                        }
+                        UserToFirebase(userGoogle, "");
+
                         Usuario currentUser = Usuario(
                           id: userGoogle!.uid,
                           email: userGoogle.email!,
