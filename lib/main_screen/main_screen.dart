@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:misto/mensajes/mensajes.dart';
 import '../container/menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import '../acceder/login.dart';
+import '../mensajes/friends_screen.dart';
 import '../profile/UserDetailScreen.dart';
 import '../Amigos/seguirUsers.dart';
 import '../user.dart';
@@ -136,40 +138,36 @@ class _main_screenState extends State<main_screen> {
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(40),
               ),
+
               child: Material(
                 color: Colors.white,
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                      children: [
-                      SizedBox(height: 10.0), // Espacio en la parte superior del DraggableScrollableSheet
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
                         children: [
-                          IconButton(
-                            icon: Icon(Icons.chat),
-                            onPressed: () {
-                              // Acción del botón chat
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.person_add),
-                            onPressed: () => Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => seguirUsers())),
-                          ),
-                        ],
+                        SizedBox(height: 20.0),
+                    Container(
+                      height: 5,
+                      width: 100,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.black
                       ),
-                      SizedBox(height: 10.0),
-                      Container(
-                        height: 300, // Aquí puedes especificar la altura que desees para las tarjetas
-                        child: buildConnectedUserCards(),
-                      ),
-                  ],
-              ),
-            ),
-            ),
+                    ),
+                          Container(
+                            height: 20, // Aquí puedes especificar la altura que desees para las tarjetas
+                          ),
+                        Container(
+                          height: 300, // Aquí puedes especificar la altura que desees para las tarjetas
+                          child: buildConnectedUserCards(),
+                        ),
+
+                    ],
+
+                  ),
+
+                  ),
+                ),
             );
           },
         ),
@@ -180,7 +178,7 @@ class _main_screenState extends State<main_screen> {
             color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
             child: IconButton(
-              icon: Icon(Icons.person, size: 36.0), // Ajusta el tamaño del icono aquí
+              icon: Icon(Icons.person, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
               onPressed: () {
                 // Acción del botón
                 Navigator.push(
@@ -194,13 +192,47 @@ class _main_screenState extends State<main_screen> {
           ),
         ),
         Positioned(
+          top: 130.0,
+          right: 30.0,
+          child: Material(
+            color: Colors.white.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(10.0),
+            child: IconButton(
+              icon: Icon(Icons.message, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
+              onPressed: () => Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => FriendsScreen(currentUser: currentUser,))),
+              iconSize: 48.0, // Ajusta el tamaño del botón aquí
+              padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
+            ),
+          ),
+        ),
+        Positioned(
+          top: 210.0,
+          right: 30.0,
+          child: Material(
+            color:  Colors.white.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(10.0),
+            child: IconButton(
+              icon: Icon(Icons.person_add, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
+              onPressed: () => Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => seguirUsers())),
+              iconSize: 48.0, // Ajusta el tamaño del botón aquí
+              padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
+            ),
+          ),
+        ),
+        Positioned(
           top: 50.0,
           left: 30.0,
           child: Material(
             color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
             child: IconButton(
-              icon: Icon(Icons.logout, size: 36.0), // Ajusta el tamaño del icono aquí
+              icon: Icon(Icons.logout, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
               onPressed: () {
                 // Acción del botón
                 Navigator.push(
@@ -366,9 +398,6 @@ class _main_screenState extends State<main_screen> {
       ),
     );
   }
-
-
-
 
 // Menu widget
   Widget buildMenu() {
