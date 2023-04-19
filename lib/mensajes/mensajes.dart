@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../user.dart';
+export 'package:misto/mensajes/mensajes.dart' show _getLastMessageAndTime;
 
 
 class mensajes extends StatefulWidget {
@@ -109,4 +110,25 @@ class _mensajes extends State<mensajes> {
       ),
     );
   }
+
+  Future<Map<String, dynamic>?> _getLastMessageAndTime(String chatId) async {
+    QuerySnapshot querySnapshot = await _chatsCollection
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final doc = querySnapshot.docs.first;
+      return {
+        'text': doc['text'],
+        'timestamp': doc['timestamp'].toDate(),
+      };
+    }
+    return null;
+  }
+
 }
+
+

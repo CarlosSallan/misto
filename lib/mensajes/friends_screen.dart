@@ -4,15 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../mensajes/mensajes.dart';
 import '../main_screen/main_screen.dart';
 import '../user.dart';
+import '../message_utils.dart';
 
 class FriendsScreen extends StatelessWidget {
   final Usuario currentUser;
 
-  FriendsScreen({required this.currentUser});
+  FriendsScreen({
+    required this.currentUser,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Usuario currentUser = widget.currentUser; // Elimina esta línea
     final Stream<QuerySnapshot> _friendsStream =
     FirebaseFirestore.instance.collection('Users').snapshots();
 
@@ -34,23 +36,54 @@ class FriendsScreen extends StatelessWidget {
           // Filtrar al usuario actual de la lista de amigos
           final friends = snapshot.data!.docs.where((userDoc) => userDoc.id != currentUser.id);
 
-          return ListView(
-            children: friends.map((DocumentSnapshot friendDoc) {
-              return ListTile(
-                title: Text(friendDoc.id),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => mensajes(
-                        currentUser: currentUser,
-                        friendUser: friendDoc,
-                      ),
-                    ),
+          return ListView.builder(
+            itemCount: friends.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot friendDoc = friends.elementAt(index);
+              String chatId = currentUser.id.compareTo(friendDoc.id) < 0
+                  ? '${currentUser.id}-${friendDoc.id}'
+                  : '${friendDoc.id}-${currentUser.id}';
+
+              return StreamBuilder<Map<String, dynamic>?>(
+                stream: getLastMessageAndTime(chatId),
+                builder: (BuildContext context,
+                    AsyncSnapshot<Map<String, dynamic>?> lastMessageSnapshot) {
+                  if (lastMessageSnapshot.hasError) {
+                    return ListTile(title: Text('Error: ${lastMessageSnapshot.error}'));
+                  }
+
+                  if (lastMessageSnapshot.connectionState == ConnectionState.waiting) {
+                    return ListTile(title: Text('Cargando...'));
+                  }
+
+                  String? lastMessage = lastMessageSnapshot.data?['text'];
+                  DateTime? lastMessageTime =
+                  (lastMessageSnapshot.data?['timestamp'] as Timestamp?)?.toDate();
+
+                  return ListTile(
+                    leading: CircleAvatar(
+                        backgroundImage: NetworkImage("https://cdn3d.iconscout.com/3d/premium/thumb/happy-girl-7962207-6451736.png?f=webp"),
+                      backgroundColor: Color.fromRGBO(22,53,77,1.000),
+                        ),
+                    title: Text(friendDoc['FullName']),
+                    subtitle: lastMessage == null
+                        ? Text('No hay mensajes')
+                        : Text('$lastMessage (${lastMessageTime.toString()})'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => mensajes(
+                            currentUser: currentUser,
+                            friendUser: friendDoc,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               );
-            }).toList(),
+            },
           );
         },
       ),
