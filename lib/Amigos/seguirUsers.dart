@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'models/Usuario.dart';
 
@@ -32,12 +33,46 @@ class _seguirUsersState extends State<seguirUsers> {
           .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
           .map((doc) {
         final fullName = doc.data()['FullName'] as String;
-        return Usuario(fullName, false);
+
+        return Usuario(fullName, true);
       }).toList();
-    });
+    }
+
+    );
+
+
+
   }
 
+  Stream<List<Usuario>> amistadCheckUser() {
+    /* conseguir el true false de seguir */
+    final userCollection = FirebaseFirestore.instance.collection('Users');
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    return userCollection.snapshots().map((snapshot) {
+      return snapshot.docs
+          .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
+          .map((doc) {
+        final fullName = doc.data()['FullName'] as String;
+
+        return Usuario(fullName, true);
+      }).toList();
+    }
+
+    );
+
+
+
+  }
+
+
+
+
   void _followUser(Usuario user) {
+
+
+
+
+
     /*
     // Actualizar el documento del usuario en Firestore para marcar que el usuario actual lo está siguiendo
     FirebaseFirestore.instance.collection('Users').doc(user.username).update({'isFollowing': true});

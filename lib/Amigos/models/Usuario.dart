@@ -4,5 +4,5 @@ class Usuario {
 
   Usuario(this.FullName, this.isFollowedByMe);
 
-  get isFollowing => false;
+  get isFollowing => this.isFollowedByMe;
 }
