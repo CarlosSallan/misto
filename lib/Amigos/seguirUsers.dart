@@ -33,7 +33,6 @@ class _seguirUsersState extends State<seguirUsers> {
           .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
           .map((doc) {
         final fullName = doc.data()['FullName'] as String;
-
         return Usuario(fullName, true);
       }).toList();
     }
@@ -44,24 +43,24 @@ class _seguirUsersState extends State<seguirUsers> {
 
   }
 
-  Stream<List<Usuario>> amistadCheckUser() {
-    /* conseguir el true false de seguir */
-    final userCollection = FirebaseFirestore.instance.collection('Users');
+  Future<bool> checkIfValueExistsInUserArray( String value) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
-    return userCollection.snapshots().map((snapshot) {
-      return snapshot.docs
-          .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
-          .map((doc) {
-        final fullName = doc.data()['FullName'] as String;
+    final userRef = FirebaseFirestore.instance.collection('Amistad');
+    final querySnapshot =
+    await userRef.where('uid', isEqualTo: currentUser?.uid).limit(1).get();
 
-        return Usuario(fullName, true);
-      }).toList();
+    if (querySnapshot.docs.isNotEmpty) {
+      final user = querySnapshot.docs.first.data();
+      return true;
+      /*
+      if (user.containsKey('arrayAmigos') && user['arrayField'].contains(value)) {
+        return true;
+      }
+
+       */
     }
 
-    );
-
-
-
+    return false;
   }
 
 

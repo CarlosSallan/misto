@@ -131,12 +131,8 @@ class _perfil2State extends State<perfil2> {
                 borderRadius: BorderRadius.circular(10.0),
                 child: IconButton(
                   icon: Icon(LineAwesomeIcons.angle_left), // Ajusta el tamaño del icono aquí
-                  onPressed: () {
-                    // Acción del botón
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
+                  onPressed: (){
+                    Navigator.pop(context);
                   },
                   iconSize: 48.0, // Ajusta el tamaño del botón aquí
                   padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
