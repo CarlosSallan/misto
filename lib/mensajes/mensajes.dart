@@ -72,17 +72,60 @@ class _mensajes extends State<mensajes> {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                return ListView(
+                return ListView.builder(
                   reverse: true,
-                  children: snapshot.data!.docs.map((DocumentSnapshot messageDoc) {
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    DocumentSnapshot messageDoc = snapshot.data!.docs[index];
                     bool isCurrentUser =
                         messageDoc['userId'] == widget.currentUser.id;
-                    return ListTile(
-                      title: Text(messageDoc['text']),
-                      subtitle: Text(messageDoc['timestamp'].toDate().toString()),
-                      trailing: isCurrentUser ? Icon(Icons.person) : null,
+
+                    return Align(
+                      alignment: isCurrentUser
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        margin: EdgeInsets.only(
+                          top: 4.0,
+                          bottom: 4.0,
+                          left: isCurrentUser ? 50.0 : 8.0,
+                          right: isCurrentUser ? 8.0 : 50.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isCurrentUser
+                              ? Colors.blueAccent
+                              : Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              messageDoc['text'],
+                              style: TextStyle(
+                                color: isCurrentUser
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 2.0),
+                            Text(
+                              messageDoc['timestamp']
+                                  .toDate()
+                                  .toString(),
+                              style: TextStyle(
+                                color: isCurrentUser
+                                    ? Colors.white.withOpacity(0.7)
+                                    : Colors.black.withOpacity(0.7),
+                                fontSize: 10.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
-                  }).toList(),
+                  },
                 );
               },
             ),
@@ -110,6 +153,7 @@ class _mensajes extends State<mensajes> {
       ),
     );
   }
+
 
   Future<Map<String, dynamic>?> _getLastMessageAndTime(String chatId) async {
     QuerySnapshot querySnapshot = await _chatsCollection
