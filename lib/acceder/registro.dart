@@ -167,13 +167,13 @@ class _registroState extends State<registro> {
             ),
 
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Container(
                 height: MediaQuery.of(context).size.height / 2,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/background.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
 
                   ),
                 ),
@@ -211,7 +211,7 @@ class _registroState extends State<registro> {
             ),
           ),
         ),
-        SizedBox(height: 30,),
+        SizedBox(height: 10,),
       ],
     );
   }
@@ -238,7 +238,7 @@ class _registroState extends State<registro> {
             ),
           ),
         ),
-        SizedBox(height: 30,),
+        SizedBox(height: 10,),
       ],
     );
   }
@@ -265,7 +265,7 @@ class _registroState extends State<registro> {
             ),
           ),
         ),
-        SizedBox(height: 30,),
+        SizedBox(height: 10,),
       ],
     );
   }

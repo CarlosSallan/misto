@@ -44,7 +44,7 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              flex: 2,
+              flex: 4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -224,11 +224,10 @@ class LoginPage extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Container(
-                height: MediaQuery.of(context).size.height / 2,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/background.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
 
                   ),
                 ),
