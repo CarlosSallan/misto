@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,7 +35,7 @@ class _seguirUsersState extends State<seguirUsers> {
           .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
           .map((doc) {
         final fullName = doc.data()['FullName'] as String;
-        return Usuario(fullName, true);
+        return Usuario(fullName, doc.id, true);
       }).toList();
     }
 
@@ -66,17 +68,65 @@ class _seguirUsersState extends State<seguirUsers> {
 
 
 
-  void _followUser(Usuario user) {
+  Future<void> _followUser(Usuario userAdded) async {
+    final user = FirebaseAuth.instance.currentUser;
+    crearDocUserAmistad(userAdded, user!);
+  }
+  Future<void> crearDocUserAmistad(Usuario userAdded, User user) async {
+    FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).get().then((docSnapshot) {
+      if (!docSnapshot.exists) {
+        // El documento no existe, lo creamos
+        FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).set({
+          'ArrayAmigos': [],
+          'ArraySoli': []
+        }).then((_) {
+          // Documento creado con éxito
+          print('Documento creado con éxito.');
+        }).catchError((error) {
+          // Error al crear el documento
+          print('Error al crear el documento: $error');
+        });
+      } else {
+        // El documento ya existe, verificamos si los campos existen
+        if (docSnapshot.data()!['ArrayAmigos'] == null) {
+          // El campo ArrayAmigos no existe, lo creamos
+          FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).update({
+            'ArrayAmigos': []
+          }).then((_) {
+            // Campo creado con éxito
+            print('Campo ArrayAmigos creado con éxito.');
+          }).catchError((error) {
+            // Error al crear el campo
+            print('Error al crear el campo ArrayAmigos: $error');
+          });
+        }
+        if (docSnapshot.data()!['ArraySoli'] == null) {
+          // El campo ArraySoli no existe, lo creamos
+          FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).update({
+            'ArraySoli': []
+          }).then((_) {
+            // Campo creado con éxito
+            print('Campo ArraySoli creado con éxito.');
+          }).catchError((error) {
+            // Error al crear el campo
+            print('Error al crear el campo ArraySoli: $error');
+          });
+        }
+      }
+    }).catchError((error) {
+      // Error al obtener el documento
+      print('Error al obtener el documento: $error');
+    });
+    await Future.delayed(Duration(seconds: 3));
+    anyadirSolicitud(user!, userAdded);
+  }
+  void anyadirSolicitud(User user, Usuario userAdded){
 
-
-
-
-
-    /*
-    // Actualizar el documento del usuario en Firestore para marcar que el usuario actual lo está siguiendo
-    FirebaseFirestore.instance.collection('Users').doc(user.username).update({'isFollowing': true});
-
-     */
+    final docRef = FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID);
+    String? userUid = user?.uid;
+    String userAddedUid = userAdded?.gettUID;
+    print('Añadiendo $userUid a $userAddedUid');
+    docRef.update({'ArraySoli': FieldValue.arrayUnion([user?.uid])});
   }
 
   Widget _buildUserListItem(Usuario user) {
@@ -127,7 +177,7 @@ class _seguirUsersState extends State<seguirUsers> {
         final username = doc.data()['Username'] as String;
         final isFollowing = doc.data()['isFollowing'] as bool;
          */
-        return Usuario(fullName, false);
+        return Usuario(fullName, doc.id,false);
       }).toList();
     });
   }
