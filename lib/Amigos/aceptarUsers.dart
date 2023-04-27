@@ -142,7 +142,7 @@ class _aceptarUsersState extends State<aceptarUsers> {
       title: Text(user.FullName),
       subtitle: Text(user.FullName),
       trailing: ElevatedButton(
-        child: Text(user.isFollowing ? 'Siguiendo' : 'Seguir'),
+        child: Text(user.isFollowing ? 'Siguiendo' : 'Aceptar'),
         onPressed: () {
           setState(() {
             _followUser(user);
