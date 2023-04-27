@@ -7,7 +7,6 @@ import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
 import 'package:fluttermoji/fluttermojiCustomizer.dart';
 import 'package:fluttermoji/fluttermojiSaveWidget.dart';
 import 'package:fluttermoji/fluttermojiThemeData.dart';
-import 'package:misto/Amigos/seguir.dart';
 import 'package:misto/Amigos/seguirUsers.dart';
 import '../container/menu.dart';
 import '../user.dart';

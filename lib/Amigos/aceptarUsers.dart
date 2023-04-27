@@ -5,14 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'models/Usuario.dart';
 
-class seguirUsers extends StatefulWidget {
-  seguirUsers({Key? key}) : super(key: key);
+class aceptarUsers extends StatefulWidget {
+  aceptarUsers({Key? key}) : super(key: key);
 
   @override
-  State<seguirUsers> createState() => _seguirUsersState();
+  State<aceptarUsers> createState() => _aceptarUsersState();
 }
 
-class _seguirUsersState extends State<seguirUsers> {
+class _aceptarUsersState extends State<aceptarUsers> {
   late Stream<List<Usuario>> _userStream;
   TextEditingController _searchController = TextEditingController();
 
@@ -31,7 +31,8 @@ class _seguirUsersState extends State<seguirUsers> {
     User? currentUser = FirebaseAuth.instance.currentUser;
     return userCollection.snapshots().map((snapshot) {
       return snapshot.docs
-          .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
+          .where((doc) =>
+      doc.id != currentUser?.uid) // Excluir el usuario actual
           .map((doc) {
         final fullName = doc.data()['FullName'] as String;
         return Usuario(fullName, doc.id, true);
@@ -39,12 +40,9 @@ class _seguirUsersState extends State<seguirUsers> {
     }
 
     );
-
-
-
   }
 
-  Future<bool> checkIfValueExistsInUserArray( String value) async {
+  Future<bool> checkIfValueExistsInUserArray(String value) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     final userRef = FirebaseFirestore.instance.collection('Amistad');
     final querySnapshot =
@@ -65,20 +63,25 @@ class _seguirUsersState extends State<seguirUsers> {
   }
 
 
-
-
   Future<void> _followUser(Usuario userAdded) async {
     final user = FirebaseAuth.instance.currentUser;
     crearDocUserAmistad(userAdded, user!);
   }
+
   Future<void> crearDocUserAmistad(Usuario userAdded, User user) async {
-    FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).get().then((docSnapshot) {
+    FirebaseFirestore.instance.collection('Amistad')
+        .doc(userAdded?.gettUID)
+        .get()
+        .then((docSnapshot) {
       if (!docSnapshot.exists) {
         // El documento no existe, lo creamos
-        FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).set({
+        FirebaseFirestore.instance.collection('Amistad')
+            .doc(userAdded?.gettUID)
+            .set({
           'ArrayAmigos': [],
           'ArraySoli': []
-        }).then((_) {
+        })
+            .then((_) {
           // Documento creado con éxito
           print('Documento creado con éxito.');
         }).catchError((error) {
@@ -89,7 +92,8 @@ class _seguirUsersState extends State<seguirUsers> {
         // El documento ya existe, verificamos si los campos existen
         if (docSnapshot.data()!['ArrayAmigos'] == null) {
           // El campo ArrayAmigos no existe, lo creamos
-          FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).update({
+          FirebaseFirestore.instance.collection('Amistad').doc(
+              userAdded?.gettUID).update({
             'ArrayAmigos': []
           }).then((_) {
             // Campo creado con éxito
@@ -101,7 +105,8 @@ class _seguirUsersState extends State<seguirUsers> {
         }
         if (docSnapshot.data()!['ArraySoli'] == null) {
           // El campo ArraySoli no existe, lo creamos
-          FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID).update({
+          FirebaseFirestore.instance.collection('Amistad').doc(
+              userAdded?.gettUID).update({
             'ArraySoli': []
           }).then((_) {
             // Campo creado con éxito
@@ -119,9 +124,10 @@ class _seguirUsersState extends State<seguirUsers> {
     await Future.delayed(Duration(seconds: 3));
     anyadirSolicitud(user!, userAdded);
   }
-  void anyadirSolicitud(User user, Usuario userAdded){
 
-    final docRef = FirebaseFirestore.instance.collection('Amistad').doc(userAdded?.gettUID);
+  void anyadirSolicitud(User user, Usuario userAdded) {
+    final docRef = FirebaseFirestore.instance.collection('Amistad').doc(
+        userAdded?.gettUID);
     String? userUid = user?.uid;
     String userAddedUid = userAdded?.gettUID;
     print('Añadiendo $userUid a $userAddedUid');
@@ -162,7 +168,7 @@ class _seguirUsersState extends State<seguirUsers> {
     } else {
       return users
           .where((user) =>
-              user.FullName.toLowerCase().contains(query.toLowerCase()))
+          user.FullName.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
   }
@@ -176,7 +182,7 @@ class _seguirUsersState extends State<seguirUsers> {
         final username = doc.data()['Username'] as String;
         final isFollowing = doc.data()['isFollowing'] as bool;
          */
-        return Usuario(fullName, doc.id,false);
+        return Usuario(fullName, doc.id, false);
       }).toList();
     });
   }
