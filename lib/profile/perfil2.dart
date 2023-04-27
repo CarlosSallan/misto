@@ -62,22 +62,6 @@ class _perfil2State extends State<perfil2> {
                 color:  Color.fromRGBO(228,229,234,1.000),
                 borderRadius: BorderRadius.circular(10.0),
                 child: IconButton(
-                  icon: Icon(Icons.settings, size: 36.0), // Ajusta el tamaño del icono aquí
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  iconSize: 48.0, // Ajusta el tamaño del botón aquí
-                  padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
-                ),
-              ),
-            ),
-            Positioned(
-              top: 130.0,
-              right: 30.0,
-              child: Material(
-                color:  Color.fromRGBO(228,229,234,1.000),
-                borderRadius: BorderRadius.circular(10.0),
-                child: IconButton(
                   icon: Icon(Icons.supervised_user_circle, size: 36.0), // Ajusta el tamaño del icono aquí
                   onPressed: () => Navigator.push(
                       context,
@@ -89,7 +73,7 @@ class _perfil2State extends State<perfil2> {
               ),
             ),
             Positioned(
-              top: 210.0,
+              top: 130.0,
               right: 30.0,
               child: Material(
                 color:  Color.fromRGBO(228,229,234,1.000),
@@ -108,7 +92,7 @@ class _perfil2State extends State<perfil2> {
               ),
             ),
             Positioned(
-              top: 290.0,
+              top: 210.0,
               right: 30.0,
               child: Material(
                 color:  Color.fromRGBO(228,229,234,1.000),
@@ -143,116 +127,11 @@ class _perfil2State extends State<perfil2> {
 
             /* imagen de perfil */
 
-
-            Positioned(
-              top: 250,
-              left: 150,
-
-              child: Column(
-                children: [
-                  Material(
-                    borderRadius: BorderRadius.circular(100.0),
-                    child: CircleAvatar(
-                      backgroundColor: Color.fromRGBO(228,229,234,1.000),
-                      radius: 150.0,
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage('assets/avatar_prueba.jpg'),
-                        radius: 140.0,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Hola, $name',//FirebaseFirestore.instance.collection("Users").doc(user.uid),
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
-                      fontSize: 50,
-                      fontWeight: FontWeight.w800,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  Container(
-                      height: 300,
-                      width: 500,
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.03),
-                      child: Column(
-                        children: [
-                          TextField(
-                            controller: _textFieldController,
-                            focusNode: _focusNode,
-                            readOnly: isTextFieldEnable,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              enabledBorder: myinputborder(),
-                              focusedBorder: myfocusborder(),
-                              hintText: 'Nombre de usuario',
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height *
-                                    0.02),
-                          ),
-                          TextField(
-                            controller: _textFieldController2,
-                            focusNode: _focusNode,
-                            readOnly: isTextFieldEnable,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              enabledBorder: myinputborder(),
-                              focusedBorder: myfocusborder(),
-                              hintText: 'Contraseña',
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height *
-                                    0.02),
-                          ),
-
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                if (isTextFieldEnable) {
-                                  isTextFieldEnable = false;
-                                } else {
-                                  isTextFieldEnable = true;
-                                }
-                                print(isTextFieldEnable);
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 20.0),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50.0)
-                              ),
-                              primary: Color.fromRGBO(22,53,77,1.000),
-                            ),
-                            child: Text(
-                              "EDITAR",
-                              style: TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          ),
+      //    Positioned(child: Container),
 
 
 
-                        ],
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
 
-                ],
-              ),
-            ),
 
 
 
