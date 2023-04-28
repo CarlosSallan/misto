@@ -15,21 +15,24 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   google_maps_flutter: ^2.1.7
   google_maps_flutter_web: ^0.3.0
-  location: ^4.4.0
+  location: ^4.3.0
   flutter_svg: ^1.1.0
   fluttermoji: ^1.0.1
   introduction_screen: ^3.1.4
   smooth_page_indicator: ^1.0.0+2
   vibration: ^1.7.5
-  firebase_core: ^2.5.0
-  firebase_auth: ^4.2.6
-  firebase_database: ^10.0.10
-  cloud_firestore: ^4.4.3
   google_sign_in: ^6.0.1
-  permission_handler: ^10.2.0
+  permission_handler: ^7.2.0
   flutter_slidable: ^0.6.0
   line_awesome_flutter: ^2.0.0
-  provider: ^6.0.1
+  image_picker: ^0.8.4
+  path_provider: ^2.0.8
+  path: ^1.8.1
+  firebase_core: ^2.8.0
+  firebase_auth: ^4.3.0
+  firebase_database: ^10.0.10
+  cloud_firestore: ^4.4.3
+  firebase_storage: ^11.0.16
 
 
 dev_dependencies:
