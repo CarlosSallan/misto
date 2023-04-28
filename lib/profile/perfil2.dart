@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter/rendering.dart';
 import 'package:misto/main_screen/main_screen.dart';
+import '../Amigos/aceptarUsers.dart';
 import '../user.dart';
 import '../Amigos/seguirUsers.dart';
 import '../acceder/login.dart';
@@ -66,7 +67,7 @@ class _perfil2State extends State<perfil2> {
                   onPressed: () => Navigator.push(
                       context,
                       new MaterialPageRoute(
-                          builder: (context) => seguirUsers())),
+                          builder: (context) => aceptarUsers())),
                   iconSize: 48.0, // Ajusta el tamaño del botón aquí
                   padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
                 ),
