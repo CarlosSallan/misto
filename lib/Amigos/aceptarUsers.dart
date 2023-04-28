@@ -14,7 +14,8 @@ class aceptarUsers extends StatefulWidget {
 
 class _aceptarUsersState extends State<aceptarUsers> {
   late Stream<List<Usuario>> _userStream;
-  TextEditingController _searchController = TextEditingController();
+  User? user = FirebaseAuth.instance.currentUser;
+
 
   @override
   void initState() {
@@ -22,7 +23,7 @@ class _aceptarUsersState extends State<aceptarUsers> {
     super.initState();
 
     setState(() {
-      _userStream = userStream();
+      _userStream = getStreamSolicitudes(user?.uid);
     });
   }
 
@@ -42,6 +43,34 @@ class _aceptarUsersState extends State<aceptarUsers> {
     );
   }
 
+  Stream<List<Usuario>> getStreamSolicitudes(String? uid) {
+    final userCollection = FirebaseFirestore.instance.collection('Users');
+    final amistadCollection = FirebaseFirestore.instance.collection('Amistad');
+
+    return amistadCollection.doc(uid).get().asStream().map((doc) {
+      final ArraySoli = (doc.data() ?? {})['ArraySoli'] as List<dynamic>?;
+      if (ArraySoli == null || ArraySoli.isEmpty) {
+        return []; // si no hay solicitudes pendientes, devuelve una lista vacía
+      } else {
+        return ArraySoli; // devuelve la lista de uid de los usuarios con solicitudes pendientes
+      }
+    }).asyncMap((soliList) async {
+      final userList = <Usuario>[]; // lista de usuarios a devolver
+
+      for (final uid in soliList) {
+        final userDoc = await userCollection.doc(uid).get();
+        if (userDoc.exists) {
+          final fullName = userDoc.data()?['FullName'] as String?;
+          if (fullName != null) {
+            userList.add(Usuario(fullName, uid, true));
+          }
+        }
+      }
+
+      return userList; // devuelve la lista final de usuarios
+    });
+  }
+
   Future<bool> checkIfValueExistsInUserArray(String value) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     final userRef = FirebaseFirestore.instance.collection('Amistad');
@@ -49,14 +78,7 @@ class _aceptarUsersState extends State<aceptarUsers> {
     await userRef.where('uid', isEqualTo: currentUser?.uid).limit(1).get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      final user = querySnapshot.docs.first.data();
       return true;
-      /*
-      if (user.containsKey('arrayAmigos') && user['arrayField'].contains(value)) {
-        return true;
-      }
-
-       */
     }
 
     return false;
@@ -178,37 +200,9 @@ class _aceptarUsersState extends State<aceptarUsers> {
     return userCollection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final fullName = doc.data()['FullName'] as String;
-        /*
-        final username = doc.data()['Username'] as String;
-        final isFollowing = doc.data()['isFollowing'] as bool;
-         */
         return Usuario(fullName, doc.id, false);
       }).toList();
     });
-  }
-
-  Widget _buildSearchBar() {
-    return TextField(
-      controller: _searchController,
-      decoration: InputDecoration(
-        hintText: 'Buscar usuarios...',
-        suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            setState(() {
-              _searchController.clear();
-              _userStream = _getUsersStream();
-            });
-          },
-        ),
-      ),
-      onChanged: (query) {
-        setState(() {
-          _userStream =
-              _getUsersStream().map((users) => _filterUsers(users, query));
-        });
-      },
-    );
   }
 
   @override
@@ -216,11 +210,10 @@ class _aceptarUsersState extends State<aceptarUsers> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(107, 153, 195, 1.000),
-        title: Text('Seguir usuarios'),
+        title: Text('Aceptar solicitudes.'),
       ),
       body: Column(
         children: [
-          _buildSearchBar(),
           Expanded(
             child: StreamBuilder<List<Usuario>>(
               stream: _userStream,
