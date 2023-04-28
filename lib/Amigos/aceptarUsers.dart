@@ -27,22 +27,6 @@ class _aceptarUsersState extends State<aceptarUsers> {
     });
   }
 
-  Stream<List<Usuario>> userStream() {
-    final userCollection = FirebaseFirestore.instance.collection('Users');
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    return userCollection.snapshots().map((snapshot) {
-      return snapshot.docs
-          .where((doc) =>
-      doc.id != currentUser?.uid) // Excluir el usuario actual
-          .map((doc) {
-        final fullName = doc.data()['FullName'] as String;
-        return Usuario(fullName, doc.id, true);
-      }).toList();
-    }
-
-    );
-  }
-
   Stream<List<Usuario>> getStreamSolicitudes(String? uid) {
     final userCollection = FirebaseFirestore.instance.collection('Users');
     final amistadCollection = FirebaseFirestore.instance.collection('Amistad');
@@ -71,89 +55,68 @@ class _aceptarUsersState extends State<aceptarUsers> {
     });
   }
 
-  Future<bool> checkIfValueExistsInUserArray(String value) async {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    final userRef = FirebaseFirestore.instance.collection('Amistad');
-    final querySnapshot =
-    await userRef.where('uid', isEqualTo: currentUser?.uid).limit(1).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      return true;
-    }
-
-    return false;
-  }
-
 
   Future<void> _followUser(Usuario userAdded) async {
-    final user = FirebaseAuth.instance.currentUser;
     crearDocUserAmistad(userAdded, user!);
   }
 
   Future<void> crearDocUserAmistad(Usuario userAdded, User user) async {
-    FirebaseFirestore.instance.collection('Amistad')
-        .doc(userAdded?.gettUID)
-        .get()
-        .then((docSnapshot) {
-      if (!docSnapshot.exists) {
-        // El documento no existe, lo creamos
-        FirebaseFirestore.instance.collection('Amistad')
-            .doc(userAdded?.gettUID)
-            .set({
-          'ArrayAmigos': [],
-          'ArraySoli': []
-        })
-            .then((_) {
-          // Documento creado con éxito
-          print('Documento creado con éxito.');
-        }).catchError((error) {
-          // Error al crear el documento
-          print('Error al crear el documento: $error');
-        });
-      } else {
-        // El documento ya existe, verificamos si los campos existen
-        if (docSnapshot.data()!['ArrayAmigos'] == null) {
-          // El campo ArrayAmigos no existe, lo creamos
-          FirebaseFirestore.instance.collection('Amistad').doc(
-              userAdded?.gettUID).update({
-            'ArrayAmigos': []
-          }).then((_) {
-            // Campo creado con éxito
-            print('Campo ArrayAmigos creado con éxito.');
-          }).catchError((error) {
-            // Error al crear el campo
-            print('Error al crear el campo ArrayAmigos: $error');
-          });
-        }
-        if (docSnapshot.data()!['ArraySoli'] == null) {
-          // El campo ArraySoli no existe, lo creamos
-          FirebaseFirestore.instance.collection('Amistad').doc(
-              userAdded?.gettUID).update({
-            'ArraySoli': []
-          }).then((_) {
-            // Campo creado con éxito
-            print('Campo ArraySoli creado con éxito.');
-          }).catchError((error) {
-            // Error al crear el campo
-            print('Error al crear el campo ArraySoli: $error');
-          });
-        }
-      }
-    }).catchError((error) {
-      // Error al obtener el documento
-      print('Error al obtener el documento: $error');
-    });
+    final amistadCollection = FirebaseFirestore.instance.collection('Amistad');
+    final currentUserUid = user?.uid;
+    final userAddedUid = userAdded?.gettUID;
+
+    // Verificar si el usuario actual tiene el documento de Amistad
+    final currentUserDoc = await amistadCollection.doc(currentUserUid).get();
+    if (!currentUserDoc.exists) {
+      // El documento no existe, lo creamos con los campos ArrayAmigos y ArraySoli vacíos
+      await amistadCollection.doc(currentUserUid).set({
+        'ArrayAmigos': [],
+        'ArraySoli': []
+      });
+    }
+
+    // Verificar si el usuarioAdded tiene el documento de Amistad
+    final userAddedDoc = await amistadCollection.doc(userAddedUid).get();
+    if (!userAddedDoc.exists) {
+      // El documento no existe, lo creamos con los campos ArrayAmigos y ArraySoli vacíos
+      await amistadCollection.doc(userAddedUid).set({
+        'ArrayAmigos': [],
+        'ArraySoli': []
+      });
+    }
+
+    // Verificar si el usuario actual tiene al usuarioAdded en el array de solicitudes
+    final currentUserSoliList = currentUserDoc.data()?['ArraySoli'] ?? <String>[];
+    if (currentUserSoliList.contains(userAddedUid)) {
+      // El usuarioAdded está en el array de solicitudes del usuario actual, lo eliminamos del array
+      await amistadCollection.doc(currentUserUid).update({
+        'ArraySoli': FieldValue.arrayRemove([userAddedUid])
+      });
+      // Añadimos al usuarioAdded en el array de amigos del usuario actual
+      await amistadCollection.doc(currentUserUid).update({
+        'ArrayAmigos': FieldValue.arrayUnion([userAddedUid])
+      });
+    }
+
+    // Verificar si el usuarioAdded tiene al usuario actual en el array de solicitudes
+    final userAddedSoliList = userAddedDoc.data()?['ArraySoli'] ?? <String>[];
+    if (userAddedSoliList.contains(currentUserUid)) {
+      // El usuario actual está en el array de solicitudes del usuarioAdded, lo eliminamos del array
+      await amistadCollection.doc(userAddedUid).update({
+        'ArraySoli': FieldValue.arrayRemove([currentUserUid])
+      });
+      // Añadimos al usuario actual en el array de amigos del usuarioAdded
+      await amistadCollection.doc(userAddedUid).update({
+        'ArrayAmigos': FieldValue.arrayUnion([currentUserUid])
+      });
+    }
+
+    /*
+    // Esperar un poco antes de llamar a la función anyadirSolicitud
     await Future.delayed(Duration(seconds: 3));
     anyadirSolicitud(user!, userAdded);
-  }
 
-  void anyadirSolicitud(User user, Usuario userAdded) {
-    final docRef = FirebaseFirestore.instance.collection('Amistad').doc(
-        userAdded?.gettUID);
-    String? userUid = user?.uid;
-    String userAddedUid = userAdded?.gettUID;
-    print('Añadiendo $userUid a $userAddedUid');
-    docRef.update({'ArraySoli': FieldValue.arrayUnion([user?.uid])});
+     */
   }
 
   Widget _buildUserListItem(Usuario user) {
@@ -164,7 +127,7 @@ class _aceptarUsersState extends State<aceptarUsers> {
       title: Text(user.FullName),
       subtitle: Text(user.FullName),
       trailing: ElevatedButton(
-        child: Text(user.isFollowing ? 'Siguiendo' : 'Aceptar'),
+        child: Text('Aceptar'),
         onPressed: () {
           setState(() {
             _followUser(user);
@@ -184,33 +147,16 @@ class _aceptarUsersState extends State<aceptarUsers> {
     );
   }
 
-  List<Usuario> _filterUsers(List<Usuario> users, String query) {
-    if (query.isEmpty) {
-      return users;
-    } else {
-      return users
-          .where((user) =>
-          user.FullName.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    }
-  }
-
-  Stream<List<Usuario>> _getUsersStream() {
-    final userCollection = FirebaseFirestore.instance.collection('Users');
-    return userCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final fullName = doc.data()['FullName'] as String;
-        return Usuario(fullName, doc.id, false);
-      }).toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(107, 153, 195, 1.000),
-        title: Text('Aceptar solicitudes.'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black54),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        backgroundColor: Color.fromRGBO(228,229,234,1.000),
+        title: Text('Aceptar solicitud', style: TextStyle(color: Colors.black54),),
       ),
       body: Column(
         children: [
