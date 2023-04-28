@@ -93,6 +93,7 @@ class _aceptarUsersState extends State<aceptarUsers> {
         'ArraySoli': FieldValue.arrayRemove([userAddedUid])
       });
       // Añadimos al usuarioAdded en el array de amigos del usuario actual
+
       await amistadCollection.doc(currentUserUid).update({
         'ArrayAmigos': FieldValue.arrayUnion([userAddedUid])
       });
@@ -100,16 +101,15 @@ class _aceptarUsersState extends State<aceptarUsers> {
 
     // Verificar si el usuarioAdded tiene al usuario actual en el array de solicitudes
     final userAddedSoliList = userAddedDoc.data()?['ArraySoli'] ?? <String>[];
-    if (userAddedSoliList.contains(currentUserUid)) {
       // El usuario actual está en el array de solicitudes del usuarioAdded, lo eliminamos del array
       await amistadCollection.doc(userAddedUid).update({
         'ArraySoli': FieldValue.arrayRemove([currentUserUid])
       });
       // Añadimos al usuario actual en el array de amigos del usuarioAdded
+      print('Agregando a tus amigos');
       await amistadCollection.doc(userAddedUid).update({
         'ArrayAmigos': FieldValue.arrayUnion([currentUserUid])
       });
-    }
 
     /*
     // Esperar un poco antes de llamar a la función anyadirSolicitud
