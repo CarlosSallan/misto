@@ -30,21 +30,10 @@ class _MyMapState extends State<MyMap> {
   GoogleMapController? _controller;
   bool _added = false;
 
-  void _zoomToSelectedUserLocation(LatLng userLocation) {
-    _controller?.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: userLocation,
-          zoom: 50.0, // Ajusta el nivel de zoom según tus necesidades
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance.collection('location').snapshots(),
+      stream: FirebaseFirestore.instance.collection('Users').snapshots(),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (!snapshot.hasData) {
@@ -56,33 +45,33 @@ class _MyMapState extends State<MyMap> {
             return Center(child: Text(widget.selectedUserId));
           }
 
-          return GoogleMap(
-            mapType: MapType.normal,
-            markers: {
-              Marker(
-                  position: LatLng(
-                    snapshot.data!.docs.singleWhere((element) =>
-                    element.id == widget.selectedUserId)['latitude'],
-                    snapshot.data!.docs.singleWhere((element) =>
-                    element.id == widget.selectedUserId)['longitude'],
-                  ),
-                  markerId: MarkerId(widget.selectedUserId),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueMagenta)),
-            },
-            initialCameraPosition: CameraPosition(
-                target: LatLng(
-                  snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.selectedUserId)['latitude'],
-                  snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.selectedUserId)['longitude'],
+        return GoogleMap(
+          mapType: MapType.normal,
+          markers: {
+            Marker(
+                position: LatLng(
+                  double.parse(snapshot.data!.docs.singleWhere((element) =>
+                  element.id == widget.selectedUserId)['latitude']),
+                  double.parse(snapshot.data!.docs.singleWhere((element) =>
+                  element.id == widget.selectedUserId)['longitude']),
                 ),
-                zoom: 14.47),
-            onMapCreated: (GoogleMapController controller) {
-              _controller = controller;
-              widget.onMapCreated(controller);
-            },
-          );
+                markerId: MarkerId(widget.selectedUserId),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueMagenta)),
+          },
+          initialCameraPosition: CameraPosition(
+              target: LatLng(
+                double.parse(snapshot.data!.docs.singleWhere((element) =>
+                element.id == widget.selectedUserId)['latitude']),
+                double.parse(snapshot.data!.docs.singleWhere((element) =>
+                element.id == widget.selectedUserId)['longitude']),
+              ),
+              zoom: 14.47),
+          onMapCreated: (GoogleMapController controller) {
+            _controller = controller;
+            widget.onMapCreated(controller);
+          },
+        );
         },
       );
   }
@@ -108,7 +97,6 @@ class main_screen extends StatefulWidget {
   @override
   _main_screenState createState() => _main_screenState();
 }
-
 
 class _main_screenState extends State<main_screen> {
 
@@ -254,7 +242,7 @@ class _main_screenState extends State<main_screen> {
   Widget buildUserList() {
     return Expanded(
       child: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('location').snapshots(),
+        stream: FirebaseFirestore.instance.collection('Users').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
@@ -264,7 +252,7 @@ class _main_screenState extends State<main_screen> {
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(snapshot.data!.docs[index]['name'].toString()),
+                  title: Text(snapshot.data!.docs[index]['FullName'].toString()),
                   subtitle: Row(
                     children: [
                       Text(snapshot.data!.docs[index]['latitude'].toString()),
@@ -291,26 +279,25 @@ class _main_screenState extends State<main_screen> {
       ),
     );
   }
-  void _zoomToSelectedUserLocation(LatLng userLocation) {
-    _mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: userLocation,
-          zoom: 15.0, // Ajusta el nivel de zoom según tus necesidades
-        ),
-      ),
-    );
-  }
-
-
 
   Widget buildConnectedUserCards() {
+
+    void _zoomToSelectedUserLocation(LatLng userLocation) {
+      _mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: userLocation,
+            zoom: 15.0, // Ajusta el nivel de zoom según tus necesidades
+          ),
+        ),
+      );
+    }
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       width: MediaQuery.of(context).size.width,
       child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('location').snapshots(),
+        stream: FirebaseFirestore.instance.collection('Users').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -375,13 +362,14 @@ class _main_screenState extends State<main_screen> {
                                     setState(() {
                                       _selectedUserId = user.id;
                                     });
-                                    LatLng userLocation = LatLng(
-                                      snapshot.data!.docs.singleWhere(
-                                              (element) => element.id == user.id)['latitude'],
-                                      snapshot.data!.docs.singleWhere(
-                                              (element) => element.id == user.id)['longitude'],
-                                    );
-                                    _zoomToSelectedUserLocation(userLocation);
+                                    Future.delayed(Duration(milliseconds: 200), () {
+                                      double latitude = double.parse(snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
+                                      double longitude = double.parse(snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
+
+                                      LatLng userLocation = LatLng(latitude, longitude);
+                                      _zoomToSelectedUserLocation(userLocation);
+                                    });
+
                                   },
                                 ),
                               ],
@@ -417,62 +405,9 @@ class _main_screenState extends State<main_screen> {
     );
   }
 
-  _getLocation() async {
-    try {
-      final loc.LocationData _locationResult = await location.getLocation();
-      await FirebaseFirestore.instance
-          .collection('location')
-          .doc('user1')
-          .set({
-        'latitude': _locationResult.latitude,
-        'longitude': _locationResult.longitude,
-        'name': 'john'
-      }, SetOptions(merge: true));
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _listenLocation() async {
-    _locationSubscription = location.onLocationChanged.handleError((onError) {
-      print(onError);
-      _locationSubscription?.cancel();
-      setState(() {
-        _locationSubscription = null;
-      });
-    }).listen((loc.LocationData currentlocation) async {
-      await FirebaseFirestore.instance
-          .collection('location')
-          .doc('user1')
-          .set({
-        'latitude': currentlocation.latitude,
-        'longitude': currentlocation.longitude,
-        'name': 'john'
-      }, SetOptions(merge: true));
-    });
-  }
-
-  _stopListening() {
-    _locationSubscription?.cancel();
-    setState(() {
-      _locationSubscription = null;
-    });
-  }
-
-  _requestPermission() async {
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      print('done');
-    } else if (status.isDenied) {
-      _requestPermission();
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-    }
-  }
-
   Future<Map<String, LatLng>> getUsersWithLocation() async {
     QuerySnapshot<Map<String, dynamic>> users =
-    await FirebaseFirestore.instance.collection('location').get();
+    await FirebaseFirestore.instance.collection('Users').get();
     Map<String, LatLng> usersWithLocation = {};
 
     for (var user in users.docs) {
