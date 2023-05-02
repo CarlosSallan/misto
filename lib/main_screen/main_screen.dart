@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -281,7 +282,6 @@ class _main_screenState extends State<main_screen> {
   }
 
   Widget buildConnectedUserCards() {
-
     void _zoomToSelectedUserLocation(LatLng userLocation) {
       _mapController?.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -331,8 +331,8 @@ class _main_screenState extends State<main_screen> {
                           padding: EdgeInsets.all(8),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
-                            child: Image.asset(
-                              "assets/avatar_prueba.jpg",
+                            child: Image.network(
+                              user['Avatar'],
                               width: MediaQuery.of(context).size.width * 0.20,
                               height: MediaQuery.of(context).size.height * 0.20,
                               fit: BoxFit.cover,
@@ -349,7 +349,7 @@ class _main_screenState extends State<main_screen> {
                               children: [
                                 // Text
                                 Text(
-                                  user.id,
+                                  user['FullName'],
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -387,6 +387,7 @@ class _main_screenState extends State<main_screen> {
       ),
     );
   }
+
 
 // Menu widget
   Widget buildMenu() {

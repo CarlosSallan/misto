@@ -33,6 +33,7 @@ dependencies:
   firebase_database: ^10.0.10
   cloud_firestore: ^4.4.3
   firebase_storage: ^11.0.16
+  cached_network_image: ^3.2.0
 
 
 dev_dependencies:
