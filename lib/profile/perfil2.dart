@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter/rendering.dart';
 import 'package:misto/main_screen/main_screen.dart';
+import 'package:misto/mensajes/friends_screen.dart';
 import '../Amigos/aceptarUsers.dart';
 import '../user.dart';
 import 'package:path/path.dart' as Path;
@@ -94,147 +95,207 @@ class _perfil2State extends State<perfil2> {
     Usuario currentUser = widget.currentUser; //
     return Scaffold(
 
-    body:StreamBuilder<DocumentSnapshot>(
-      stream: _userStream,
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        }
+      body:StreamBuilder<DocumentSnapshot>(
+        stream: _userStream,
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-        ////
-        print('IDEEEE: ${snapshot.data?.id}');
-        ////
+          ////
+          print('IDEEEE: ${snapshot.data?.id}');
+          ////
 
-        Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
-        String? name = data?['FullName'];
-        String? email = user?.email;
-        return Stack(
-          alignment: Alignment.center,
-          children: [
+          Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
+          String? name = data?['FullName'];
+          String? email = user?.email;
+          return Scaffold(
+              body:  Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 2.0,
+                  ),
+                ),
+                child:Stack(
 
-            Positioned(
-              top: 50.0,
-              right: 30.0,
-              child: Material(
-                color:  Color.fromRGBO(228,229,234,1.000),
-                borderRadius: BorderRadius.circular(10.0),
-                child: IconButton(
-                  icon: Icon(Icons.supervised_user_circle, size: 36.0), // Ajusta el tamaño del icono aquí
-                  onPressed: () => Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => aceptarUsers())),
-                  iconSize: 48.0, // Ajusta el tamaño del botón aquí
-                  padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
-                ),
-              ),
-            ),
-            Positioned(
-              top: 130.0,
-              right: 30.0,
-              child: Material(
-                color:  Color.fromRGBO(228,229,234,1.000),
-                borderRadius: BorderRadius.circular(10.0),
-                child: IconButton(
-                  icon: Icon(Icons.map, size: 36.0), // Ajusta el tamaño del icono aquí
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => main_screen(currentUser: currentUser)),
-                    );
-                  },
-                  iconSize: 48.0, // Ajusta el tamaño del botón aquí
-                  padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
-                ),
-              ),
-            ),
-            Positioned(
-              top: 350.0,
-              right: 30.0,
-              child: Material(
-                color:  Color.fromRGBO(228,229,234,1.000),
-                borderRadius: BorderRadius.circular(10.0),
-                child: IconButton(
-                  icon: Icon(Icons.chat, size: 36.0), // Ajusta el tamaño del icono aquí
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  iconSize: 48.0, // Ajusta el tamaño del botón aquí
-                  padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
-                ),
-              ),
-            ),
-            Positioned(
-              top: 50.0,
-              left: 30.0,
-              child: Material(
-                color:  Color.fromRGBO(228,229,234,1.000),
-                borderRadius: BorderRadius.circular(10.0),
-                child: IconButton(
-                  icon: Icon(LineAwesomeIcons.angle_left), // Ajusta el tamaño del icono aquí
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  iconSize: 48.0, // Ajusta el tamaño del botón aquí
-                  padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
-                ),
-              ),
-            ),
+                  children: [
 
-            Positioned(
-              left:0,
-              top:0,
-              bottom: 0,
-              right: 0,
-              child: data?['Avatar'] != null
-                  ? CircleAvatar(
-                backgroundImage: NetworkImage(data?['Avatar']),
-                radius: 80,
+
+
+                    Positioned(
+                      top: 50,
+                      left: 0,
+                      right: 0,
+                      child: data?['Avatar'] != null
+                          ? CircleAvatar(
+                        backgroundImage: NetworkImage(data?['Avatar']),
+                        radius: 50,
+                      )
+                          : CircleAvatar(
+                        backgroundImage: AssetImage('assets/avatar_prueba.jpg'), // Asegúrate de tener una imagen predeterminada en tu carpeta 'assets/images'
+                        radius: 50,
+                      ),
+                    ),
+
+
+
+                    Positioned(
+                        top: 160,
+                        left: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 50),
+                          child: Center(
+                            child: Text(
+                              "$name",
+                              style: TextStyle(fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(22,53,77,1.000) ),
+                            ),
+                          ),
+                        )
+                    ),
+
+
+                    Positioned(
+                      top: 200,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(228,229,234,1.000),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: IconTheme(
+                                    data: IconThemeData(color: Color.fromRGBO(22,53,77,1.000)),
+                                    child: Icon(Icons.photo_album),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: TextButton(
+                                    onPressed: chooseFile,
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      primary:Color.fromRGBO(22,53,77,1.000),
+                                      padding: EdgeInsets.all(15.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Subir foto perfil',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 260,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(228,229,234,1.000),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: IconTheme(
+                                    data: IconThemeData(color: Color.fromRGBO(22,53,77,1.000)),
+                                    child: Icon(Icons.add_a_photo),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: TextButton(
+                                    onPressed: captureAndUploadImage,
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      primary:Color.fromRGBO(22,53,77,1.000),
+                                      padding: EdgeInsets.all(15.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Hacer foto perfil',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+
+
+
+
+
+
+                    Positioned(
+                      top: 50.0,
+                      left: 10.0,
+                      child: Material(
+                        color:  Color.fromRGBO(228,229,234,1.000),
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: IconButton(
+                          icon: Icon(LineAwesomeIcons.angle_left), // Ajusta el tamaño del icono aquí
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                          iconSize: 30.0, // Ajusta el tamaño del botón aquí
+                          padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
+                        ),
+                      ),
+                    ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    /* button */
+
+                  ],
+
+                ),
               )
-                  : CircleAvatar(
-                backgroundImage: AssetImage('assets/avatar_prueba.jpg'), // Asegúrate de tener una imagen predeterminada en tu carpeta 'assets/images'
-                radius: 80,
-              ),
-            ),
-            Positioned(
-              top: 320,
-              right: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: chooseFile,
-                    icon: Icon(Icons.photo_library),
-                    label: Text('Galería'),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: captureAndUploadImage,
-                    icon: Icon(Icons.camera),
-                    label: Text('Cámara'),
-                  ),
-                ],
-              ),
-            ),
 
-
-            /* imagen de perfil */
-
-      //    Positioned(child: Container),
-
-
-
-
-
-
-
-
-            /* button */
-
-          ],
-
-        );
-      },
-    ),
+          );
+        },
+      ),
 
     );
   }
