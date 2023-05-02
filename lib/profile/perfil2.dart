@@ -186,9 +186,9 @@ class _perfil2State extends State<perfil2> {
               top:0,
               bottom: 0,
               right: 0,
-              child: _uploadedFileURL != null
+              child: data?['Avatar'] != null
                   ? CircleAvatar(
-                backgroundImage: NetworkImage(_uploadedFileURL!),
+                backgroundImage: NetworkImage(data?['Avatar']),
                 radius: 80,
               )
                   : CircleAvatar(
