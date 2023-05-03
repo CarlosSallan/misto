@@ -7,6 +7,7 @@ import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
 import 'package:fluttermoji/fluttermojiCustomizer.dart';
 import 'package:fluttermoji/fluttermojiSaveWidget.dart';
 import 'package:fluttermoji/fluttermojiThemeData.dart';
+import 'package:misto/Amigos/misAmigos.dart';
 import 'package:misto/Amigos/seguirUsers.dart';
 import '../container/menu.dart';
 import '../user.dart';
@@ -188,7 +189,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                     onPressed: () => Navigator.push(
                                         context,
                                         new MaterialPageRoute(
-                                            builder: (context) => seguirUsers())),
+                                            builder: (context) => misAmigos())),
                                   ),
                                 ],
                               )),

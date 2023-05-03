@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../profile/perfil2.dart';
 import 'models/Usuario.dart';
 
-class aceptarUsers extends StatefulWidget {
-  aceptarUsers({Key? key}) : super(key: key);
+class misAmigos extends StatefulWidget {
+  misAmigos({Key? key}) : super(key: key);
 
   @override
-  State<aceptarUsers> createState() => _aceptarUsersState();
+  State<misAmigos> createState() => _misAmigosState();
 }
 
-class _aceptarUsersState extends State<aceptarUsers> {
+class _misAmigosState extends State<misAmigos> {
   late Stream<List<Usuario>> _userStream;
   User? user = FirebaseAuth.instance.currentUser;
   late bool pantallaSolicitudes;
@@ -247,72 +248,148 @@ class _aceptarUsersState extends State<aceptarUsers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black54),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: Color.fromRGBO(228, 229, 234, 1.000),
-        title: Text(
-          'Social',
-          style: TextStyle(color: Colors.black54),
-        ),
-      ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                  onPressed: () {
-                    setState(() {
-                      pantallaSolicitudes = true;
-                      _userStream = getStreamSolicitudes(user?.uid);
-                    });
-                  },
-                  child: Text('Solicitudes')),
-              TextButton(
-                  onPressed: () {
-                    setState(() {
-                      pantallaSolicitudes = false;
-                      _userStream = getStreamAmigos(user?.uid);
-                    });
-                  },
-                  child: Text('Amigos'))
-            ],
-          ),
-          Expanded(
-            child: StreamBuilder<List<Usuario>>(
-              stream: _userStream,
-              builder: (context, snapshot) {
-                if (pantallaSolicitudes) {
-                  if (snapshot.hasData) {
-                    final users = snapshot.data!;
-                    return _buildUserList(users);
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                } else {
-                  if (snapshot.hasData && pantallaSolicitudes == false) {
-                    final users = snapshot.data!;
-                    return _buildUserListAmigo(users);
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                }
-              },
+      backgroundColor: Color.fromRGBO(22, 53, 77, 1.000),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                _top(),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(right: 30.0),
+                  child: Material(
+                    color: Colors.white.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.person,
+                        size: 36.0,
+                        color: Color.fromRGBO(22, 53, 77, 1.000),
+                      ),
+                      onPressed: () {
+                        /*
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => perfil2(
+                              currentUser: currentUser,
+                            ),
+                          ),
+                        );
+
+                         */
+                      },
+                      iconSize: 48.0,
+                      padding: EdgeInsets.all(8.0),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+
+            _body(),
+          ],
+        ),
       ),
     );
   }
+  Widget _top() {
+    return Container(
+      padding: EdgeInsets.only(left: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20),
+          Text(
+            'Connect with \nyour friends',
+            style: TextStyle(
+                fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(
+                width: 55,
+              ),
+
+            ],
+          ),
+
+
+        ],
+
+
+      ),
+    );
+  }
+  Widget _body() {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(45), topRight: Radius.circular(45)),
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        pantallaSolicitudes = true;
+                        _userStream = getStreamSolicitudes(user?.uid);
+                      });
+                    },
+                    child: Text('Solicitudes')),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        pantallaSolicitudes = false;
+                        _userStream = getStreamAmigos(user?.uid);
+                      });
+                    },
+                    child: Text('Amigos'))
+              ],
+            ),
+            Expanded(
+              child: StreamBuilder<List<Usuario>>(
+                stream: _userStream,
+                builder: (context, snapshot) {
+                  if (pantallaSolicitudes) {
+                    if (snapshot.hasData) {
+                      final users = snapshot.data!;
+                      return _buildUserList(users);
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  } else {
+                    if (snapshot.hasData && pantallaSolicitudes == false) {
+                      final users = snapshot.data!;
+                      return _buildUserListAmigo(users);
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

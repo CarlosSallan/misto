@@ -30,7 +30,8 @@ Future<void> addUser(User? user, String nombre) {
   // Call the user's CollectionReference to add a new user
   return users.doc(user?.uid).set({
     'FullName': nombre,
-
+    'latitude': '41.033806',
+    'longitude': '28.977905',
   })
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user: $error"));
