@@ -4,6 +4,7 @@ import '../mensajes/mensajes.dart';
 import '../profile/perfil2.dart';
 import '../user.dart';
 import '../message_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FriendsScreen extends StatelessWidget {
   final Usuario currentUser;
@@ -147,32 +148,47 @@ class FriendsScreen extends StatelessWidget {
                     as Timestamp?)
                         ?.toDate();
 
-                    return ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 10.0,
-                      ),
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            "https://cdn3d.iconscout.com/3d/premium/thumb/happy-girl-7962207-6451736.png?f=webp"),
-                        backgroundColor: Color.fromRGBO(22, 53, 77, 1.000),
-                      ),
-                      title: Text(friendDoc['FullName']),
-                      subtitle: lastMessage == null
-                          ? Text('No hay mensajes')
-                          : Text(
-                          '$lastMessage (${lastMessageTime.toString()})'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => mensajes(
-                              currentUser: currentUser,
-                              friendUser: friendDoc,
+                    DocumentSnapshot user = snapshot.data!.docs[index];
+
+                    return Column(
+                      children: [
+                        SizedBox(height: 10.0),
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 5.0,
+                            vertical: 15.0,
+                          ),
+                          leading: ClipOval(
+                            child: Image.network(
+                              user['Avatar'],
+                              width: MediaQuery.of(context).size.width * 0.07,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        );
-                      },
+                          title: Text(friendDoc['FullName']),
+                          subtitle: lastMessage == null
+                              ? Text('No hay mensajes')
+                              : Text(
+                              '$lastMessage (${lastMessageTime.toString()})'),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => mensajes(
+                                  currentUser: currentUser,
+                                  friendUser: friendDoc,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        // Añade un espacio
+                        Divider(
+                          color: Colors.grey.withOpacity(0.3),
+                          thickness: 0.6,
+                        ),
+                      ],
                     );
                   },
                 );
