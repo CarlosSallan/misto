@@ -190,22 +190,7 @@ class _mensajes extends State<mensajes> {
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: 20),
-          Material(
-                color: Colors.white.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10.0),
-                child: IconButton(
-                  icon: Icon(Icons.logout, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
-                  onPressed: () {
-                    // Acción del botón
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FriendsScreen(currentUser: currentUser,)),
-                    );
-                  },
-                  iconSize: 48.0, // Ajusta el tamaño del botón aquí
-                  padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
-                ),
-              ),
+
             ],
           ),
     );
