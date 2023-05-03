@@ -92,7 +92,8 @@ class _perfil2State extends State<perfil2> {
 
   }
   Widget build(BuildContext context) {
-    Usuario currentUser = widget.currentUser; //
+    Usuario currentUser = widget.currentUser;
+    bool isSwitched = false;
     return Scaffold(
 
       body:StreamBuilder<DocumentSnapshot>(
@@ -148,7 +149,7 @@ class _perfil2State extends State<perfil2> {
                           padding: EdgeInsets.symmetric(horizontal: 50),
                           child: Center(
                             child: Text(
-                              "$name",
+                              "hola, $name",
                               style: TextStyle(fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromRGBO(22,53,77,1.000) ),
@@ -159,53 +160,20 @@ class _perfil2State extends State<perfil2> {
 
 
                     Positioned(
-                      top: 200,
+                      top: 210,
                       left: 0,
                       right: 0,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(228,229,234,1.000),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: IconTheme(
-                                    data: IconThemeData(color: Color.fromRGBO(22,53,77,1.000)),
-                                    child: Icon(Icons.photo_album),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: TextButton(
-                                    onPressed: chooseFile,
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      primary:Color.fromRGBO(22,53,77,1.000),
-                                      padding: EdgeInsets.all(15.0),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Subir foto perfil',
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: Divider(
+                          height: 20, // altura de la barra
+                          thickness: 2, // grosor de la barra
+                          color:  Color.fromRGBO(22,53,77,1.000), // color de la barra
                         ),
-                      ),
-                    ),
+                      ),),
+                    //imagen
                     Positioned(
-                      top: 260,
+                      top: 240,
                       left: 0,
                       right: 0,
                       child: Padding(
@@ -250,6 +218,180 @@ class _perfil2State extends State<perfil2> {
                         ),
                       ),
                     ),
+                    Positioned(
+                      top: 310,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(228,229,234,1.000),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: IconTheme(
+                                    data: IconThemeData(color: Color.fromRGBO(22,53,77,1.000)),
+                                    child: Icon(Icons.photo_album),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: TextButton(
+                                    onPressed: chooseFile,
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      primary:Color.fromRGBO(22,53,77,1.000),
+                                      padding: EdgeInsets.all(15.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Subir foto perfil',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    //amigos
+                    Positioned(
+                      top: 370,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Divider(
+                          height: 20, // altura de la barra
+                          thickness: 2, // grosor de la barra
+                          color:  Color.fromRGBO(22,53,77,1.000), // color de la barra
+                        ),
+                      ),),
+                    Positioned(
+                      top: 410,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(228,229,234,1.000),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: IconTheme(
+                                    data: IconThemeData(color: Color.fromRGBO(22,53,77,1.000)),
+                                    child: Icon(Icons.supervised_user_circle_sharp),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: TextButton(
+                                    onPressed: chooseFile,
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      primary:Color.fromRGBO(22,53,77,1.000),
+                                      padding: EdgeInsets.all(15.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Mis amigos',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 470,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Divider(
+                          height: 20, // altura de la barra
+                          thickness: 2, // grosor de la barra
+                          color:  Color.fromRGBO(22,53,77,1.000), // color de la barra
+                        ),
+                      ),),
+
+          //ubi
+                Positioned(
+                top: 500,
+                left: 0,
+                right: 0,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(228, 229, 234, 1.000),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: IconTheme(
+                              data: IconThemeData(color: Color.fromRGBO(22, 53, 77, 1.000)),
+                              child: Icon(Icons.location_on),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Ubicacion',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Spacer(),
+                                  Switch(
+                                    value: isSwitched,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isSwitched = value;
+                                      });
+                                    },
+                                    activeColor: Colors.redAccent,
+                                    inactiveTrackColor: Colors.green,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
 
 
 
@@ -265,6 +407,22 @@ class _perfil2State extends State<perfil2> {
                         borderRadius: BorderRadius.circular(10.0),
                         child: IconButton(
                           icon: Icon(LineAwesomeIcons.angle_left), // Ajusta el tamaño del icono aquí
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                          iconSize: 30.0, // Ajusta el tamaño del botón aquí
+                          padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 50.0,
+                      left: 290.0,
+                      child: Material(
+                        color:  Color.fromRGBO(228,229,234,1.000),
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: IconButton(
+                          icon: Icon(Icons.edit, color:  Color.fromRGBO(22,53,77,1.000)), // Ajusta el tamaño del icono aquí
                           onPressed: (){
                             Navigator.pop(context);
                           },
