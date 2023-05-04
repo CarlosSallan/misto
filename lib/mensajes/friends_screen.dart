@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:misto/main_screen/main_screen.dart';
+import 'package:misto/profile/perfil.dart';
 import '../mensajes/mensajes.dart';
 import '../profile/perfil2.dart';
 import '../user.dart';
@@ -34,20 +36,14 @@ class FriendsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                     child: IconButton(
                       icon: Icon(
-                        Icons.person,
+                        Icons.home,
                         size: 36.0,
                         color: Color.fromRGBO(22, 53, 77, 1.000),
                       ),
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () => Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => perfil2(
-                              currentUser: currentUser,
-                            ),
-                          ),
-                        );
-                      },
+                          new MaterialPageRoute(
+                              builder: (context) => main_screen(currentUser: currentUser))),
                       iconSize: 48.0,
                       padding: EdgeInsets.all(8.0),
                     ),
@@ -73,7 +69,7 @@ class FriendsScreen extends StatelessWidget {
         children: [
           SizedBox(height: 20),
           Text(
-            'Chat with \nyour friends',
+            'Habla con \ntus amigos',
             style: TextStyle(
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
           ),

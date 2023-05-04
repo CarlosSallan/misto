@@ -173,7 +173,7 @@ class _main_screenState extends State<main_screen> {
                 // Acción del botón
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => perfil2(currentUser: currentUser,)),
+                  MaterialPageRoute(builder: (context) => perfil2()),
                 );
               },
               iconSize: 48.0, // Ajusta el tamaño del botón aquí

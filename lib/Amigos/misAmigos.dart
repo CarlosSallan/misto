@@ -268,17 +268,7 @@ class _misAmigosState extends State<misAmigos> {
                         color: Color.fromRGBO(22, 53, 77, 1.000),
                       ),
                       onPressed: () {
-                        /*
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => perfil2(
-                              currentUser: currentUser,
-                            ),
-                          ),
-                        );
-
-                         */
+                        Navigator.pop(context);
                       },
                       iconSize: 48.0,
                       padding: EdgeInsets.all(8.0),
@@ -302,7 +292,7 @@ class _misAmigosState extends State<misAmigos> {
         children: [
           SizedBox(height: 20),
           Text(
-            'Connect with \nyour friends',
+            'Conecta con \ntus amigos',
             style: TextStyle(
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
           ),

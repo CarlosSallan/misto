@@ -6,26 +6,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter/rendering.dart';
 import 'package:misto/Amigos/misAmigos.dart';
-import 'package:misto/main_screen/main_screen.dart';
-import 'package:misto/mensajes/friends_screen.dart';
 import '../user.dart';
 import 'package:path/path.dart' as Path;
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as Path;
 
 class perfil2 extends StatefulWidget {
-  final Usuario currentUser;
-
-  const perfil2({Key? key, required this.currentUser}) : super(key: key);
+  const perfil2({Key? key}) : super(key: key);
 
   @override
   State<perfil2> createState() => _perfil2State();
 }
 
 class _perfil2State extends State<perfil2> {
+  final User? user = FirebaseAuth.instance.currentUser;
   final ImagePicker _picker = ImagePicker();
   String? _uploadedFileURL;
 
@@ -81,9 +74,6 @@ class _perfil2State extends State<perfil2> {
   }
 
   late Stream<DocumentSnapshot> _userStream;
-  User? user = FirebaseAuth.instance.currentUser;
-  TextEditingController _textFieldController = TextEditingController();
-  TextEditingController _textFieldController2 = TextEditingController();
   bool isTextFieldEnable = true;
   FocusNode _focusNode = FocusNode();
 
@@ -97,7 +87,6 @@ class _perfil2State extends State<perfil2> {
   }
 
   Widget build(BuildContext context) {
-    Usuario currentUser = widget.currentUser;
     bool isSwitched = false;
     return Scaffold(
       body: StreamBuilder<DocumentSnapshot>(

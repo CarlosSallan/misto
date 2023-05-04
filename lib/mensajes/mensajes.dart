@@ -185,7 +185,7 @@ class _mensajes extends State<mensajes> {
         children: [
           SizedBox(height: 20),
           Text(
-            'Chat with \nyour friends',
+            'Habla con \ntus amigos',
             style: TextStyle(
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
           ),
