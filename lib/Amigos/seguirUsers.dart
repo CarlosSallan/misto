@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../main_screen/main_screen.dart';
 import 'models/Usuario.dart';
 
 class seguirUsers extends StatefulWidget {
@@ -13,6 +14,7 @@ class seguirUsers extends StatefulWidget {
 }
 
 class _seguirUsersState extends State<seguirUsers> {
+  final User? user = FirebaseAuth.instance.currentUser;
   late Stream<List<Usuario>> _userStream;
   TextEditingController _searchController = TextEditingController();
 
@@ -44,6 +46,26 @@ class _seguirUsersState extends State<seguirUsers> {
 
   }
 
+  Future<bool> compruebaSeguir(String amigoId) async {
+    final amistadCollection = FirebaseFirestore.instance.collection('Amistad');
+
+    // Verificar si el usuario actual tiene el documento de Amistad
+    final currentUserDoc = await amistadCollection.doc(user?.uid).get();
+    if (!currentUserDoc.exists) {
+      // El documento no existe, por lo que no está siguiendo a nadie
+      return false;
+    }
+
+    // Verificar si el usuario actual sigue al usuario pasado por parámetro
+    final currentUserAmigosList = currentUserDoc.data()?['ArrayAmigos'] ?? <String>[];
+    if (currentUserAmigosList.contains(amigoId)) {
+      // El usuario actual sigue al usuario pasado por parámetro
+      return true;
+    } else {
+      // El usuario actual no sigue al usuario pasado por parámetro
+      return false;
+    }
+  }
   Future<bool> checkIfValueExistsInUserArray( String value) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     final userRef = FirebaseFirestore.instance.collection('Amistad');
@@ -129,20 +151,34 @@ class _seguirUsersState extends State<seguirUsers> {
   }
 
   Widget _buildUserListItem(Usuario user) {
-    return ListTile(
-      leading: CircleAvatar(
-        child: Text(user.FullName.substring(0, 2)),
-      ),
-      title: Text(user.FullName),
-      subtitle: Text(user.FullName),
-      trailing: ElevatedButton(
-        child: Text(user.isFollowing ? 'Siguiendo' : 'Seguir'),
-        onPressed: () {
-          setState(() {
-            _followUser(user);
-          });
-        },
-      ),
+    return FutureBuilder<bool>(
+      future: compruebaSeguir(user.gettUID),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          bool sigue = snapshot.data!;
+          return ListTile(
+            leading: CircleAvatar(
+              child: Text(user.FullName.substring(0, 2)),
+            ),
+            title: Text(user.FullName),
+            subtitle: Text(user.FullName),
+            trailing: ElevatedButton(
+              child: Text(sigue ? 'Siguiendo' : 'Seguir'),
+              onPressed: () {
+                setState(() {
+                  _followUser(user);
+                });
+              },
+            ),
+          );
+        } else if (snapshot.hasError) {
+          // Manejar errores
+          return CircularProgressIndicator();
+        } else {
+          // Mostrar un indicador de progreso
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 
@@ -208,31 +244,97 @@ class _seguirUsersState extends State<seguirUsers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(107, 153, 195, 1.000),
-        title: Text('Seguir usuarios'),
-      ),
-      body: Column(
-        children: [
-          _buildSearchBar(),
-          Expanded(
-            child: StreamBuilder<List<Usuario>>(
-              stream: _userStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final users = snapshot.data!;
-                  return _buildUserList(users);
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
+      backgroundColor: Color.fromRGBO(22, 53, 77, 1.000),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                _top(),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(right: 30.0),
+                  child: Material(
+                    color: Colors.white.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.home,
+                        size: 36.0,
+                        color: Color.fromRGBO(22, 53, 77, 1.000),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      iconSize: 48.0,
+                      padding: EdgeInsets.all(8.0),
+                    ),
+                  ),
+                ),
+              ],
             ),
+
+            _body(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _top() {
+    return Container(
+      padding: EdgeInsets.only(left: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20),
+          Text(
+            'Haz nuevos \namigos',
+            style: TextStyle(
+                fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
           ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(
+                width: 55,
+              ),
+
+            ],
+          ),
+
+
         ],
+
+
+      ),
+    );
+  }
+  Widget _body() {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(45), topRight: Radius.circular(45)),
+          color: Colors.white,
+        ),
+        child: StreamBuilder<List<Usuario>>(
+          stream: _userStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final users = snapshot.data!;
+              return _buildUserList(users);
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       ),
     );
   }
