@@ -93,10 +93,10 @@ class _MyMapState extends State<MyMap> {
           markers: {
             Marker(
                 position: LatLng(
-                  double.parse(snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.selectedUserId)['latitude']),
-                  double.parse(snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.selectedUserId)['longitude']),
+                  snapshot.data!.docs.singleWhere((element) =>
+                  element.id == widget.selectedUserId)['latitude'],
+                  snapshot.data!.docs.singleWhere((element) =>
+                  element.id == widget.selectedUserId)['longitude'],
                 ),
                 markerId: MarkerId(widget.selectedUserId),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
@@ -104,10 +104,10 @@ class _MyMapState extends State<MyMap> {
           },
           initialCameraPosition: CameraPosition(
               target: LatLng(
-                double.parse(snapshot.data!.docs.singleWhere((element) =>
-                element.id == widget.selectedUserId)['latitude']),
-                double.parse(snapshot.data!.docs.singleWhere((element) =>
-                element.id == widget.selectedUserId)['longitude']),
+                snapshot.data!.docs.singleWhere((element) =>
+                element.id == widget.selectedUserId)['latitude'],
+                snapshot.data!.docs.singleWhere((element) =>
+                element.id == widget.selectedUserId)['longitude'],
               ),
               zoom: 14.47),
           onMapCreated: (GoogleMapController controller) {
@@ -157,7 +157,7 @@ class _main_screenState extends State<main_screen> {
 
     return Stack(
       children: [
-        MyMap(currentUser.id, _selectedUserId, onMapCreated: (controller) {
+        MyMap(currentUser.id, currentUser.id, onMapCreated: (controller) {
           _mapController = controller;
         }),
         DraggableScrollableSheet(
