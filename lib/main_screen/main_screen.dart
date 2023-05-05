@@ -148,7 +148,7 @@ class _main_screenState extends State<main_screen> {
   StreamSubscription<LocationData>? _locationSubscription;
   final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
-  String _selectedUserId = 'user1';
+  late String _selectedUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -369,15 +369,36 @@ class _main_screenState extends State<main_screen> {
                     child: Row(
                       children: [
                         // Image
+                        // Image
                         Padding(
                           padding: EdgeInsets.all(8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: Image.network(
-                              user['Avatar'],
-                              width: MediaQuery.of(context).size.width * 0.20,
-                              height: MediaQuery.of(context).size.height * 0.20,
-                              fit: BoxFit.cover,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: ClipOval(
+                              child: (user.data() as Map<String, dynamic>).containsKey('Avatar') && user['Avatar'] != null
+                                  ? FadeInImage.assetNetwork(
+                                placeholder: 'assets/MistoLog.png',
+                                image: user['Avatar'],
+                                width: MediaQuery.of(context).size.width * 0.20,
+                                height: MediaQuery.of(context).size.height * 0.13,
+                                fit: BoxFit.cover,
+                              )
+                                  : Image.asset(
+                                'assets/MistoLog.png',
+                                width: MediaQuery.of(context).size.width * 0.20,
+                                height: MediaQuery.of(context).size.height * 0.13,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
