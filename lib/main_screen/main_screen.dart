@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,11 +6,10 @@ import 'package:misto/mensajes/mensajes.dart';
 import 'package:misto/profile/perfil2.dart';
 import '../container/menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:location/location.dart' as loc;
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:location/location.dart';
 import '../acceder/login.dart';
 import '../mensajes/friends_screen.dart';
-import '../profile/UserDetailScreen.dart';
 import '../Amigos/seguirUsers.dart';
 import '../user.dart';
 
@@ -27,9 +25,53 @@ class MyMap extends StatefulWidget {
 }
 
 class _MyMapState extends State<MyMap> {
-  final loc.Location location = loc.Location();
+  late Location location;
   GoogleMapController? _controller;
+  StreamSubscription<LocationData>? _locationSubscription;
   bool _added = false;
+
+  @override
+  void initState() {
+    super.initState();
+    location = Location();
+    _requestLocationPermission().then((status) {
+      if (status == ph.PermissionStatus.granted) {
+        _initLocationUpdates();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _locationSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _initLocationUpdates() async {
+    bool _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _locationSubscription = location.onLocationChanged.listen((LocationData currentLocation) async {
+      await _updateLocationInFirebase(currentLocation.latitude!, currentLocation.longitude!);
+    });
+  }
+
+  Future<void> _updateLocationInFirebase(double latitude, double longitude) async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.user_id)
+        .update({'latitude': latitude, 'longitude': longitude});
+  }
+
+  Future<ph.PermissionStatus> _requestLocationPermission() async {
+    final status = await ph.Permission.location.request();
+    return status;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +82,11 @@ class _MyMapState extends State<MyMap> {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
         }
-          final userExists = snapshot.data!.docs.any((element) => element.id == widget.selectedUserId);
+        final userExists = snapshot.data!.docs.any((element) => element.id == widget.selectedUserId);
 
-          if (!userExists) {
-            return Center(child: Text(widget.selectedUserId));
-          }
+        if (!userExists) {
+          return Center(child: Text(widget.selectedUserId));
+        }
 
         return GoogleMap(
           mapType: MapType.normal,
@@ -73,8 +115,8 @@ class _MyMapState extends State<MyMap> {
             widget.onMapCreated(controller);
           },
         );
-        },
-      );
+      },
+    );
   }
 
   Future<void> mymap(AsyncSnapshot<QuerySnapshot> snapshot) async {
@@ -102,8 +144,8 @@ class main_screen extends StatefulWidget {
 class _main_screenState extends State<main_screen> {
 
   final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
-  final loc.Location location = loc.Location();
-  StreamSubscription<loc.LocationData>? _locationSubscription;
+  final Location location = Location();
+  StreamSubscription<LocationData>? _locationSubscription;
   final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
   String _selectedUserId = 'user1';
@@ -115,7 +157,7 @@ class _main_screenState extends State<main_screen> {
 
     return Stack(
       children: [
-        MyMap(_selectedUserId, _selectedUserId, onMapCreated: (controller) {
+        MyMap(currentUser.id, _selectedUserId, onMapCreated: (controller) {
           _mapController = controller;
         }),
         DraggableScrollableSheet(
