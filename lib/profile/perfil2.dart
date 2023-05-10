@@ -10,6 +10,8 @@ import '../user.dart';
 import 'package:path/path.dart' as Path;
 import 'dart:io';
 
+import 'editarPerfil.dart';
+
 class perfil2 extends StatefulWidget {
   const perfil2({Key? key}) : super(key: key);
 
@@ -425,9 +427,10 @@ class _perfil2State extends State<perfil2> {
                       icon: Icon(Icons.edit,
                           color: Color.fromRGBO(22, 53, 77, 1.000)),
                       // Ajusta el tamaño del icono aquí
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed:() => Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => editarPerfil())),
                       iconSize: 30.0,
                       // Ajusta el tamaño del botón aquí
                       padding: EdgeInsets.all(
