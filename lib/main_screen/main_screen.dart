@@ -183,14 +183,14 @@ class _main_screenState extends State<main_screen> {
                       width: 100,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.black
+                        color: Color.fromRGBO(22,53,77,1.000),
                       ),
                     ),
                           Container(
-                            height: 20, // Aquí puedes especificar la altura que desees para las tarjetas
+                            height: 20,
                           ),
                         Container(
-                          height: 300, // Aquí puedes especificar la altura que desees para las tarjetas
+                          height: MediaQuery.of(context).size.height * 0.2,
                           child: buildConnectedUserCards(),
                         ),
 
@@ -282,47 +282,6 @@ class _main_screenState extends State<main_screen> {
     );
   }
 
-  Widget buildUserList() {
-    return Expanded(
-      child: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('Users').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return Material( // Agrega el widget Material aquí
-            child: ListView.builder(
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(snapshot.data!.docs[index]['FullName'].toString()),
-                  subtitle: Row(
-                    children: [
-                      Text(snapshot.data!.docs[index]['latitude'].toString()),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(snapshot.data!.docs[index]['longitude'].toString()),
-                    ],
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.directions),
-                    onPressed: () {
-                      setState(() {
-                        _selectedUserId = snapshot.data!.docs[index].id;
-                      });
-
-                    },
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Widget buildConnectedUserCards() {
     void _zoomToSelectedUserLocation(LatLng userLocation) {
       _mapController?.animateCamera(
@@ -336,8 +295,10 @@ class _main_screenState extends State<main_screen> {
     }
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('Users').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -350,139 +311,179 @@ class _main_screenState extends State<main_screen> {
           }
 
           return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot user = snapshot.data!.docs[index];
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot user = snapshot.data!.docs[index];
+                double latitude = double.parse(
+                    snapshot.data!.docs.singleWhere((element) =>
+                    element.id ==
+                        user.id)['latitude'].toString());
 
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Card(
-                  color: Colors.white,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    child: Row(
-                      children: [
-                        // Image
-                        // Image
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: ClipOval(
-                              child: (user.data() as Map<String, dynamic>).containsKey('Avatar') && user['Avatar'] != null
-                                  ? FadeInImage.assetNetwork(
-                                placeholder: 'assets/MistoLog.png',
-                                image: user['Avatar'],
-                                width: MediaQuery.of(context).size.width * 0.20,
-                                height: MediaQuery.of(context).size.height * 0.13,
-                                fit: BoxFit.cover,
-                              )
-                                  : Image.asset(
-                                'assets/MistoLog.png',
-                                width: MediaQuery.of(context).size.width * 0.20,
-                                height: MediaQuery.of(context).size.height * 0.13,
-                                fit: BoxFit.cover,
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+
+
+
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ),
-                        // Text and Map button
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Text
-                                Text(
-                                  user['FullName'],
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                           
+                            Row(
+                                children: [
+                                  SizedBox(width: 20),
+                                  ClipOval(
+                                    child: (user.data() as Map<String, dynamic>).containsKey('Avatar') && user['Avatar'] != null
+                                        ? FadeInImage.assetNetwork(
+                                      placeholder: 'assets/MistoLog.png',
+                                      image: user['Avatar'],
+                                      width: MediaQuery.of(context).size.width * 0.15,
+                                      height: MediaQuery.of(context).size.height * 0.10,
+                                      fit: BoxFit.cover,
+                                    )
+                                        : Image.asset(
+                                      'assets/MistoLog.png',
+                                      width: MediaQuery.of(context).size.width * 0.20,
+                                      height: MediaQuery.of(context).size.height * 0.13,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                // Map button
-                                IconButton(
-                                  icon: Icon(Icons.map),
-                                  onPressed: () {
-                                    setState(() {
-                                      _selectedUserId = user.id;
-                                    });
-                                    Future.delayed(Duration(milliseconds: 200), () {
-                                      double latitude = double.parse(snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
-                                      double longitude = double.parse(snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
 
-                                      LatLng userLocation = LatLng(latitude, longitude);
-                                      _zoomToSelectedUserLocation(userLocation);
-                                    });
+                                  SizedBox(width: 20),
 
-                                  },
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        user['FullName'],
+                                        style: TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w900,
+                                          color: Color.fromRGBO(22, 53, 77, 1.000),
+                                        ),
+                                      ),
+
+                                      Text(
+                                        "${user['latitude'] != null
+                                            ? (user['latitude'] is String ?
+                                        double.parse(user['latitude']) : user['latitude']).toString() : '0.0'} / "
+                                            "${user['longitude'] != null ? (user['longitude'] is String ? double.parse(user['longitude']) : user['longitude']).toString() : '0.0'}",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                ]
+                            ),
+
+                            SizedBox(height: 20),
+
+                            Row(
+                              children: [
+                                SizedBox(width: 20),
+                                SizedBox(
+                                    height: 50, //height of button
+                                    width: 150, //width of button
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Color.fromRGBO(22,53,77,1.000),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(50)
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _selectedUserId = user.id;
+                                        });
+                                        Future.delayed(
+                                            Duration(milliseconds: 200), () {
+                                          double latitude = double.parse(
+                                              snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());double longitude = double.parse(
+                                              snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
+
+                                          LatLng userLocation = LatLng(latitude, longitude);
+                                          _zoomToSelectedUserLocation(userLocation);
+                                        });
+                                      }, child: Text('Donde esta?'),
+                                    ),
                                 ),
+
+                                SizedBox(width: 20),
+
+                                SizedBox(
+                                    height: 50,
+                                    width: 150,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(50)
+                                      ),
+                                        side: const BorderSide(
+                                          width: 1.0,
+                                          color: Color.fromRGBO(22,53,77,1.000),
+                                        ),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _selectedUserId = user.id;
+                                      });
+                                      Future.delayed(
+                                          Duration(milliseconds: 200), () {
+                                        double latitude = double.parse(
+                                            snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());double longitude = double.parse(
+                                            snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
+
+                                        LatLng userLocation = LatLng(latitude, longitude);
+                                        _zoomToSelectedUserLocation(userLocation);
+                                      });
+                                    }, child: Text('Chat',
+                                    style: TextStyle(
+                                    color: Color.fromRGBO(22,53,77,1.000),
+                                  ),
+                                  ),
+                                  ),
+                                )
                               ],
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              });
         },
       ),
+
     );
-  }
-
-
-// Menu widget
-  Widget buildMenu() {
-    Usuario currentUser = widget.currentUser;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.13,
-          width: MediaQuery.of(context).size.width,
-          child: menu(
-            pagina: 0, currentUser: currentUser,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<Map<String, LatLng>> getUsersWithLocation() async {
-    QuerySnapshot<Map<String, dynamic>> users =
-    await FirebaseFirestore.instance.collection('Users').get();
-    Map<String, LatLng> usersWithLocation = {};
-
-    for (var user in users.docs) {
-      if (user.data().containsKey('latitude') &&
-          user.data().containsKey('longitude')) {
-        usersWithLocation[user.id] = LatLng(
-          user['latitude'],
-          user['longitude'],
-        );
-      }
-    }
-    return usersWithLocation;
   }
 }

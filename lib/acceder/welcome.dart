@@ -61,42 +61,12 @@ class _welcomeState extends State<welcome> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                      Text(
-                        "MISTO",
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          letterSpacing: 10.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "bienvenido",
-                        style: TextStyle(
-                          color: Colors.black38,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 30,
-                        ),
-                      ),
-                      Text(
-                        'Misto es una aplicación social para conectar con tus amigos. \n Chatea e interactua con ellos mediante el mapa. \n ¡No esperes más y regístrate!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black38, fontSize: 15),
-                      ),
-
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
+              flex: 5,
               child: Container(
-                height: MediaQuery.of(context).size.height / 3,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/Illustration.png')),
+                      image: AssetImage('assets/MistoLog.png')),
                 ),
               ),
             ),
