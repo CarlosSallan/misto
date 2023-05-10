@@ -161,9 +161,9 @@ class _main_screenState extends State<main_screen> {
           _mapController = controller;
         }),
         DraggableScrollableSheet(
-          initialChildSize: 0.2,
-          minChildSize: 0.2,
-          maxChildSize: 0.4,
+          initialChildSize: 0.1,
+          minChildSize: 0.1,
+          maxChildSize: 0.25,
           builder: (BuildContext context, ScrollController scrollController) {
             return ClipRRect(
               borderRadius: BorderRadius.only(
@@ -295,10 +295,7 @@ class _main_screenState extends State<main_screen> {
     }
 
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('Users').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -316,9 +313,7 @@ class _main_screenState extends State<main_screen> {
               itemBuilder: (context, index) {
                 DocumentSnapshot user = snapshot.data!.docs[index];
                 double latitude = double.parse(
-                    snapshot.data!.docs.singleWhere((element) =>
-                    element.id ==
-                        user.id)['latitude'].toString());
+                    snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
 
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
@@ -328,8 +323,6 @@ class _main_screenState extends State<main_screen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-
-
 
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.5,
@@ -353,13 +346,13 @@ class _main_screenState extends State<main_screen> {
                                 ],
                               ),
                             ),
-                           
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                             Row(
                                 children: [
-                                  SizedBox(width: 20),
+                                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                                   ClipOval(
-                                    child: (user.data() as Map<String, dynamic>).containsKey('Avatar') && user['Avatar'] != null
-                                        ? FadeInImage.assetNetwork(
+                                    child: (user.data() as Map<String, dynamic>).containsKey('Avatar') &&
+                                        user['Avatar'] != null ? FadeInImage.assetNetwork(
                                       placeholder: 'assets/MistoLog.png',
                                       image: user['Avatar'],
                                       width: MediaQuery.of(context).size.width * 0.15,
@@ -368,8 +361,8 @@ class _main_screenState extends State<main_screen> {
                                     )
                                         : Image.asset(
                                       'assets/MistoLog.png',
-                                      width: MediaQuery.of(context).size.width * 0.20,
-                                      height: MediaQuery.of(context).size.height * 0.13,
+                                      width: MediaQuery.of(context).size.width * 0.15,
+                                      height: MediaQuery.of(context).size.height * 0.10,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -404,11 +397,11 @@ class _main_screenState extends State<main_screen> {
                                 ]
                             ),
 
-                            SizedBox(height: 20),
+                            SizedBox(height: MediaQuery.of(context).size.width * 0.02),
 
                             Row(
                               children: [
-                                SizedBox(width: 20),
+                                SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                                 SizedBox(
                                     height: 50, //height of button
                                     width: 150, //width of button
@@ -426,7 +419,8 @@ class _main_screenState extends State<main_screen> {
                                         Future.delayed(
                                             Duration(milliseconds: 200), () {
                                           double latitude = double.parse(
-                                              snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());double longitude = double.parse(
+                                              snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
+                                          double longitude = double.parse(
                                               snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
 
                                           LatLng userLocation = LatLng(latitude, longitude);
@@ -436,7 +430,7 @@ class _main_screenState extends State<main_screen> {
                                     ),
                                 ),
 
-                                SizedBox(width: 20),
+                                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
 
                                 SizedBox(
                                     height: 50,
@@ -459,7 +453,8 @@ class _main_screenState extends State<main_screen> {
                                       Future.delayed(
                                           Duration(milliseconds: 200), () {
                                         double latitude = double.parse(
-                                            snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());double longitude = double.parse(
+                                            snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
+                                        double longitude = double.parse(
                                             snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
 
                                         LatLng userLocation = LatLng(latitude, longitude);
