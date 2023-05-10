@@ -149,6 +149,7 @@ class _main_screenState extends State<main_screen> {
   final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
   late String _selectedUserId;
+  late DocumentSnapshot friend;
 
   @override
   Widget build(BuildContext context) {
@@ -451,18 +452,12 @@ class _main_screenState extends State<main_screen> {
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        _selectedUserId = user.id;
+                                        friend = user;
                                       });
-                                      Future.delayed(
-                                          Duration(milliseconds: 200), () {
-                                        double latitude = double.parse(
-                                            snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
-                                        double longitude = double.parse(
-                                            snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
-
-                                        LatLng userLocation = LatLng(latitude, longitude);
-                                        _zoomToSelectedUserLocation(userLocation);
-                                      });
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => mensajes(currentUser: widget.currentUser, friendUser: friend)),
+                                      );
                                     }, child: Text('Chat',
                                     style: TextStyle(
                                     color: Color.fromRGBO(22,53,77,1.000),
