@@ -325,7 +325,7 @@ class _main_screenState extends State<main_screen> {
                     ),
 
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.6,
                       height: MediaQuery.of(context).size.height * 0.7,
                       child: Padding(
                         padding: EdgeInsets.all(10),
@@ -356,7 +356,7 @@ class _main_screenState extends State<main_screen> {
                                       placeholder: 'assets/MistoLog.png',
                                       image: user['Avatar'],
                                       width: MediaQuery.of(context).size.width * 0.15,
-                                      height: MediaQuery.of(context).size.height * 0.10,
+                                      height: MediaQuery.of(context).size.width * 0.15,
                                       fit: BoxFit.cover,
                                     )
                                         : Image.asset(
@@ -367,7 +367,7 @@ class _main_screenState extends State<main_screen> {
                                     ),
                                   ),
 
-                                  SizedBox(width: 20),
+                                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
 
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,7 +376,7 @@ class _main_screenState extends State<main_screen> {
                                       Text(
                                         user['FullName'],
                                         style: TextStyle(
-                                          fontSize: 26,
+                                          fontSize: MediaQuery.of(context).size.height * 0.025,
                                           fontWeight: FontWeight.w900,
                                           color: Color.fromRGBO(22, 53, 77, 1.000),
                                         ),
@@ -388,7 +388,7 @@ class _main_screenState extends State<main_screen> {
                                         double.parse(user['latitude']) : user['latitude']).toString() : '0.0'} / "
                                             "${user['longitude'] != null ? (user['longitude'] is String ? double.parse(user['longitude']) : user['longitude']).toString() : '0.0'}",
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: MediaQuery.of(context).size.height * 0.015,
                                         ),
                                       ),
                                     ],
@@ -401,10 +401,10 @@ class _main_screenState extends State<main_screen> {
 
                             Row(
                               children: [
-                                SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+                                SizedBox(width: MediaQuery.of(context).size.width * 0.025),
                                 SizedBox(
-                                    height: 50, //height of button
-                                    width: 150, //width of button
+                                    height: MediaQuery.of(context).size.height * 0.04, //height of button
+                                    width: MediaQuery.of(context).size.height * 0.12, //width of button
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         primary: Color.fromRGBO(22,53,77,1.000),
@@ -426,15 +426,18 @@ class _main_screenState extends State<main_screen> {
                                           LatLng userLocation = LatLng(latitude, longitude);
                                           _zoomToSelectedUserLocation(userLocation);
                                         });
-                                      }, child: Text('Donde esta?'),
+                                      }, child: Text('En mapa',
+                                      style: TextStyle(
+                                      fontSize: MediaQuery.of(context).size.height * 0.012,
+                                    ),),
                                     ),
                                 ),
 
                                 SizedBox(width: MediaQuery.of(context).size.width * 0.03),
 
                                 SizedBox(
-                                    height: 50,
-                                    width: 150,
+                                  height: MediaQuery.of(context).size.height * 0.04, //height of button
+                                  width: MediaQuery.of(context).size.height * 0.12,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       primary: Colors.white,
@@ -463,6 +466,7 @@ class _main_screenState extends State<main_screen> {
                                     }, child: Text('Chat',
                                     style: TextStyle(
                                     color: Color.fromRGBO(22,53,77,1.000),
+                                      fontSize: MediaQuery.of(context).size.height * 0.012,
                                   ),
                                   ),
                                   ),
