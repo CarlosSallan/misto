@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
+
 void UserToFirebase(User? user, String nombre){
   //Agregamos User a Firebase
   addUser(user, nombre);

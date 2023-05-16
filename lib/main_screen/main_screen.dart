@@ -1,16 +1,17 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:misto/mensajes/mensajes.dart';
 import 'package:misto/profile/perfil2.dart';
-import '../container/menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:location/location.dart';
 import '../acceder/login.dart';
 import '../mensajes/friends_screen.dart';
 import '../Amigos/seguirUsers.dart';
+import 'models/Usuario.dart' as UserApp;
 import '../user.dart';
 
 class MyMap extends StatefulWidget {
@@ -28,7 +29,6 @@ class _MyMapState extends State<MyMap> {
   late Location location;
   GoogleMapController? _controller;
   StreamSubscription<LocationData>? _locationSubscription;
-  bool _added = false;
 
   @override
   void initState() {
@@ -150,6 +150,61 @@ class _main_screenState extends State<main_screen> {
   GoogleMapController? _mapController;
   late String _selectedUserId;
   late DocumentSnapshot friend;
+  late Stream<List<UserApp.Usuario>> _userStreamTodos;
+  late Stream<List<UserApp.Usuario>> _userStream;
+
+  User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _userStream = getStreamAmigos(user?.uid);
+    // Filtrar los usuarios y los guardas en un array de toda la vida
+    _userStreamTodos = userStream();
+
+  }
+
+  Stream<List<UserApp.Usuario>> userStream() {
+    final userCollection = FirebaseFirestore.instance.collection('Users');
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    return userCollection.snapshots().map((snapshot) {
+      return snapshot.docs
+          .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
+          .map((doc) {
+        final fullName = doc.data()['FullName'] as String;
+        return UserApp.Usuario(fullName, doc.id, true);
+      }).toList();
+    }
+    );
+  }
+
+  Stream<List<UserApp.Usuario>> getStreamAmigos(String? uid) {
+    final userCollection = FirebaseFirestore.instance.collection('Users');
+    final amistadCollection = FirebaseFirestore.instance.collection('Amistad');
+
+    return amistadCollection.doc(uid).get().asStream().map((doc) {
+      final ArraySoli = (doc.data() ?? {})['ArrayAmigos'] as List<dynamic>?;
+      if (ArraySoli == null || ArraySoli.isEmpty) {
+        return []; // si no hay solicitudes pendientes, devuelve una lista vacía
+      } else {
+        return ArraySoli; // devuelve la lista de uid de los usuarios con solicitudes pendientes
+      }
+    }).asyncMap((soliList) async {
+      final userList = <UserApp.Usuario>[]; // lista de usuarios a devolver
+
+      for (final uid in soliList) {
+        final userDoc = await userCollection.doc(uid).get();
+        if (userDoc.exists) {
+          final fullName = userDoc.data()?['FullName'] as String?;
+          if (fullName != null) {
+            userList.add(UserApp.Usuario(fullName, uid, true));
+          }
+        }
+      }
+
+      return userList; // devuelve la lista final de usuarios
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -297,9 +352,9 @@ class _main_screenState extends State<main_screen> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('Users').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      child: StreamBuilder<List<UserApp.Usuario>>(
+        stream: _userStream,
+        builder: (BuildContext context, AsyncSnapshot<List<UserApp.Usuario>> snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           }
@@ -308,13 +363,18 @@ class _main_screenState extends State<main_screen> {
             return CircularProgressIndicator();
           }
 
+          List<UserApp.Usuario> userList = snapshot.data ?? [];
+
           return ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data!.docs.length,
+              itemCount: userList.length,
               itemBuilder: (context, index) {
-                DocumentSnapshot user = snapshot.data!.docs[index];
+                UserApp.Usuario? user = snapshot.data?.elementAt(index);
+                /*
                 double latitude = double.parse(
                     snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
+
+                 */
 
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
@@ -326,7 +386,7 @@ class _main_screenState extends State<main_screen> {
                     ),
 
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
+                      width: MediaQuery.of(context).size.width * 0.7,
                       height: MediaQuery.of(context).size.height * 0.7,
                       child: Padding(
                         padding: EdgeInsets.all(10),
@@ -348,6 +408,7 @@ class _main_screenState extends State<main_screen> {
                               ),
                             ),
                             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                            /*
                             Row(
                                 children: [
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
@@ -468,6 +529,8 @@ class _main_screenState extends State<main_screen> {
                                 )
                               ],
                             ),
+                            
+                             */
                           ],
                         ),
                       ),
