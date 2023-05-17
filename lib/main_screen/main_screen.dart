@@ -172,7 +172,9 @@ class _main_screenState extends State<main_screen> {
           .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
           .map((doc) {
         final fullName = doc.data()['FullName'] as String;
-        return UserApp.Usuario(fullName, doc.id, true);
+        final  Latitude = doc.data()?['latitude'] as double;
+        final  longitude = doc.data()?['longitude'] as double;
+        return UserApp.Usuario(fullName, doc.id, true, Latitude, longitude);
       }).toList();
     }
     );
@@ -195,9 +197,11 @@ class _main_screenState extends State<main_screen> {
       for (final uid in soliList) {
         final userDoc = await userCollection.doc(uid).get();
         if (userDoc.exists) {
-          final fullName = userDoc.data()?['FullName'] as String?;
+          final fullName = userDoc.data()?['FullName'] as String;
+          final  Latitude = userDoc.data()?['latitude'] as double;
+          final  longitude = userDoc.data()?['longitude'] as double;
           if (fullName != null) {
-            userList.add(UserApp.Usuario(fullName, uid, true));
+            userList.add(UserApp.Usuario(fullName, uid, true, Latitude, longitude));
           }
         }
       }
@@ -408,10 +412,10 @@ class _main_screenState extends State<main_screen> {
                               ),
                             ),
                             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                            /*
                             Row(
                                 children: [
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                                  /*
                                   ClipOval(
                                     child: (user.data() as Map<String, dynamic>).containsKey('Avatar') &&
                                         user['Avatar'] != null ? FadeInImage.assetNetwork(
@@ -428,15 +432,15 @@ class _main_screenState extends State<main_screen> {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-
+                                  */
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-
+                                  /*
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        user['FullName'],
+                                        "${user?.FullName ?? "Usuario"}",
                                         style: TextStyle(
                                           fontSize: MediaQuery.of(context).size.height * 0.025,
                                           fontWeight: FontWeight.w900,
@@ -445,16 +449,15 @@ class _main_screenState extends State<main_screen> {
                                       ),
 
                                       Text(
-                                        "${user['latitude'] != null
-                                            ? (user['latitude'] is String ?
-                                        double.parse(user['latitude']) : user['latitude']).toString() : '0.0'} / "
-                                            "${user['longitude'] != null ? (user['longitude'] is String ? double.parse(user['longitude']) : user['longitude']).toString() : '0.0'}",
+                                        "${user?.longitude.toString()} / "
+                                            "${user?.latitude.toString()}",
                                         style: TextStyle(
                                           fontSize: MediaQuery.of(context).size.height * 0.015,
                                         ),
                                       ),
                                     ],
                                   ),
+                                  */
 
                                 ]
                             ),
@@ -476,18 +479,18 @@ class _main_screenState extends State<main_screen> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _selectedUserId = user.id;
+                                          _selectedUserId = user?.UID ?? "No hay UID";
                                         });
+
                                         Future.delayed(
                                             Duration(milliseconds: 200), () {
-                                          double latitude = double.parse(
-                                              snapshot.data!.docs.singleWhere((element) => element.id == user.id)['latitude'].toString());
-                                          double longitude = double.parse(
-                                              snapshot.data!.docs.singleWhere((element) => element.id == user.id)['longitude'].toString());
+                                          double latitude = user?.latitude.toDouble() ?? 1.0;
+                                          double longitude = user?.longitude.toDouble() ?? 2.0;
 
                                           LatLng userLocation = LatLng(latitude, longitude);
                                           _zoomToSelectedUserLocation(userLocation);
                                         });
+
                                       }, child: Text('En mapa',
                                       style: TextStyle(
                                       fontSize: MediaQuery.of(context).size.height * 0.012,
@@ -496,7 +499,7 @@ class _main_screenState extends State<main_screen> {
                                 ),
 
                                 SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-
+                                /*
                                 SizedBox(
                                   height: MediaQuery.of(context).size.height * 0.04, //height of button
                                   width: MediaQuery.of(context).size.height * 0.12,
@@ -527,10 +530,9 @@ class _main_screenState extends State<main_screen> {
                                   ),
                                   ),
                                 )
+                                */
                               ],
                             ),
-                            
-                             */
                           ],
                         ),
                       ),
