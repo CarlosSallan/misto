@@ -29,70 +29,72 @@ class FriendsScreen extends StatelessWidget {
         .doc(currentUser.id)
         .snapshots();
     return Scaffold(
-        body: StreamBuilder<DocumentSnapshot>(
-            stream: _userStream,
-            builder:
-                (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  Map<String, dynamic>? data =
-                  snapshot.data?.data() as Map<String, dynamic>?;
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: _userStream,
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+          Map<String, dynamic>? data =
+          snapshot.data?.data() as Map<String, dynamic>?;
 
-                  return Scaffold(
-                    backgroundColor: Color.fromRGBO(22, 53, 77, 1.000),
-                    body: SafeArea(
-                      child: Column(
-
-                        children: [
-                          Row(
+          return Scaffold(
+            backgroundColor: Color.fromRGBO(22, 53, 77, 1.000),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      _top(context),
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(right: 30.0),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => perfil2()),
+                            );
+                          },
+                          child: Row(
                             children: [
-                              _top(context),
-                              Spacer(),
-                              Padding(
-                                padding: EdgeInsets.only(right: 30.0),
-                                child: Material(
-                                  color: Colors.white.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Color.fromRGBO(22,53,77,1.000),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => perfil2()),
-                                      );
-                                    },
-                                    child: ClipOval(
-
-                                      child: data?['Avatar'] != null
-                                          ? CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            data?['Avatar']),
-                                        radius: 50,
-                                      )
-                                          : CircleAvatar(
-                                        backgroundImage:
-                                        AssetImage('assets/avatar_prueba.jpg'),
-                                        radius: 50,
-                                      ),
-                                    ),
-                                  ),
+                              Text(
+                                data!['FullName'] as String, // Replace with your text
+                                style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.02, fontWeight: FontWeight.bold, color: Colors.white), // Replace with your style
+                              ),
+                              SizedBox(width: 8.0), // Add some spacing between the text and the image
+                              ClipOval(
+                                child: data?['Avatar'] != null
+                                    ? CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      data!['Avatar'] as String),
+                                  radius: MediaQuery.of(context).size.height * 0.03,
+                                )
+                                    : CircleAvatar(
+                                  backgroundImage:
+                                  AssetImage('assets/avatar_prueba.jpg'),
+                                  radius: MediaQuery.of(context).size.height * 0.03,
                                 ),
                               ),
                             ],
                           ),
-
-                          _body(),
-                        ],
+                          style: TextButton.styleFrom(
+                            primary: Color.fromRGBO(22, 53, 77, 1.000),
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-                },
-    ),
+                    ],
+                  ),
+                  _body(),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
+
 
 
   Widget _top(BuildContext context) {
@@ -110,22 +112,22 @@ class FriendsScreen extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios_sharp,
-                      size: 36.0,
+                      size: MediaQuery.of(context).size.height * 0.03,
                       color: Color.fromRGBO(22, 53, 77, 1.000),
                     ),
                   onPressed: () => Navigator.push(
                       context,
                       new MaterialPageRoute(
                           builder: (context) => main_screen(currentUser: currentUser))),
-                  iconSize: 48.0,
+                  iconSize: MediaQuery.of(context).size.height * 0.03,
                   padding: EdgeInsets.all(8.0),
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.022,),
               Text(
-                'Habla con \ntus amigoss',
+                'Habla con \ntus amigos',
                 style: TextStyle(
-                    fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                    fontSize: MediaQuery.of(context).size.height * 0.02, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ],
           ),
