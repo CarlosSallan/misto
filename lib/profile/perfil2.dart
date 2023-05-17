@@ -107,6 +107,10 @@ class _perfil2State extends State<perfil2> {
               snapshot.data?.data() as Map<String, dynamic>?;
           String? name = data?['FullName'];
           String? email = user?.email;
+
+
+
+
           return Scaffold(
               body: Container(
             decoration: BoxDecoration(
@@ -121,17 +125,39 @@ class _perfil2State extends State<perfil2> {
                   top: 50,
                   left: 0,
                   right: 0,
-                  child: data?['Avatar'] != null
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(data?['Avatar']),
-                          radius: 50,
-                        )
-                      : CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/avatar_prueba.jpg'),
-                          // Asegúrate de tener una imagen predeterminada en tu carpeta 'assets/images'
-                          radius: 50,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 30.0),
+                    child: Material(
+
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.transparent, // Establecer el fondo transparente
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0), // Establecer los bordes redondeados
+                            side: BorderSide(color: Colors.transparent), // Eliminar el borde
+                          ),
+                          elevation: 0, // Establecer la elevación del botón en 0 para eliminar el sombreado
                         ),
+                        onPressed: () {
+                          // Acción al presionar el botón
+                        },
+                        child: ClipOval(
+                          child: data?['Avatar'] != null
+                              ? CircleAvatar(
+                            backgroundImage: NetworkImage(data?['Avatar']),
+                            radius: 50,
+                          )
+                              : CircleAvatar(
+                            backgroundImage: AssetImage('assets/avatar_prueba.jpg'),
+                            radius: 50,
+                          ),
+                        ),
+                      ),
+
+
+                    ),
+                  ),
                 ),
 
                 Positioned(
