@@ -182,9 +182,10 @@ class _main_screenState extends State<main_screen> {
 
           final double latitude = double.parse(userDoc.data()!['latitude'].toString());
           final double longitude = double.parse(userDoc.data()!['longitude'].toString());
+          final String image = userDoc.data()!['Avatar'];
 
           if (fullName != null) {
-            userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude));
+            userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude, image));
           }
         }
       }
@@ -398,24 +399,17 @@ class _main_screenState extends State<main_screen> {
                             Row(
                                 children: [
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                                  /*
+
                                   ClipOval(
-                                    child: (user.data() as Map<String, dynamic>).containsKey('Avatar') &&
-                                        user['Avatar'] != null ? FadeInImage.assetNetwork(
+                                    child: FadeInImage.assetNetwork(
                                       placeholder: 'assets/MistoLog.png',
-                                      image: user['Avatar'],
+                                      image: user?.image ?? 'assets/MistoLog.png',
                                       width: MediaQuery.of(context).size.width * 0.15,
                                       height: MediaQuery.of(context).size.width * 0.15,
                                       fit: BoxFit.cover,
                                     )
-                                        : Image.asset(
-                                      'assets/MistoLog.png',
-                                      width: MediaQuery.of(context).size.width * 0.15,
-                                      height: MediaQuery.of(context).size.height * 0.10,
-                                      fit: BoxFit.cover,
-                                    ),
                                   ),
-                                  */
+
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -496,13 +490,25 @@ class _main_screenState extends State<main_screen> {
                                         ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        //friend = user;
+                                      final String? uid = user?.UID;
+
+                                      _userStream.listen((List<UserApp.Usuario> userList) {
+                                        UserApp.Usuario? selectedUser = userList.firstWhere((user) => user.UID == uid);
+                                        if (selectedUser != null) {
+                                          FirebaseFirestore.instance.collection('Users').doc(selectedUser.UID).get().then((DocumentSnapshot snapshot) {
+                                            setState(() {
+                                              friend = snapshot;
+                                            });
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => mensajes(currentUser: widget.currentUser, friendUser: friend)),
+                                            );
+                                          });
+                                        }else{
+                                          print('No HAAAAAYYYYYDFJSDKFKSDFK');
+                                        }
                                       });
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => mensajes(currentUser: widget.currentUser, friendUser: friend)),
-                                      );
                                     }, child: Text('Chat',
                                     style: TextStyle(
                                     color: Color.fromRGBO(22,53,77,1.000),
