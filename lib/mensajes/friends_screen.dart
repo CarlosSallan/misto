@@ -58,9 +58,12 @@ class FriendsScreen extends StatelessWidget {
                           },
                           child: Row(
                             children: [
-                              Text(
-                                data!['FullName'] as String, // Replace with your text
-                                style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.02, fontWeight: FontWeight.bold, color: Colors.white), // Replace with your style
+                              Padding(
+                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03,), // adjust this value as per your need
+                                child: Text(
+                                  'Hola, ' + (data!['FullName'] as String),
+                                  style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.02, fontWeight: FontWeight.bold, color: Colors.white),
+                                ),
                               ),
                               SizedBox(width: 8.0), // Add some spacing between the text and the image
                               ClipOval(
@@ -72,7 +75,7 @@ class FriendsScreen extends StatelessWidget {
                                 )
                                     : CircleAvatar(
                                   backgroundImage:
-                                  AssetImage('assets/avatar_prueba.jpg'),
+                                  AssetImage('assets/MistoLogo.png',),
                                   radius: MediaQuery.of(context).size.height * 0.03,
                                 ),
                               ),
@@ -103,7 +106,7 @@ class FriendsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.025,),
           Row(
             children: [
                 Material(
@@ -112,26 +115,26 @@ class FriendsScreen extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios_sharp,
-                      size: MediaQuery.of(context).size.height * 0.03,
+                      size: MediaQuery.of(context).size.height * 0.035,
                       color: Color.fromRGBO(22, 53, 77, 1.000),
                     ),
                   onPressed: () => Navigator.push(
                       context,
                       new MaterialPageRoute(
                           builder: (context) => main_screen(currentUser: currentUser))),
-                  iconSize: MediaQuery.of(context).size.height * 0.03,
+                  iconSize: MediaQuery.of(context).size.height * 0.035,
                   padding: EdgeInsets.all(8.0),
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.022,),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.025,),
               Text(
                 'Habla con \ntus amigos',
                 style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.02, fontWeight: FontWeight.bold, color: Colors.white),
+                    fontSize: MediaQuery.of(context).size.height * 0.023, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ],
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
         ],
 
       ),
@@ -141,11 +144,11 @@ class FriendsScreen extends StatelessWidget {
   Widget _body() {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(45), topRight: Radius.circular(45)),
+              topLeft: Radius.circular(50), topRight: Radius.circular(50)),
           color: Colors.white,
         ),
         child: StreamBuilder<QuerySnapshot>(
@@ -212,38 +215,41 @@ class FriendsScreen extends StatelessWidget {
                     return Column(
                       children: [
                         SizedBox(height: 10.0),
-                        ListTile(
-                          contentPadding: EdgeInsets.symmetric(
+                        Container(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 5.0,
                             vertical: 15.0,
                           ),
-                          leading: avatarUrl != null
-                              ? ClipOval(
-                            child: Image.network(
-                              avatarUrl,
-                              width: MediaQuery.of(context).size.width * 0.07,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                              : SizedBox.shrink(), // Add some placeholder widget here
-                          title: fullName != null ? Text(fullName) : Text('Unknown user'),
-                          subtitle: lastMessage == null
-                              ? Text('No hay mensajes')
-                              : Text(
-                              '$lastMessage (${lastMessageTime.toString()})'),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => mensajes(
-                                  currentUser: currentUser,
-                                  friendUser: friendDoc,
+                          child: Row(
+                            children: <Widget>[
+                              ClipOval(
+                                child: FadeInImage.assetNetwork(
+                                  placeholder: 'assets/MistoLogo.png',
+                                  image: avatarUrl ?? 'https://firebasestorage.googleapis.com/v0/b/misto-22442.appspot.com/o/avatars%2FMistoLogo.png?alt=media&token=1df83d6e-a913-4ef4-90a0-c4b5f9d7f8e0',
+                                  width: MediaQuery.of(context).size.width * 0.1, // Cambia el tamaño aquí
+                                  height: MediaQuery.of(context).size.width * 0.1,  // Cambia el tamaño aquí
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            );
-                          },
+                              SizedBox(width: 10.0),  // Add some spacing
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    fullName != null ? fullName : 'Unknown user',
+                                    style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03, fontWeight: FontWeight.w900,
+                                      color: Color.fromRGBO(22, 53, 77, 1.000),),  // Increase font size as you need
+                                  ),
+                                  Text(
+                                    lastMessage == null ? 'No hay mensajes' : '$lastMessage (${lastMessageTime.toString()})',
+                                    style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.02,),  // Increase font size as you need
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
+
                         // Añade un espacio
                         Divider(
                           color: Colors.grey.withOpacity(0.3),
