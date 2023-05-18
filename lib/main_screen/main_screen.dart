@@ -150,7 +150,6 @@ class _main_screenState extends State<main_screen> {
   GoogleMapController? _mapController;
   late String _selectedUserId;
   late DocumentSnapshot friend;
-  late Stream<List<UserApp.Usuario>> _userStreamTodos;
   late Stream<List<UserApp.Usuario>> _userStream;
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -159,25 +158,7 @@ class _main_screenState extends State<main_screen> {
   void initState() {
     super.initState();
     _userStream = getStreamAmigos(user?.uid);
-    // Filtrar los usuarios y los guardas en un array de toda la vida
-    _userStreamTodos = userStream();
 
-  }
-
-  Stream<List<UserApp.Usuario>> userStream() {
-    final userCollection = FirebaseFirestore.instance.collection('Users');
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    return userCollection.snapshots().map((snapshot) {
-      return snapshot.docs
-          .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
-          .map((doc) {
-        final fullName = doc.data()['FullName'] as String;
-        final  Latitude = doc.data()?['latitude'] as double;
-        final  longitude = doc.data()?['longitude'] as double;
-        return UserApp.Usuario(fullName, doc.id, true, Latitude, longitude);
-      }).toList();
-    }
-    );
   }
 
   Stream<List<UserApp.Usuario>> getStreamAmigos(String? uid) {
@@ -198,10 +179,12 @@ class _main_screenState extends State<main_screen> {
         final userDoc = await userCollection.doc(uid).get();
         if (userDoc.exists) {
           final fullName = userDoc.data()?['FullName'] as String;
-          final  Latitude = userDoc.data()?['latitude'] as double;
-          final  longitude = userDoc.data()?['longitude'] as double;
+
+          final double latitude = double.parse(userDoc.data()!['latitude'].toString());
+          final double longitude = double.parse(userDoc.data()!['longitude'].toString());
+
           if (fullName != null) {
-            userList.add(UserApp.Usuario(fullName, uid, true, Latitude, longitude));
+            userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude));
           }
         }
       }
@@ -434,7 +417,6 @@ class _main_screenState extends State<main_screen> {
                                   ),
                                   */
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                                  /*
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -447,7 +429,6 @@ class _main_screenState extends State<main_screen> {
                                           color: Color.fromRGBO(22, 53, 77, 1.000),
                                         ),
                                       ),
-
                                       Text(
                                         "${user?.longitude.toString()} / "
                                             "${user?.latitude.toString()}",
@@ -457,7 +438,7 @@ class _main_screenState extends State<main_screen> {
                                       ),
                                     ],
                                   ),
-                                  */
+
 
                                 ]
                             ),
@@ -484,9 +465,11 @@ class _main_screenState extends State<main_screen> {
 
                                         Future.delayed(
                                             Duration(milliseconds: 200), () {
-                                          double latitude = user?.latitude.toDouble() ?? 1.0;
-                                          double longitude = user?.longitude.toDouble() ?? 2.0;
-
+                                          double latitude = user?.latitude ?? 1.0;
+                                          double longitude = user?.longitude ?? 2.0;
+                                          double? latitud = user?.latitude;
+                                          double? longitud = user?.longitude;
+                                          print("La longitude es: $latitud  // $longitud");
                                           LatLng userLocation = LatLng(latitude, longitude);
                                           _zoomToSelectedUserLocation(userLocation);
                                         });
@@ -497,9 +480,7 @@ class _main_screenState extends State<main_screen> {
                                     ),),
                                     ),
                                 ),
-
                                 SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                                /*
                                 SizedBox(
                                   height: MediaQuery.of(context).size.height * 0.04, //height of button
                                   width: MediaQuery.of(context).size.height * 0.12,
@@ -516,7 +497,7 @@ class _main_screenState extends State<main_screen> {
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        friend = user;
+                                        //friend = user;
                                       });
                                       Navigator.push(
                                         context,
@@ -530,7 +511,6 @@ class _main_screenState extends State<main_screen> {
                                   ),
                                   ),
                                 )
-                                */
                               ],
                             ),
                           ],
