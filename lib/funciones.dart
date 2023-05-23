@@ -11,6 +11,8 @@ void UserToFirebase(User? user, String nombre){
 
 Future<void> addUser(User? user, String nombre) {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String linkAvatar = 'https://firebasestorage.googleapis.com/v0/b/misto-22442.appspot.com/o/avatars%2Fdc28cfe0-948b-4f26-982b-ed0a3016e8774785723906782791120.jpg?'
+      'alt=media&token=56d05bbf-3bb2-4d10-a4ca-497bb7e56da5';
   print("Ejecutando addUser");
   CollectionReference users = firestore.collection('Users');
 
@@ -33,6 +35,7 @@ Future<void> addUser(User? user, String nombre) {
     'FullName': nombre,
     'latitude': '41.033806',
     'longitude': '28.977905',
+    'Avatar': linkAvatar,
   })
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user: $error"));
