@@ -212,55 +212,77 @@ class FriendsScreen extends StatelessWidget {
                       fullName = friendData['FullName'];
                     }
 
-                    return Column(
-                      children: [
-                        SizedBox(height: 10.0),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.0,
-                            vertical: 15.0,
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => mensajes(
+                              currentUser: currentUser,
+                              friendUser: friendDoc,
+                            ),
                           ),
-                          child: Row(
-                            children: <Widget>[
-                              ClipOval(
-                                child: FadeInImage.assetNetwork(
-                                  placeholder: 'assets/MistoLogo.png',
-                                  image: avatarUrl ?? 'https://firebasestorage.googleapis.com/v0/b/misto-22442.appspot.com/o/avatars%2FMistoLogo.png?alt=media&token=1df83d6e-a913-4ef4-90a0-c4b5f9d7f8e0',
-                                  width: MediaQuery.of(context).size.width * 0.1, // Cambia el tamaño aquí
-                                  height: MediaQuery.of(context).size.width * 0.1,  // Cambia el tamaño aquí
-                                  fit: BoxFit.cover,
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10.0),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.0,
+                              vertical: 15.0,
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                ClipOval(
+                                  child: FadeInImage.assetNetwork(
+                                    placeholder: 'assets/MistoLogo.png',
+                                    image: avatarUrl ??
+                                        'https://firebasestorage.googleapis.com/v0/b/misto-22442.appspot.com/o/avatars%2FMistoLogo.png?alt=media&token=1df83d6e-a913-4ef4-90a0-c4b5f9d7f8e0',
+                                    width: MediaQuery.of(context).size.width *
+                                        0.1, // Cambia el tamaño aquí
+                                    height: MediaQuery.of(context).size.width *
+                                        0.1, // Cambia el tamaño aquí
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 10.0),  // Add some spacing
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    fullName != null ? fullName : 'Unknown user',
-                                    style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03, fontWeight: FontWeight.w900,
-                                      color: Color.fromRGBO(22, 53, 77, 1.000),),  // Increase font size as you need
-                                  ),
-                                  Text(
-                                    lastMessage == null ? 'No hay mensajes' : '$lastMessage (${lastMessageTime.toString()})',
-                                    style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.02,),  // Increase font size as you need
-                                  ),
-                                ],
-                              ),
-                            ],
+                                SizedBox(width: 10.0), // Add some spacing
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      fullName != null ? fullName : 'Unknown user',
+                                      style: TextStyle(
+                                        fontSize:
+                                        MediaQuery.of(context).size.width * 0.03,
+                                        fontWeight: FontWeight.w900,
+                                        color: Color.fromRGBO(22, 53, 77, 1.000),
+                                      ), // Increase font size as you need
+                                    ),
+                                    Text(
+                                      lastMessage == null
+                                          ? 'No hay mensajes'
+                                          : '$lastMessage (${lastMessageTime.toString()})',
+                                      style: TextStyle(
+                                        fontSize: MediaQuery.of(context).size.width * 0.02,
+                                      ), // Increase font size as you need
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
 
-                        // Añade un espacio
-                        Divider(
-                          color: Colors.grey.withOpacity(0.3),
-                          thickness: 0.6,
-                        ),
-                      ],
+                          // Añade un espacio
+                          Divider(
+                            color: Colors.grey.withOpacity(0.3),
+                            thickness: 0.6,
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );
-
-
               },
             );
           },
