@@ -183,6 +183,7 @@ class _main_screenState extends State<main_screen> {
           final double latitude = double.parse(userDoc.data()!['latitude'].toString());
           final double longitude = double.parse(userDoc.data()!['longitude'].toString());
           final String image = userDoc.data()!['Avatar'];
+          print('El URL del avatar de $fullName es $image');
 
           if (fullName != null) {
             userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude, image));
@@ -399,7 +400,7 @@ class _main_screenState extends State<main_screen> {
                             Row(
                                 children: [
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-
+                                  /*
                                   ClipOval(
                                     child: FadeInImage.assetNetwork(
                                       placeholder: 'assets/MistoLog.png',
@@ -408,6 +409,20 @@ class _main_screenState extends State<main_screen> {
                                       height: MediaQuery.of(context).size.width * 0.15,
                                       fit: BoxFit.cover,
                                     )
+                                  ),
+                                  */
+                                  ClipOval(
+                                    child: user?.image != null
+                                        ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          user?.image as String),
+                                      radius: MediaQuery.of(context).size.height * 0.03,
+                                    )
+                                        : CircleAvatar(
+                                      backgroundImage:
+                                      AssetImage('assets/MistoLogo.png',),
+                                      radius: MediaQuery.of(context).size.height * 0.03,
+                                    ),
                                   ),
 
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
