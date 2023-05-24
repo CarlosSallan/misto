@@ -5,25 +5,55 @@ import 'package:misto/main_screen/main_screen.dart';
 import 'package:misto/profile/perfil.dart';
 import '../mensajes/mensajes.dart';
 import '../profile/perfil2.dart';
-import '../user.dart';
+import '../user.dart' as UsuarioLogin;
 import '../message_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../Amigos/models/Usuario.dart' as UsuarioApp;
 
 class FriendsScreen extends StatelessWidget {
-  final Usuario currentUser;
+  final UsuarioLogin.Usuario currentUser;
   final User? user = FirebaseAuth.instance.currentUser;
   late Stream<DocumentSnapshot> _userStream;
   FriendsScreen({
     required this.currentUser,
   });
 
-  final Stream<QuerySnapshot> _friendsStream =
-  FirebaseFirestore.instance.collection('Users').snapshots();
+  late final Stream<List<UsuarioApp.Usuario>> _friendsStream;
 
+
+  Stream<List<UsuarioApp.Usuario>> getStreamAmigos(String? uid) {
+    final userCollection = FirebaseFirestore.instance.collection('Users');
+    final amistadCollection = FirebaseFirestore.instance.collection('Amistad');
+
+    return amistadCollection.doc(uid).get().asStream().map((doc) {
+      final ArraySoli = (doc.data() ?? {})['ArrayAmigos'] as List<dynamic>?;
+      if (ArraySoli == null || ArraySoli.isEmpty) {
+        return []; // si no hay solicitudes pendientes, devuelve una lista vacía
+      } else {
+        return ArraySoli; // devuelve la lista de uid de los usuarios con solicitudes pendientes
+      }
+    }).asyncMap((soliList) async {
+      final userList = <UsuarioApp.Usuario>[]; // lista de usuarios a devolver
+      for (final uid in soliList) {
+        final userDoc = await userCollection.doc(uid).get();
+        if (userDoc.exists) {
+          final fullName = userDoc.data()?['FullName'] as String?;
+
+          if (fullName != null) {
+            userList.add(UsuarioApp.Usuario(fullName, uid, true));
+          }
+        }
+      }
+
+      return userList; // devuelve la lista final de usuarios
+    });
+  }
 
 
   @override
   Widget build(BuildContext context) {
+    _friendsStream =
+        getStreamAmigos(user?.uid);
     _userStream = FirebaseFirestore.instance
         .collection('Users')
         .doc(currentUser.id)
@@ -141,6 +171,37 @@ class FriendsScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildUserListItem(UsuarioApp.Usuario user) {
+    return ListTile(
+      leading: CircleAvatar(
+        child: Text(user.FullName.substring(0, 2)),
+      ),
+      title: Text(user.FullName),
+      subtitle: Text(user.FullName),
+      trailing: ElevatedButton(
+        child: Text('Aceptar'),
+        onPressed: () {
+          /*
+          setState(() {
+            _aceptarUsuario(user);
+          });
+          */
+
+        },
+      ),
+    );
+  }
+
+  Widget _buildUserList(List<UsuarioApp.Usuario> users) {
+    return ListView.builder(
+      itemCount: users.length,
+      itemBuilder: (context, index) {
+        final user = users[index];
+        return _buildUserListItem(user);
+      },
+    );
+  }
+
   Widget _body() {
     return Expanded(
       child: Container(
@@ -151,10 +212,10 @@ class FriendsScreen extends StatelessWidget {
               topLeft: Radius.circular(50), topRight: Radius.circular(50)),
           color: Colors.white,
         ),
-        child: StreamBuilder<QuerySnapshot>(
+        child: StreamBuilder<List<UsuarioApp.Usuario>>(
           stream: _friendsStream,
           builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot> snapshot) {
+              AsyncSnapshot<List<UsuarioApp.Usuario>> snapshot) {
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
@@ -162,20 +223,25 @@ class FriendsScreen extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
+            final users = snapshot.data!;
 
+            return _buildUserList(users);
+          },
+        ),
+      ),
+    );
+  }
+}
 
-
-            // Filtrar al usuario actual de la lista de amigos
-            final friends = snapshot.data!.docs
-                .where((userDoc) => userDoc.id != currentUser.id);
-
-            return ListView.builder(
-              itemCount: friends.length,
+/*
+ListView.builder(
+              itemCount: users.length,
               itemBuilder: (context, index) {
-                DocumentSnapshot friendDoc = friends.elementAt(index);
-                String chatId = currentUser.id.compareTo(friendDoc.id) < 0
-                    ? '${currentUser.id}-${friendDoc.id}'
-                    : '${friendDoc.id}-${currentUser.id}';
+                String? friendDoc = user?.uid;
+
+                String chatId = currentUser.id.compareTo(friendDoc!) < 0
+                    ? '${currentUser.id}-${friendDoc}'
+                    : '${friendDoc}-${currentUser.id}';
 
                 return StreamBuilder<Map<String, dynamic>?>(
                   stream: getLastMessageAndTime(chatId),
@@ -284,10 +350,5 @@ class FriendsScreen extends StatelessWidget {
                   },
                 );
               },
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
+            )
+ */
