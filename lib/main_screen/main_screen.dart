@@ -148,14 +148,10 @@ class main_screen extends StatefulWidget {
 
 class _main_screenState extends State<main_screen> {
 
-<<<<<<< Updated upstream
-  final Location location = Location();
-=======
   final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
   final Loca.Location location = Loca.Location();
   StreamSubscription<Loca.LocationData>? _locationSubscription;
   final Completer<GoogleMapController> _controller = Completer();
->>>>>>> Stashed changes
   GoogleMapController? _mapController;
   late String _selectedUserId;
   late DocumentSnapshot friend;
