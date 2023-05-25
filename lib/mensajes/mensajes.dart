@@ -8,9 +8,9 @@ export 'package:misto/mensajes/mensajes.dart' show _getLastMessageAndTime;
 
 class mensajes extends StatefulWidget {
   final Usuario currentUser;
-  final DocumentSnapshot friendUser;
+  final String UidAmigo;
 
-  mensajes({required this.currentUser, required this.friendUser});
+  mensajes({required this.currentUser, required this.UidAmigo});
 
   @override
   _mensajes createState() => _mensajes();
@@ -24,18 +24,18 @@ class _mensajes extends State<mensajes> {
   get child => null;
 
   String _getChatId() {
-    return widget.currentUser.id.compareTo(widget.friendUser.id) < 0
-        ? '${widget.currentUser.id}-${widget.friendUser.id}'
-        : '${widget.friendUser.id}-${widget.currentUser.id}';
+    return widget.currentUser.id.compareTo(widget.UidAmigo) < 0
+        ? '${widget.currentUser.id}-${widget.UidAmigo}'
+        : '${widget.UidAmigo}-${widget.currentUser.id}';
   }
 
   Future<void> _sendMessage(String message) async {
     if (message.trim().isEmpty) return;
 
     // Crear un chatId único para la conversación entre dos usuarios
-    String chatId = widget.currentUser.id.compareTo(widget.friendUser.id) < 0
-        ? '${widget.currentUser.id}-${widget.friendUser.id}'
-        : '${widget.friendUser.id}-${widget.currentUser.id}';
+    String chatId = widget.currentUser.id.compareTo(widget.UidAmigo) < 0
+        ? '${widget.currentUser.id}-${widget.UidAmigo}'
+        : '${widget.UidAmigo}-${widget.currentUser.id}';
 
     DocumentReference chatDoc = _chatsCollection.doc(chatId);
 

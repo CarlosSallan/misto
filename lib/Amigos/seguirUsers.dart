@@ -36,7 +36,9 @@ class _seguirUsersState extends State<seguirUsers> {
           .where((doc) => doc.id != currentUser?.uid) // Excluir el usuario actual
           .map((doc) {
         final fullName = doc.data()['FullName'] as String;
-        return Usuario(fullName, doc.id, true);
+        final image = doc.data()?['Avatar'] as String;
+
+        return Usuario(fullName, doc.id, true, image);
       }).toList();
     }
 
@@ -157,8 +159,18 @@ class _seguirUsersState extends State<seguirUsers> {
         if (snapshot.hasData) {
           bool sigue = snapshot.data!;
           return ListTile(
-            leading: CircleAvatar(
-              child: Text(user.FullName.substring(0, 2)),
+            leading: ClipOval(
+              child: user?.image != null
+                  ? CircleAvatar(
+                backgroundImage: NetworkImage(
+                    user?.image as String),
+                radius: MediaQuery.of(context).size.height * 0.03,
+              )
+                  : CircleAvatar(
+                backgroundImage:
+                AssetImage('assets/MistoLogo.png',),
+                radius: MediaQuery.of(context).size.height * 0.03,
+              ),
             ),
             title: Text(user.FullName),
             subtitle: Text(user.FullName),
@@ -208,11 +220,12 @@ class _seguirUsersState extends State<seguirUsers> {
     return userCollection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final fullName = doc.data()['FullName'] as String;
+        final image = doc.data()?['Avatar'] as String;
         /*
         final username = doc.data()['Username'] as String;
         final isFollowing = doc.data()['isFollowing'] as bool;
          */
-        return Usuario(fullName, doc.id,false);
+        return Usuario(fullName, doc.id,false, image);
       }).toList();
     });
   }

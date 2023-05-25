@@ -75,6 +75,7 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance.collection('Users').snapshots(),
       builder: (BuildContext context,
@@ -143,10 +144,7 @@ class main_screen extends StatefulWidget {
 
 class _main_screenState extends State<main_screen> {
 
-  final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
   final Location location = Location();
-  StreamSubscription<LocationData>? _locationSubscription;
-  final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
   late String _selectedUserId;
   late DocumentSnapshot friend;
@@ -400,17 +398,6 @@ class _main_screenState extends State<main_screen> {
                             Row(
                                 children: [
                                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                                  /*
-                                  ClipOval(
-                                    child: FadeInImage.assetNetwork(
-                                      placeholder: 'assets/MistoLog.png',
-                                      image: user?.image ?? 'assets/MistoLog.png',
-                                      width: MediaQuery.of(context).size.width * 0.15,
-                                      height: MediaQuery.of(context).size.width * 0.15,
-                                      fit: BoxFit.cover,
-                                    )
-                                  ),
-                                  */
                                   ClipOval(
                                     child: user?.image != null
                                         ? CircleAvatar(
@@ -517,8 +504,9 @@ class _main_screenState extends State<main_screen> {
 
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => mensajes(currentUser: widget.currentUser, friendUser: friend)),
+                                              MaterialPageRoute(builder: (context) => mensajes(currentUser: widget.currentUser, UidAmigo: selectedUser.gettUID,)),
                                             );
+
                                           });
                                         }else{
                                           print('No HAAAAAYYYYYDFJSDKFKSDFK');

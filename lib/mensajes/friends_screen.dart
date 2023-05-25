@@ -38,9 +38,10 @@ class FriendsScreen extends StatelessWidget {
         final userDoc = await userCollection.doc(uid).get();
         if (userDoc.exists) {
           final fullName = userDoc.data()?['FullName'] as String?;
+          final image = userDoc.data()?['Avatar'] as String?;
 
-          if (fullName != null) {
-            userList.add(UsuarioApp.Usuario(fullName, uid, true));
+          if (fullName != null && image != null) {
+            userList.add(UsuarioApp.Usuario(fullName, uid, true, image));
           }
         }
       }
@@ -171,33 +172,45 @@ class FriendsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUserListItem(UsuarioApp.Usuario user) {
+  Widget _buildUserListItem(UsuarioApp.Usuario user, BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        child: Text(user.FullName.substring(0, 2)),
+      leading: ClipOval(
+        child: user?.image != null
+            ? CircleAvatar(
+          backgroundImage: NetworkImage(
+              user?.image as String),
+          radius: MediaQuery.of(context).size.height * 0.03,
+        )
+            : CircleAvatar(
+          backgroundImage:
+          AssetImage('assets/MistoLogo.png',),
+          radius: MediaQuery.of(context).size.height * 0.03,
+        ),
       ),
       title: Text(user.FullName),
       subtitle: Text(user.FullName),
-      trailing: ElevatedButton(
-        child: Text('Aceptar'),
-        onPressed: () {
-          /*
-          setState(() {
-            _aceptarUsuario(user);
-          });
-          */
-
-        },
+      trailing: Icon( Icons.chat_rounded
       ),
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => mensajes(
+              currentUser: currentUser,
+              UidAmigo: user.gettUID,
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildUserList(List<UsuarioApp.Usuario> users) {
+  Widget _buildUserList(List<UsuarioApp.Usuario> users, BuildContext context) {
     return ListView.builder(
       itemCount: users.length,
       itemBuilder: (context, index) {
         final user = users[index];
-        return _buildUserListItem(user);
+        return _buildUserListItem(user, context);
       },
     );
   }
@@ -225,7 +238,7 @@ class FriendsScreen extends StatelessWidget {
             }
             final users = snapshot.data!;
 
-            return _buildUserList(users);
+            return _buildUserList(users, context);
           },
         ),
       ),

@@ -44,8 +44,10 @@ class _misAmigosState extends State<misAmigos> {
         final userDoc = await userCollection.doc(uid).get();
         if (userDoc.exists) {
           final fullName = userDoc.data()?['FullName'] as String?;
-          if (fullName != null) {
-            userList.add(Usuario(fullName, uid, true));
+          final image = userDoc.data()?['Avatar'] as String?;
+
+          if (fullName != null && image != null) {
+            userList.add(Usuario(fullName, uid, true, image));
           }
         }
       }
@@ -72,8 +74,9 @@ class _misAmigosState extends State<misAmigos> {
         final userDoc = await userCollection.doc(uid).get();
         if (userDoc.exists) {
           final fullName = userDoc.data()?['FullName'] as String?;
-          if (fullName != null) {
-            userList.add(Usuario(fullName, uid, true));
+          final image = userDoc.data()?['Avatar'] as String?;
+          if (fullName != null && image != null) {
+            userList.add(Usuario(fullName, uid, true, image));
           }
         }
       }
@@ -186,8 +189,18 @@ class _misAmigosState extends State<misAmigos> {
 
   Widget _buildUserListItemAmigo(Usuario user) {
     return ListTile(
-      leading: CircleAvatar(
-        child: Text(user.FullName.substring(0, 2)),
+      leading: ClipOval(
+        child: user?.image != null
+            ? CircleAvatar(
+          backgroundImage: NetworkImage(
+              user?.image as String),
+          radius: MediaQuery.of(context).size.height * 0.03,
+        )
+            : CircleAvatar(
+          backgroundImage:
+          AssetImage('assets/MistoLogo.png',),
+          radius: MediaQuery.of(context).size.height * 0.03,
+        ),
       ),
       title: Text(user.FullName),
       subtitle: Text(user.FullName),
@@ -209,8 +222,18 @@ class _misAmigosState extends State<misAmigos> {
 
   Widget _buildUserListItem(Usuario user) {
     return ListTile(
-      leading: CircleAvatar(
-        child: Text(user.FullName.substring(0, 2)),
+      leading: ClipOval(
+        child: user?.image != null
+            ? CircleAvatar(
+          backgroundImage: NetworkImage(
+              user?.image as String),
+          radius: MediaQuery.of(context).size.height * 0.03,
+        )
+            : CircleAvatar(
+          backgroundImage:
+          AssetImage('assets/MistoLogo.png',),
+          radius: MediaQuery.of(context).size.height * 0.03,
+        ),
       ),
       title: Text(user.FullName),
       subtitle: Text(user.FullName),
