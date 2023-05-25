@@ -2,13 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:misto/main_screen/main_screen.dart';
-import 'package:misto/profile/perfil.dart';
 import '../mensajes/mensajes.dart';
 import '../profile/perfil2.dart';
 import '../user.dart' as UsuarioLogin;
-import '../message_utils.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../Amigos/models/Usuario.dart' as UsuarioApp;
+import '../message_utils.dart' show  getLastMessageAndTime;
 
 class FriendsScreen extends StatelessWidget {
   final UsuarioLogin.Usuario currentUser;
@@ -173,36 +171,77 @@ class FriendsScreen extends StatelessWidget {
   }
 
   Widget _buildUserListItem(UsuarioApp.Usuario user, BuildContext context) {
-    return ListTile(
-      leading: ClipOval(
-        child: user?.image != null
-            ? CircleAvatar(
-          backgroundImage: NetworkImage(
-              user?.image as String),
-          radius: MediaQuery.of(context).size.height * 0.03,
-        )
-            : CircleAvatar(
-          backgroundImage:
-          AssetImage('assets/MistoLogo.png',),
-          radius: MediaQuery.of(context).size.height * 0.03,
-        ),
-      ),
-      title: Text(user.FullName),
-      subtitle: Text(user.FullName),
-      trailing: Icon( Icons.chat_rounded
-      ),
-      onTap: (){
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => mensajes(
-              currentUser: currentUser,
-              UidAmigo: user.gettUID,
+    String? friendDoc = user?.UID;
+
+    String chatId = currentUser.id.compareTo(friendDoc!) < 0
+    ? '${currentUser.id}-${friendDoc}'
+        : '${friendDoc}-${currentUser.id}';
+
+    return StreamBuilder<Map<String, dynamic>?>(
+      stream: getLastMessageAndTime(chatId),
+      builder: (BuildContext context,
+          AsyncSnapshot<Map<String, dynamic>?> lastMessageSnapshot) {
+        if (lastMessageSnapshot.hasError) {
+          return ListTile(
+              title: Text('Error: ${lastMessageSnapshot.error}'));
+        }
+
+        String? lastMessage;
+        if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['text'] != null) {
+          lastMessage = lastMessageSnapshot.data?['text'];
+        }
+
+        DateTime? lastMessageTime;
+        if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['timestamp'] != null) {
+          lastMessageTime = (lastMessageSnapshot.data?['timestamp']
+          as Timestamp?)
+              ?.toDate();
+        }
+
+        print("El ultimo mensaje es: $lastMessage");
+        print("El ultimo mensaje es: $lastMessage");
+        print("El ultimo mensaje es: $lastMessage");
+
+        return ListTile(
+          leading: ClipOval(
+            child: user?.image != null
+                ? CircleAvatar(
+              backgroundImage: NetworkImage(
+                  user?.image as String),
+              radius: MediaQuery.of(context).size.height * 0.03,
+            )
+                : CircleAvatar(
+              backgroundImage:
+              AssetImage('assets/MistoLogo.png',),
+              radius: MediaQuery.of(context).size.height * 0.03,
             ),
           ),
+          title: Text(user.FullName),
+          subtitle: Text(
+            lastMessage == null
+                ? 'No hay mensajes'
+                : '$lastMessage (${lastMessageTime.toString()})',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.width * 0.02,
+            ), // Increase font size as you need
+          ),
+          trailing: Icon( Icons.chat_rounded
+          ),
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => mensajes(
+                  currentUser: currentUser,
+                  UidAmigo: user.gettUID,
+                ),
+              ),
+            );
+          },
         );
       },
     );
+
   }
 
   Widget _buildUserList(List<UsuarioApp.Usuario> users, BuildContext context) {
