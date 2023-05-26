@@ -139,7 +139,7 @@ class _registroState extends State<registro> {
                                 password: pass,
                               );
                               UserToFirebase(
-                                  userCredentials.user, nickname.text);
+                                  userCredentials.user, nickname.text, ema);
 
                               Navigator.push(
                                 context,

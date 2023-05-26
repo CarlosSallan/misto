@@ -153,7 +153,7 @@ class _registroState extends State<registro> {
                               password: pass,
                             );
 
-                            addUser(userCredentials.user, nickname.text);
+                            addUser(userCredentials.user, nickname.text, ema);
 
                             Navigator.push(
                               context,

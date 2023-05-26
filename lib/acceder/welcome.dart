@@ -134,7 +134,7 @@ class _welcomeState extends State<welcome> {
                     await signInWithGoogle();
                     User? userGoogle = FirebaseAuth.instance.currentUser;
                     //await addUser(userGoogle, ""); // Esperar a que se agregue el usuario a Firestore
-                    UserToFirebase(userGoogle, "");
+                    UserToFirebase(userGoogle, "", ema);
 
                     Usuario currentUser = Usuario(
                       id: userGoogle!.uid,

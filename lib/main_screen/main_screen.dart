@@ -191,10 +191,12 @@ class _main_screenState extends State<main_screen> {
           final double latitude = double.parse(userDoc.data()!['latitude'].toString());
           final double longitude = double.parse(userDoc.data()!['longitude'].toString());
           final String image = userDoc.data()!['Avatar'];
-          print('El URL del avatar de $fullName es $image');
+          final String email = userDoc.data()!['Email'];
 
+          print('El URL del avatar de $fullName es $image');
+          print('El email es $email');
           if (fullName != null) {
-            userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude, image));
+            userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude, image, email));
           }
         }
       }

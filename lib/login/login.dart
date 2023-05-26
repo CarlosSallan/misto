@@ -237,7 +237,7 @@ class _loginState extends State<login> {
                 onPressed: () async {
                   await signInWithGoogle();
                   User? userGoogle = FirebaseAuth.instance.currentUser;
-                  await addUser(userGoogle, ""); // Esperar a que se agregue el usuario a Firestore
+                  await addUser(userGoogle, "", ema); // Esperar a que se agregue el usuario a Firestore
                   Usuario currentUser = Usuario(
                     id: userGoogle!.uid,
                     email: userGoogle.email!,

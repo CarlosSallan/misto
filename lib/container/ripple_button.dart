@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
-import '../login/login.dart';
 import 'package:flutter/material.dart';
 import '../container/RippleAnimation.dart';
-import 'package:vibration/vibration.dart';
 import '../main_screen/models/Usuario.dart' as UserApp;
 
 class RippleButton extends StatefulWidget {
@@ -58,10 +55,12 @@ class _MyHomePageState extends State<RippleButton> {
           final double latitude = double.parse(userDoc.data()!['latitude'].toString());
           final double longitude = double.parse(userDoc.data()!['longitude'].toString());
           final String image = userDoc.data()!['Avatar'];
+          final String email = userDoc.data()!['Email'];
           print('El URL del avatar de $fullName es $image');
+          print('El email es $email');
 
           if (fullName != null) {
-            userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude, image));
+            userList.add(UserApp.Usuario(fullName, uid, true, latitude, longitude, image, email));
           }
         }
       }
@@ -70,13 +69,20 @@ class _MyHomePageState extends State<RippleButton> {
     });
   }
 
+  void _enviarCorreos(List<UserApp.Usuario> users) {
+    for(UserApp.Usuario user in users){
+      sendMail(user.getEmail);
+    }
+  }
+
 
   List<Widget> _anims = [];
 
   int _animationsRunning = 0;
   var _pressed = false;
 
-  Future sendMail() async {
+  Future sendMail(String correo) async {
+    print('Enviando correo a $correo');
     String username = 'appmisto@gmail.com';
     String password = 'jyoyuvhjuvljqmie';
 
@@ -84,7 +90,7 @@ class _MyHomePageState extends State<RippleButton> {
 
     final message = Message()
       ..from = Address(username, 'Your name')
-      ..recipients.add('kogutsofia04@gmail.com')
+      ..recipients.add(correo)
       ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
       ..text = 'This is the plain text.\nThis is line 2 of the text part.'
       ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
@@ -132,37 +138,53 @@ class _MyHomePageState extends State<RippleButton> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
-    return Stack(
-      children: <Widget>[
-        Center(
-          child: GestureDetector(
-            onLongPress: () {
-              setState(() {
-                _pressed = true;
-              });
-              _runRipple();
-            },
-            onLongPressEnd: (_) {
-              sendMail();
-              setState(() {
-                _anims = [];
-                _pressed = false;
-              });
-            },
-            child: Container(
-              width: (_size.width * widget.size),
-              height: (_size.width * widget.size),
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.pink),
-            ),
-          ),
-        ),
-        ..._anims,
-      ],
+
+    return StreamBuilder<List<UserApp.Usuario>>(
+      stream: _userStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final List<UserApp.Usuario> amigos = snapshot.data!;
+          final List<UserApp.Usuario> emails = amigos.toList();
+
+          return Stack(
+            children: <Widget>[
+              Center(
+                child: GestureDetector(
+                  onLongPress: () {
+                    _enviarCorreos(emails);
+                    setState(() {
+                      _pressed = true;
+                    });
+                    _runRipple();
+                  },
+                  onLongPressEnd: (_) {
+                    sendMail(user?.email as String);
+                    setState(() {
+                      _anims = [];
+                      _pressed = false;
+                    });
+                  },
+                  child: Container(
+                    width: (_size.width * widget.size),
+                    height: (_size.width * widget.size),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.pink,
+                    ),
+                  ),
+                ),
+              ),
+              ..._anims,
+            ],
+          );
+        } else {
+          // Si no hay datos, muestra un widget de reemplazo (por ejemplo, un Container vacío)
+          return Container();
+        }
+      },
     );
   }
 }
