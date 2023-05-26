@@ -89,11 +89,11 @@ class _MyHomePageState extends State<RippleButton> {
     final smtpServer = gmail(username, password);
 
     final message = Message()
-      ..from = Address(username, 'Your name')
+      ..from = Address(username, 'Misto')
       ..recipients.add(correo)
-      ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
-      ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
+      ..subject = '${DateTime.now()}'
+      ..text = ''
+      ..html = "<h1>¡Tu amigo necesita ayuda!</h1>\n<p></p>";
 
     try {
       final sendReport = await send(message, smtpServer);
