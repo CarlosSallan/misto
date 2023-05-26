@@ -4,18 +4,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:location/location.dart' as Loca;
-import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:misto/mensajes/mensajes.dart';
 import 'package:misto/profile/perfil2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import '../acceder/login.dart';
+import '../container/ripple_button.dart';
 import '../mensajes/friends_screen.dart';
 import '../Amigos/seguirUsers.dart';
 import 'models/Usuario.dart' as UserApp;
 import '../user.dart';
-
+import 'package:vibration/vibration.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class MyMap extends StatefulWidget {
   final String user_id;
@@ -166,29 +167,7 @@ class _main_screenState extends State<main_screen> {
 
   }
 
-  Future sendMail() async {
-    String username = 'appmisto@gmail.com';
-    String password = 'jyoyuvhjuvljqmie';
 
-    final smtpServer = gmail(username, password);
-
-    final message = Message()
-      ..from = Address(username, 'Your name')
-      ..recipients.add('kogutsofia04@gmail.com')
-      ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
-      ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
-
-    try {
-      final sendReport = await send(message, smtpServer);
-      print('Message sent: ' + sendReport.toString());
-    } on MailerException catch (e) {
-      print('Message not sent.');
-      for (var p in e.problems) {
-        print('Problem: ${p.code}: ${p.msg}');
-      }
-    }
-  }
 
   Stream<List<UserApp.Usuario>> getStreamAmigos(String? uid) {
     final userCollection = FirebaseFirestore.instance.collection('Users');
@@ -228,6 +207,9 @@ class _main_screenState extends State<main_screen> {
   Widget build(BuildContext context) {
 
     Usuario currentUser = widget.currentUser;
+    bool isVibrating = false;
+    AudioPlayer audioPlayer = AudioPlayer();
+    bool isButtonPressed = false;
 
     return Stack(
       children: [
@@ -332,19 +314,12 @@ class _main_screenState extends State<main_screen> {
           ),
         ),
         Positioned(
-          top: 290.0,
+          bottom: MediaQuery.of(context).size.height * 0.3,
           right: 30.0,
           child: Material(
             color:  Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
-            child: IconButton(
-              icon: Icon(Icons.person_add, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
-              onPressed: () {
-                sendMail();
-              },
-              iconSize: 48.0, // Ajusta el tamaño del botón aquí
-              padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
-            ),
+            child: RippleButton(size: 0.1)
           ),
         ),
         Positioned(

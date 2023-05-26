@@ -36,7 +36,7 @@ dependencies:
   cached_network_image: ^3.2.0
   flutter_launcher_icons: ^0.9.2
   mailer: ^6.0.1
-
+  audioplayers: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -56,4 +56,5 @@ flutter:
     - assets/avatar_prueba.jpg
     - assets/MistoLog.png
     - assets/MistoLogo.png
+
 
