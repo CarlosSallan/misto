@@ -74,7 +74,7 @@ class FriendsScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      _top(context),
+                      Expanded(child: _top(context)),
                       Spacer(),
                       Padding(
                         padding: EdgeInsets.only(right: 30.0),
@@ -174,75 +174,74 @@ class FriendsScreen extends StatelessWidget {
     String? friendDoc = user?.UID;
 
     String chatId = currentUser.id.compareTo(friendDoc!) < 0
-    ? '${currentUser.id}-${friendDoc}'
+        ? '${currentUser.id}-${friendDoc}'
         : '${friendDoc}-${currentUser.id}';
 
-    return StreamBuilder<Map<String, dynamic>?>(
-      stream: getLastMessageAndTime(chatId),
-      builder: (BuildContext context,
-          AsyncSnapshot<Map<String, dynamic>?> lastMessageSnapshot) {
-        if (lastMessageSnapshot.hasError) {
-          return ListTile(
-              title: Text('Error: ${lastMessageSnapshot.error}'));
-        }
+    return Column(
+      children: [
+        StreamBuilder<Map<String, dynamic>?>(
+          stream: getLastMessageAndTime(chatId),
+          builder: (BuildContext context,
+              AsyncSnapshot<Map<String, dynamic>?> lastMessageSnapshot) {
+            if (lastMessageSnapshot.hasError) {
+              return ListTile(
+                  title: Text('Error: ${lastMessageSnapshot.error}'));
+            }
 
-        String? lastMessage;
-        if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['text'] != null) {
-          lastMessage = lastMessageSnapshot.data?['text'];
-        }
+            String? lastMessage;
+            if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['text'] != null) {
+              lastMessage = lastMessageSnapshot.data?['text'];
+            }
 
-        DateTime? lastMessageTime;
-        if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['timestamp'] != null) {
-          lastMessageTime = (lastMessageSnapshot.data?['timestamp']
-          as Timestamp?)
-              ?.toDate();
-        }
+            DateTime? lastMessageTime;
+            if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['timestamp'] != null) {
+              lastMessageTime = (lastMessageSnapshot.data?['timestamp']
+              as Timestamp?)
+                  ?.toDate();
+            }
 
-        print("El ultimo mensaje es: $lastMessage");
-        print("El ultimo mensaje es: $lastMessage");
-        print("El ultimo mensaje es: $lastMessage");
-
-        return ListTile(
-          leading: ClipOval(
-            child: user?.image != null
-                ? CircleAvatar(
-              backgroundImage: NetworkImage(
-                  user?.image as String),
-              radius: MediaQuery.of(context).size.height * 0.03,
-            )
-                : CircleAvatar(
-              backgroundImage:
-              AssetImage('assets/MistoLogo.png',),
-              radius: MediaQuery.of(context).size.height * 0.03,
-            ),
-          ),
-          title: Text(user.FullName),
-          subtitle: Text(
-            lastMessage == null
-                ? 'No hay mensajes'
-                : '$lastMessage (${lastMessageTime.toString()})',
-            style: TextStyle(
-              fontSize: MediaQuery.of(context).size.width * 0.02,
-            ), // Increase font size as you need
-          ),
-          trailing: Icon( Icons.chat_rounded
-          ),
-          onTap: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => mensajes(
-                  currentUser: currentUser,
-                  UidAmigo: user.gettUID,
+            return ListTile(
+              leading: ClipOval(
+                child: user?.image != null
+                    ? CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      user?.image as String),
+                  radius: MediaQuery.of(context).size.height * 0.03,
+                )
+                    : CircleAvatar(
+                  backgroundImage:
+                  AssetImage('assets/MistoLogo.png',),
+                  radius: MediaQuery.of(context).size.height * 0.03,
                 ),
               ),
+              title: Text(user.FullName),
+              subtitle: Text(
+                lastMessage == null
+                    ? 'No hay mensajes'
+                    : '$lastMessage (${lastMessageTime.toString()})',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.02,
+                ), // Increase font size as you need
+              ),
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => mensajes(
+                      currentUser: currentUser,
+                      UidAmigo: user.gettUID,
+                    ),
+                  ),
+                );
+              },
             );
           },
-        );
-      },
+        ),
+        Divider(color: Colors.grey, thickness: 0.5),
+      ],
     );
-
   }
+
 
   Widget _buildUserList(List<UsuarioApp.Usuario> users, BuildContext context) {
     return ListView.builder(
@@ -284,123 +283,3 @@ class FriendsScreen extends StatelessWidget {
     );
   }
 }
-
-/*
-ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                String? friendDoc = user?.uid;
-
-                String chatId = currentUser.id.compareTo(friendDoc!) < 0
-                    ? '${currentUser.id}-${friendDoc}'
-                    : '${friendDoc}-${currentUser.id}';
-
-                return StreamBuilder<Map<String, dynamic>?>(
-                  stream: getLastMessageAndTime(chatId),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<Map<String, dynamic>?> lastMessageSnapshot) {
-                    if (lastMessageSnapshot.hasError) {
-                      return ListTile(
-                          title: Text('Error: ${lastMessageSnapshot.error}'));
-                    }
-
-                    String? lastMessage;
-                    if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['text'] != null) {
-                      lastMessage = lastMessageSnapshot.data?['text'];
-                    }
-
-                    DateTime? lastMessageTime;
-                    if (lastMessageSnapshot.data != null && lastMessageSnapshot.data!['timestamp'] != null) {
-                      lastMessageTime = (lastMessageSnapshot.data?['timestamp']
-                      as Timestamp?)
-                          ?.toDate();
-                    }
-
-                    DocumentSnapshot user = snapshot.data!.docs[index];
-                    Map<String, dynamic>? userData = user.data() as Map<String, dynamic>?;
-                    String? avatarUrl;
-                    if (userData != null && userData['Avatar'] != null) {
-                      avatarUrl = userData['Avatar'];
-                    }
-
-                    DocumentSnapshot friendDoc = snapshot.data!.docs[index];
-                    Map<String, dynamic>? friendData = friendDoc.data() as Map<String, dynamic>?;
-                    String? fullName;
-                    if (friendData != null && friendData['FullName'] != null) {
-                      fullName = friendData['FullName'];
-                    }
-
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => mensajes(
-                              currentUser: currentUser,
-                              friendUser: friendDoc,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          SizedBox(height: 10.0),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 5.0,
-                              vertical: 15.0,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                ClipOval(
-                                  child: FadeInImage.assetNetwork(
-                                    placeholder: 'assets/MistoLogo.png',
-                                    image: avatarUrl ??
-                                        'https://firebasestorage.googleapis.com/v0/b/misto-22442.appspot.com/o/avatars%2FMistoLogo.png?alt=media&token=1df83d6e-a913-4ef4-90a0-c4b5f9d7f8e0',
-                                    width: MediaQuery.of(context).size.width *
-                                        0.1, // Cambia el tamaño aquí
-                                    height: MediaQuery.of(context).size.width *
-                                        0.1, // Cambia el tamaño aquí
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                SizedBox(width: 10.0), // Add some spacing
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      fullName != null ? fullName : 'Unknown user',
-                                      style: TextStyle(
-                                        fontSize:
-                                        MediaQuery.of(context).size.width * 0.03,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color.fromRGBO(22, 53, 77, 1.000),
-                                      ), // Increase font size as you need
-                                    ),
-                                    Text(
-                                      lastMessage == null
-                                          ? 'No hay mensajes'
-                                          : '$lastMessage (${lastMessageTime.toString()})',
-                                      style: TextStyle(
-                                        fontSize: MediaQuery.of(context).size.width * 0.02,
-                                      ), // Increase font size as you need
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Añade un espacio
-                          Divider(
-                            color: Colors.grey.withOpacity(0.3),
-                            thickness: 0.6,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            )
- */
