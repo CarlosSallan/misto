@@ -6,6 +6,8 @@ import 'package:mailer/smtp_server/gmail.dart';
 import 'package:flutter/material.dart';
 import '../container/RippleAnimation.dart';
 import '../main_screen/models/Usuario.dart' as UserApp;
+import 'package:location/location.dart' as loc;
+
 
 class RippleButton extends StatefulWidget {
   const RippleButton({Key? key, required this.size}) : super(key: key);
@@ -69,11 +71,20 @@ class _MyHomePageState extends State<RippleButton> {
     });
   }
 
-  void _enviarCorreos(List<UserApp.Usuario> users) {
+  void _enviarCorreos(List<UserApp.Usuario> users) async {
+    loc.Location location = new loc.Location();
+    loc.LocationData _locationData;
+
+    _locationData = await location.getLocation();
+    double latitude = _locationData.latitude!;
+    double longitude = _locationData.longitude!;
+
     for(UserApp.Usuario user in users){
-      sendMail(user.getEmail);
+      sendMail(user.getEmail, latitude, longitude);
     }
   }
+
+
 
 
   List<Widget> _anims = [];
@@ -81,19 +92,24 @@ class _MyHomePageState extends State<RippleButton> {
   int _animationsRunning = 0;
   var _pressed = false;
 
-  Future sendMail(String correo) async {
+  Future sendMail(String correo, double latitude, double longitude) async {
     print('Enviando correo a $correo');
     String username = 'appmisto@gmail.com';
     String password = 'jyoyuvhjuvljqmie';
 
     final smtpServer = gmail(username, password);
 
+    // Crear el enlace de Google Maps
+    String googleMapsLink = "https://www.google.com/maps/?q=$latitude,$longitude";
+
     final message = Message()
       ..from = Address(username, 'Misto')
       ..recipients.add(correo)
       ..subject = '${DateTime.now()}'
       ..text = ''
-      ..html = "<h1>¡Tu amigo necesita ayuda!</h1>\n<p></p>";
+      ..html = "<h1>¡Tu amigo necesita ayuda!</h1>\n"
+          "<p>Latitud: $latitude, Longitud: $longitude</p>\n"
+          "<p><a href='$googleMapsLink'>Ver en Google Maps</a></p>";
 
     try {
       final sendReport = await send(message, smtpServer);
@@ -105,6 +121,7 @@ class _MyHomePageState extends State<RippleButton> {
       }
     }
   }
+
 
   void animationEnded() {
     _animationsRunning--;
@@ -161,7 +178,7 @@ class _MyHomePageState extends State<RippleButton> {
                     _runRipple();
                   },
                   onLongPressEnd: (_) {
-                    sendMail(user?.email as String);
+                    _enviarCorreos(emails);
                     setState(() {
                       _anims = [];
                       _pressed = false;

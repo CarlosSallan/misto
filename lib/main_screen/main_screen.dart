@@ -367,7 +367,7 @@ class _main_screenState extends State<main_screen> {
         stream: _userStream,
         builder: (BuildContext context, AsyncSnapshot<List<UserApp.Usuario>> snapshot) {
           if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Text('');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -518,24 +518,20 @@ class _main_screenState extends State<main_screen> {
                                     onPressed: () {
                                       final String? uid = user?.UID;
 
-                                      _userStream.listen((List<UserApp.Usuario> userList) {
-                                        UserApp.Usuario? selectedUser = userList.firstWhere((user) => user.UID == uid);
-                                        if (selectedUser != null) {
-                                          FirebaseFirestore.instance.collection('Users').doc(selectedUser.UID).get().then((DocumentSnapshot snapshot) {
-                                            setState(() {
-                                              friend = snapshot;
-                                            });
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => mensajes(currentUser: widget.currentUser, UidAmigo: selectedUser.gettUID,)),
-                                            );
-
+                                      if (uid != null) {
+                                        FirebaseFirestore.instance.collection('Users').doc(uid).get().then((DocumentSnapshot snapshot) {
+                                          setState(() {
+                                            friend = snapshot;
                                           });
-                                        }else{
-                                          print('No HAAAAAYYYYYDFJSDKFKSDFK');
-                                        }
-                                      });
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => mensajes(currentUser: widget.currentUser, UidAmigo: uid)),
+                                          );
+                                        });
+                                      } else {
+                                        print('No user UID found, sorry');
+                                      }
                                     }, child: Text('Chat',
                                     style: TextStyle(
                                     color: Color.fromRGBO(22,53,77,1.000),
