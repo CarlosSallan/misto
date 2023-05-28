@@ -106,7 +106,7 @@ class _MyMapState extends State<MyMap> {
                 ),
                 markerId: MarkerId(widget.selectedUserId),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueMagenta)),
+                    BitmapDescriptor.hueRed)),
           },
           initialCameraPosition: CameraPosition(
               target: LatLng(
@@ -149,10 +149,7 @@ class main_screen extends StatefulWidget {
 
 class _main_screenState extends State<main_screen> {
 
-  final ValueNotifier<double> _mapHeight = ValueNotifier(0.3);
   final Loca.Location location = Loca.Location();
-  StreamSubscription<Loca.LocationData>? _locationSubscription;
-  final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
   late String _selectedUserId;
   late DocumentSnapshot friend;
