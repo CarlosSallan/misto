@@ -204,18 +204,24 @@ class _misAmigosState extends State<misAmigos> {
       ),
       title: Text(user.FullName),
       subtitle: Text(user.FullName),
-      trailing: ElevatedButton(
-        child: IconButton(
-          icon: Icon(Icons.clear),
+      trailing: ConstrainedBox(
+        constraints: BoxConstraints.tightFor(height: MediaQuery.of(context).size.height * 0.04),  // Ajusta la altura del botón aquí
+        child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(22,53,77,1.000)), // Establece el color del botón aquí
+          ),
+          child: IconButton(
+            icon: Icon(Icons.clear, color: Colors.white),  // Establece el color del ícono aquí
+            onPressed: () {
+              setState(() {
+                _eliminarUsuario(user);
+              });
+            },
+          ),
           onPressed: () {
-            setState(() {
-              _eliminarUsuario(user);
-            });
+
           },
         ),
-        onPressed: () {
-
-        },
       ),
     );
   }
@@ -317,7 +323,7 @@ class _misAmigosState extends State<misAmigos> {
           Text(
             'Conecta con \ntus amigos',
             style: TextStyle(
-                fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: MediaQuery.of(context).size.height * 0.025, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: 20),
           Row(
@@ -358,7 +364,12 @@ class _misAmigosState extends State<misAmigos> {
                         _userStream = getStreamSolicitudes(user?.uid);
                       });
                     },
-                    child: Text('Solicitudes')),
+                    child: Text('Solicitudes',
+                    style: TextStyle(
+                      color: Color.fromRGBO(22,53,77,1.000),
+                      fontSize: MediaQuery.of(context).size.height * 0.018,
+                      fontWeight: FontWeight.w600
+                    ),)),
                 TextButton(
                     onPressed: () {
                       setState(() {
@@ -366,7 +377,12 @@ class _misAmigosState extends State<misAmigos> {
                         _userStream = getStreamAmigos(user?.uid);
                       });
                     },
-                    child: Text('Amigos'))
+                    child: Text('Amigos',
+                      style: TextStyle(
+                        color: Color.fromRGBO(22,53,77,1.000),
+                        fontSize: MediaQuery.of(context).size.height * 0.018,
+                        fontWeight: FontWeight.w600
+                    ),))
               ],
             ),
             Expanded(

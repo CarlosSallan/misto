@@ -273,13 +273,13 @@ class _seguirUsersState extends State<seguirUsers> {
                     child: IconButton(
                       icon: Icon(
                         Icons.home,
-                        size: 36.0,
+                        size: MediaQuery.of(context).size.height * 0.04,
                         color: Color.fromRGBO(22, 53, 77, 1.000),
                       ),
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      iconSize: 48.0,
+                      iconSize: MediaQuery.of(context).size.height * 0.05,
                       padding: EdgeInsets.all(8.0),
                     ),
                   ),
@@ -304,7 +304,7 @@ class _seguirUsersState extends State<seguirUsers> {
           Text(
             'Haz nuevos \namigos',
             style: TextStyle(
-                fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: MediaQuery.of(context).size.height * 0.025, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: 20),
           Row(

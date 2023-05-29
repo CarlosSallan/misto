@@ -126,7 +126,7 @@ class _perfil2State extends State<perfil2> {
                   left: 0,
                   right: 0,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 30.0),
+                    padding: EdgeInsets.only(right: 0.0),
                     child: Material(
 
                       borderRadius: BorderRadius.circular(10.0),
@@ -366,7 +366,7 @@ class _perfil2State extends State<perfil2> {
                     ),
                   ),
                 ),
-
+/*
                 //ubi
                 Positioned(
                   top: 500,
@@ -423,10 +423,10 @@ class _perfil2State extends State<perfil2> {
                     ),
                   ),
                 ),
-
+*/
                 Positioned(
                   top: 50.0,
-                  left: 10.0,
+                  left: 30.0,
                   child: Material(
                     color: Color.fromRGBO(228, 229, 234, 1.000),
                     borderRadius: BorderRadius.circular(10.0),
@@ -436,7 +436,7 @@ class _perfil2State extends State<perfil2> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      iconSize: 30.0,
+                      iconSize: MediaQuery.of(context).size.height * 0.05,
                       // Ajusta el tamaño del botón aquí
                       padding: EdgeInsets.all(
                           8.0), // Ajusta el padding para aumentar el área de toque del botón
@@ -445,19 +445,19 @@ class _perfil2State extends State<perfil2> {
                 ),
                 Positioned(
                   top: 50.0,
-                  left: 290.0,
+                  right: 30.0,
                   child: Material(
                     color: Color.fromRGBO(228, 229, 234, 1.000),
                     borderRadius: BorderRadius.circular(10.0),
                     child: IconButton(
                       icon: Icon(Icons.edit,
-                          color: Color.fromRGBO(22, 53, 77, 1.000)),
+                          color: Color.fromRGBO(22, 53, 77, 1.000), size: MediaQuery.of(context).size.height * 0.04,),
                       // Ajusta el tamaño del icono aquí
                       onPressed:() => Navigator.push(
                           context,
                           new MaterialPageRoute(
                               builder: (context) => editarPerfil())),
-                      iconSize: 30.0,
+                      iconSize: MediaQuery.of(context).size.height * 0.05,
                       // Ajusta el tamaño del botón aquí
                       padding: EdgeInsets.all(
                           8.0), // Ajusta el padding para aumentar el área de toque del botón

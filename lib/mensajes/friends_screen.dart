@@ -74,7 +74,7 @@ class FriendsScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Expanded(child: _top(context)),
+                      _top(context),
                       Spacer(),
                       Padding(
                         padding: EdgeInsets.only(right: 30.0),
@@ -88,10 +88,10 @@ class FriendsScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03,), // adjust this value as per your need
+                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01,), // adjust this value as per your need
                                 child: Text(
                                   'Hola, ' + (data!['FullName'] as String),
-                                  style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.02, fontWeight: FontWeight.bold, color: Colors.white),
+                                  style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.018, fontWeight: FontWeight.bold, color: Colors.white),
                                 ),
                               ),
                               SizedBox(width: 8.0), // Add some spacing between the text and the image
@@ -138,37 +138,44 @@ class FriendsScreen extends StatelessWidget {
           SizedBox(height: MediaQuery.of(context).size.height * 0.025,),
           Row(
             children: [
-                Material(
-                  color: Colors.white.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios_sharp,
-                      size: MediaQuery.of(context).size.height * 0.035,
-                      color: Color.fromRGBO(22, 53, 77, 1.000),
-                    ),
+              Material(
+                color: Colors.white.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(10.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_sharp,
+                    size: MediaQuery.of(context).size.height * 0.04,
+                    color: Color.fromRGBO(22, 53, 77, 1.000),
+                  ),
                   onPressed: () => Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => main_screen(currentUser: currentUser))),
-                  iconSize: MediaQuery.of(context).size.height * 0.035,
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => main_screen(currentUser: currentUser)
+                    ),
+                  ),
+                  iconSize: MediaQuery.of(context).size.height * 0.05,
                   padding: EdgeInsets.all(8.0),
                 ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.025,),
-              Text(
-                'Habla con \ntus amigos',
-                style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.023, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
+              Container(// Or any other size you want.
+                child: Text(
+                  'Habla con \ntus amigos',
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.02,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                  ),
+                ),
+                ),
             ],
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
         ],
-
       ),
     );
   }
+
 
   Widget _buildUserListItem(UsuarioApp.Usuario user, BuildContext context) {
     String? friendDoc = user?.UID;
@@ -214,13 +221,19 @@ class FriendsScreen extends StatelessWidget {
                   radius: MediaQuery.of(context).size.height * 0.03,
                 ),
               ),
-              title: Text(user.FullName),
+              title: Text(user.FullName,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.04,
+                  color: Color.fromRGBO(22,53,77,1.000),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               subtitle: Text(
                 lastMessage == null
                     ? 'No hay mensajes'
                     : '$lastMessage (${lastMessageTime.toString()})',
                 style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.width * 0.02,
+                  fontSize: MediaQuery.of(context).size.width * 0.025,
                 ), // Increase font size as you need
               ),
               onTap: (){

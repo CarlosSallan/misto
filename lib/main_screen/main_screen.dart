@@ -124,18 +124,6 @@ class _MyMapState extends State<MyMap> {
       },
     );
   }
-
-  Future<void> mymap(AsyncSnapshot<QuerySnapshot> snapshot) async {
-    await _controller?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(
-              snapshot.data!.docs.singleWhere((element) =>
-              element.id == widget.selectedUserId)['latitude'],
-              snapshot.data!.docs.singleWhere((element) =>
-              element.id == widget.selectedUserId)['longitude'],
-            ),
-            zoom: 14.47)));
-  }
 }
 
 // main_screen widget
@@ -161,10 +149,7 @@ class _main_screenState extends State<main_screen> {
   void initState() {
     super.initState();
     _userStream = getStreamAmigos(user?.uid);
-
   }
-
-
 
   Stream<List<UserApp.Usuario>> getStreamAmigos(String? uid) {
     final userCollection = FirebaseFirestore.instance.collection('Users');
@@ -265,7 +250,7 @@ class _main_screenState extends State<main_screen> {
             color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
             child: IconButton(
-              icon: Icon(Icons.person, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
+              icon: Icon(Icons.person, size: MediaQuery.of(context).size.height * 0.04, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
               onPressed: () {
                 // Acción del botón
                 Navigator.push(
@@ -273,7 +258,7 @@ class _main_screenState extends State<main_screen> {
                   MaterialPageRoute(builder: (context) => perfil2()),
                 );
               },
-              iconSize: 48.0, // Ajusta el tamaño del botón aquí
+              iconSize: MediaQuery.of(context).size.height * 0.05, // Ajusta el tamaño del botón aquí
               padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
             ),
           ),
@@ -285,12 +270,12 @@ class _main_screenState extends State<main_screen> {
             color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
             child: IconButton(
-              icon: Icon(Icons.message, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
+              icon: Icon(Icons.message, size: MediaQuery.of(context).size.height * 0.04, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
               onPressed: () => Navigator.push(
                   context,
                   new MaterialPageRoute(
                       builder: (context) => FriendsScreen(currentUser: currentUser,))),
-              iconSize: 48.0, // Ajusta el tamaño del botón aquí
+              iconSize: MediaQuery.of(context).size.height * 0.05, // Ajusta el tamaño del botón aquí
               padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
             ),
           ),
@@ -302,12 +287,12 @@ class _main_screenState extends State<main_screen> {
             color:  Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
             child: IconButton(
-              icon: Icon(Icons.person_add, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
+              icon: Icon(Icons.person_add, size: MediaQuery.of(context).size.height * 0.04, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
               onPressed: () => Navigator.push(
                   context,
                   new MaterialPageRoute(
                       builder: (context) => seguirUsers())),
-              iconSize: 48.0, // Ajusta el tamaño del botón aquí
+              iconSize: MediaQuery.of(context).size.height * 0.05, // Ajusta el tamaño del botón aquí
               padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
             ),
           ),
@@ -328,7 +313,7 @@ class _main_screenState extends State<main_screen> {
             color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10.0),
             child: IconButton(
-              icon: Icon(Icons.logout, size: 36.0, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
+              icon: Icon(Icons.logout, size: MediaQuery.of(context).size.height * 0.04, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
               onPressed: () {
                 // Acción del botón
                 Navigator.push(
@@ -336,7 +321,7 @@ class _main_screenState extends State<main_screen> {
                   MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
-              iconSize: 48.0, // Ajusta el tamaño del botón aquí
+              iconSize: MediaQuery.of(context).size.height * 0.05, // Ajusta el tamaño del botón aquí
               padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
             ),
           ),

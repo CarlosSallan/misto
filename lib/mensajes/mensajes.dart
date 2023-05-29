@@ -5,7 +5,7 @@ import '../main_screen/main_screen.dart';
 import '../user.dart';
 import 'friends_screen.dart';
 export 'package:misto/mensajes/mensajes.dart' show _getLastMessageAndTime;
-
+import '../user.dart' as UsuarioLogin;
 
 class mensajes extends StatefulWidget {
   final Usuario currentUser;
@@ -21,7 +21,6 @@ class _mensajes extends State<mensajes> {
   final TextEditingController _messageController = TextEditingController();
   final CollectionReference _chatsCollection =
   FirebaseFirestore.instance.collection('chats');
-
   get child => null;
 
   Future<String?> _getUserAvatar(String uid) async {
@@ -55,6 +54,12 @@ class _mensajes extends State<mensajes> {
     _messageController.clear();
   }
 
+  Future<String?> _getUserFullName(String uid) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+    return userDoc['FullName'] as String?;
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -70,8 +75,54 @@ class _mensajes extends State<mensajes> {
           children: [
             Row(
               children: [
-                _top(),
+                _top(context),
                 Spacer(),
+                FutureBuilder<String?>(
+                  future: _getUserAvatar(widget.UidAmigo), // Pasamos el UidAmigo para obtener el avatar
+                  builder: (BuildContext context, AsyncSnapshot<String?> avatarSnapshot) {
+                    if (avatarSnapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator(); // Muestra un indicador de progreso mientras se carga la imagen
+                    }
+
+                    return FutureBuilder<String?>(
+                        future: _getUserFullName(widget.UidAmigo), // Pasamos el UidAmigo para obtener el nombre completo
+                        builder: (BuildContext context, AsyncSnapshot<String?> fullNameSnapshot) {
+                          if (fullNameSnapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Muestra un indicador de progreso mientras se carga el nombre
+                          }
+
+                          return Padding(
+                            padding: EdgeInsets.only(right: 30.0),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03,), // adjust this value as per your need
+                                  child: Text(
+                                    fullNameSnapshot.data ?? 'Usuario',
+                                    style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.018, fontWeight: FontWeight.bold, color: Colors.white),
+                                  ),
+                                ),
+                                SizedBox(width: 8.0), // Add some spacing between the text and the image
+                                ClipOval(
+                                  child: avatarSnapshot.data != null
+                                      ? CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        avatarSnapshot.data!),
+                                    radius: MediaQuery.of(context).size.height * 0.03,
+                                  )
+                                      : CircleAvatar(
+                                    backgroundImage:
+                                    AssetImage('assets/MistoLogo.png',),
+                                    radius: MediaQuery.of(context).size.height * 0.03,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                    );
+                  },
+                ),
 
               ],
             ),
@@ -208,22 +259,39 @@ class _mensajes extends State<mensajes> {
 
 
 
-  Widget _top() {
-    Usuario currentUser = widget.currentUser;
+  Widget _top(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 30),
-      child: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios_sharp,
-          size: MediaQuery.of(context).size.height * 0.035,
-          color: Color.fromRGBO(22, 53, 77, 1.000),
-        ),
-        onPressed: () => Navigator.push(
-            context,
-            new MaterialPageRoute(
-                builder: (context) => main_screen(currentUser: currentUser))),
-        iconSize: MediaQuery.of(context).size.height * 0.035,
-        padding: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height * 0.025,),
+          Row(
+            children: [
+              Material(
+                color: Colors.white.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(10.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_sharp,
+                    size: MediaQuery.of(context).size.height * 0.04,
+                    color: Color.fromRGBO(22, 53, 77, 1.000),
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => main_screen(currentUser: widget.currentUser)
+                    ),
+                  ),
+                  iconSize: MediaQuery.of(context).size.height * 0.05,
+                  padding: EdgeInsets.all(8.0),
+                ),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.025,),
+            ],
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
+        ],
       ),
     );
   }
@@ -247,5 +315,3 @@ class _mensajes extends State<mensajes> {
     return null;
   }
 }
-
-
