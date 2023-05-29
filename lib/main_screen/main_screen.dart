@@ -22,8 +22,9 @@ class MyMap extends StatefulWidget {
   final String user_id;
   final String selectedUserId;
   final Function(GoogleMapController) onMapCreated;
+  Set<Marker> mmarkers = {};
 
-  MyMap(this.user_id, this.selectedUserId, {required this.onMapCreated});
+  MyMap(this.user_id, this.selectedUserId, this.mmarkers, {required this.onMapCreated});
 
   @override
   _MyMapState createState() => _MyMapState();
@@ -96,18 +97,7 @@ class _MyMapState extends State<MyMap> {
 
         return GoogleMap(
           mapType: MapType.normal,
-          markers: {
-            Marker(
-                position: LatLng(
-                  snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.selectedUserId)['latitude'],
-                  snapshot.data!.docs.singleWhere((element) =>
-                  element.id == widget.selectedUserId)['longitude'],
-                ),
-                markerId: MarkerId(widget.selectedUserId),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueRed)),
-          },
+          markers: widget.mmarkers,
           initialCameraPosition: CameraPosition(
               target: LatLng(
                 snapshot.data!.docs.singleWhere((element) =>
@@ -143,13 +133,37 @@ class _main_screenState extends State<main_screen> {
   late DocumentSnapshot friend;
   late Stream<List<UserApp.Usuario>> _userStream;
 
+  Set<Marker> _markers = {};
+  bool? _serviceEnabled;
+  Loca.LocationData? _locationData;
   User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     super.initState();
     _userStream = getStreamAmigos(user?.uid);
+
+    _getLocation().then((locationData) {
+      if (locationData != null) {
+        _zoomToSelectedUserLocation(LatLng(locationData.latitude!, locationData.longitude!));
+      }
+    });
+
   }
+
+  Future<Loca.LocationData?> _getLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled!) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled!) {
+        return null;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    return _locationData;
+  }
+
 
   Stream<List<UserApp.Usuario>> getStreamAmigos(String? uid) {
     final userCollection = FirebaseFirestore.instance.collection('Users');
@@ -191,13 +205,10 @@ class _main_screenState extends State<main_screen> {
   Widget build(BuildContext context) {
 
     Usuario currentUser = widget.currentUser;
-    bool isVibrating = false;
-    AudioPlayer audioPlayer = AudioPlayer();
-    bool isButtonPressed = false;
 
     return Stack(
       children: [
-        MyMap(currentUser.id, currentUser.id, onMapCreated: (controller) {
+        MyMap(currentUser.id, currentUser.id, _markers, onMapCreated: (controller) {
           _mapController = controller;
         }),
         DraggableScrollableSheet(
@@ -297,15 +308,45 @@ class _main_screenState extends State<main_screen> {
             ),
           ),
         ),
+
         Positioned(
-          bottom: MediaQuery.of(context).size.height * 0.3,
-          right: 30.0,
+          top: 50.0,
+          right: 90.0,
           child: Material(
-            color:  Colors.white.withOpacity(0.5),
+            color:  Colors.white.withOpacity(0.0),
             borderRadius: BorderRadius.circular(10.0),
-            child: RippleButton(size: 0.1)
+            child: IconButton(
+              icon: Icon(Icons.man, size: MediaQuery.of(context).size.height * 0.04, color: Color.fromRGBO(22,53,77,1.000),), // Ajusta el tamaño del icono aquí
+              onPressed: () async {
+                Loca.Location location = new Loca.Location();
+                Loca.LocationData _locationData;
+
+                _locationData = await location.getLocation();
+                double latitude = _locationData.latitude!;
+                double longitude = _locationData.longitude!;
+
+                LatLng userLocation = LatLng(latitude, longitude);
+                _zoomToSelectedUserLocation(userLocation);
+
+              },
+              iconSize: MediaQuery.of(context).size.height * 0.05, // Ajusta el tamaño del botón aquí
+              padding: EdgeInsets.all(8.0), // Ajusta el padding para aumentar el área de toque del botón
+            ),
           ),
         ),
+
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.27,
+          right: 30.0,
+          child: Material(
+            color:  Colors.white.withOpacity(0.0),
+            borderRadius: BorderRadius.circular(10.0),
+            child: Container( // ajusta el ancho según tus necesidades
+              child: RippleButton(size: 0.12),
+            ),
+          ),
+        ),
+
         Positioned(
           top: 50.0,
           left: 30.0,
@@ -331,17 +372,32 @@ class _main_screenState extends State<main_screen> {
     );
   }
 
-  Widget buildConnectedUserCards() {
-    void _zoomToSelectedUserLocation(LatLng userLocation) {
-      _mapController?.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: userLocation,
-            zoom: 15.0, // Ajusta el nivel de zoom según tus necesidades
-          ),
+  void _zoomToSelectedUserLocation(LatLng userLocation) async {
+    // Crear un nuevo marcador con la ubicación del usuario
+    final Marker userMarker = Marker(
+      markerId: MarkerId(widget.currentUser.id),
+      position: userLocation,
+    );
+
+    // Actualiza el conjunto de marcadores del mapa
+    setState(() {
+      _markers.add(userMarker);
+    });
+
+    // Mover la cámara del mapa a la ubicación del usuario
+    _mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: userLocation,
+          zoom: 15.0, // Ajusta el nivel de zoom según tus necesidades
         ),
-      );
-    }
+      ),
+    );
+  }
+
+
+  Widget buildConnectedUserCards() {
+
 
     return Container(
       width: MediaQuery.of(context).size.width,
