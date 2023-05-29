@@ -29,10 +29,10 @@ class _RippleControllerState extends State<RippleAnimation>
           }
         }
       });
-    _scale = Tween<double>(begin: 1, end: 1.7).animate(_controller);
+    _scale = Tween<double>(begin: 1, end: 3.5).animate(_controller);
     _color = ColorTween(
-      begin: Colors.pink,
-      end: Colors.pink.withOpacity(0),
+      begin: Colors.red,
+      end: Colors.red.withOpacity(0),
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -61,10 +61,12 @@ class _RippleControllerState extends State<RippleAnimation>
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
     final _size = MediaQuery.of(context).size;
-    return Center(
+    return Transform.scale(
+      scale: _scale.value,
+      alignment: Alignment.center,
       child: Container(
-        width: (_size.width * widget.size) * _scale.value,
-        height: (_size.width * widget.size) * _scale.value,
+        width: (_size.width * widget.size),
+        height: (_size.width * widget.size),
         decoration: BoxDecoration(shape: BoxShape.circle, color: _color.value),
       ),
     );

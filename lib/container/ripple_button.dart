@@ -80,7 +80,7 @@ class _MyHomePageState extends State<RippleButton> {
     double longitude = _locationData.longitude!;
 
     for(UserApp.Usuario user in users){
-      sendMail(user.getEmail, latitude, longitude);
+      sendMail(user.getEmail, latitude, longitude, user.FullName);
     }
   }
 
@@ -92,7 +92,7 @@ class _MyHomePageState extends State<RippleButton> {
   int _animationsRunning = 0;
   var _pressed = false;
 
-  Future sendMail(String correo, double latitude, double longitude) async {
+  Future sendMail(String correo, double latitude, double longitude, String name) async {
     print('Enviando correo a $correo');
     String username = 'appmisto@gmail.com';
     String password = 'jyoyuvhjuvljqmie';
@@ -107,9 +107,44 @@ class _MyHomePageState extends State<RippleButton> {
       ..recipients.add(correo)
       ..subject = '${DateTime.now()}'
       ..text = ''
-      ..html = "<h1>¡Tu amigo necesita ayuda!</h1>\n"
+      ..html = "<table cellspacing='0' cellpadding='0' width='100%'>"
+          "<tbody>"
+          "<tr>"
+          "<td class='es-p20t es-p20r es-p20l esd-structure' align='left' bgcolor='#16354D' style='background-color: #16354d;'>"
+          "<table cellspacing='0' cellpadding='0' width='100%'>"
+          "<tbody>"
+          "<tr>"
+          "<td class='es-m-p0r esd-container-frame' width='560' valign='top' align='center'>"
+          "<table width='100%' cellspacing='0' cellpadding='0'>"
+          "<tbody>"
+          "<tr>"
+          "<td align='center' class='esd-block-image' style='font-size: 0px;'>"
+          "<a target='_blank'>"
+          "<img class='adapt-img' src='https://xccpwv.stripocdn.email/content/guids/CABINET_a887509391999bb3dd70f0e62a113928398a920ef1885b9ba0d9b6492f8cbb53/images/mistoentradablanc_1673557831352_1673557831417_666921.png' alt style='display: block;' width='100'>"
+          "</a>"
+          "</td>"
+          "</tr>"
+          "</tbody>"
+          "</table>"
+          "</td>"
+          "</tr>"
+          "</tbody>"
+          "</table>"
+          "</td>"
+          "</tr>"
+          "<tr>"
+          "<td>"
+          "<h1>¡Tu amigo necesita ayuda!</h1>\n"
+          "<p>Amigo: $name</p>\n"
           "<p>Latitud: $latitude, Longitud: $longitude</p>\n"
-          "<p><a href='$googleMapsLink'>Ver en Google Maps</a></p>";
+          "<p><a href='$googleMapsLink'></a>$googleMapsLink</p>"
+          "</td>"
+          "</tr>"
+          "</tbody>"
+          "</table>";
+
+
+
 
     try {
       final sendReport = await send(message, smtpServer);
@@ -189,7 +224,7 @@ class _MyHomePageState extends State<RippleButton> {
                     height: (_size.width * widget.size),
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.pink,
+                      color: Colors.red,
                     ),
                   ),
                 ),
