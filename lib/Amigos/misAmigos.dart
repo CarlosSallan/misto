@@ -293,13 +293,13 @@ class _misAmigosState extends State<misAmigos> {
                     child: IconButton(
                       icon: Icon(
                         Icons.person,
-                        size: 36.0,
+                        size: MediaQuery.of(context).size.height * 0.04,
                         color: Color.fromRGBO(22, 53, 77, 1.000),
                       ),
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      iconSize: 48.0,
+                      iconSize: MediaQuery.of(context).size.height * 0.05,
                       padding: EdgeInsets.all(8.0),
                     ),
                   ),

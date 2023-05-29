@@ -175,6 +175,9 @@ class _seguirUsersState extends State<seguirUsers> {
             title: Text(user.FullName),
             subtitle: Text(user.FullName),
             trailing: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(22,53,77,1.000)), // Establece el color del botón aquí
+              ),
               child: Text(sigue ? 'Siguiendo' : 'Seguir'),
               onPressed: () {
                 setState(() {
